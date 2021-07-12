@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import apiRequest from '@/utils/apiRequest'
+import store from '@/store'
 
 export default {
   namespaced: true,
@@ -11,6 +12,7 @@ export default {
           .then(res => {
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('userType', res.data.role)
+            store.commit('setUser', res.data)
             resolve(res)
           })
           .catch(e => {

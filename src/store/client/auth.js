@@ -1,16 +1,19 @@
 import Vue from 'vue'
 import apiRequest from '@/utils/apiRequest'
+import store from '../'
 
 export default {
   namespaced: true,
 
   actions: {
-    async register ({ commit }, data) {
+    // eslint-disable-next-line no-empty-pattern
+    async register ({}, data) {
       return new Promise((resolve, reject) => {
         apiRequest.post('/auth/client_register/', data)
           .then(res => {
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('userType', res.data.role)
+            store.commit('setUser', res.data)
             resolve(res)
           })
           .catch(e => {

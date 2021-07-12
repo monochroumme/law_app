@@ -38,10 +38,22 @@ const routes = [
     redirect: '/'
   },
   {
-    path: '/cases/:userType',
+    path: '/:userType/cases/',
     name: 'cases',
     props: true,
     component: () => import('@/pages/cases.vue')
+  },
+  {
+    path: '/:userType/chats/',
+    name: 'chats',
+    props: true,
+    component: () => import('@/pages/chats.vue')
+  },
+  {
+    path: '/:userType/profile/',
+    name: 'profile',
+    props: true,
+    component: () => import('@/pages/profile.vue')
   },
   {
     path: '/login',

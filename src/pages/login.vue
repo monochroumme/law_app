@@ -77,7 +77,11 @@ export default {
       }
       if (!this.password?.trim()?.length) {
         error = true
-        this.$toasted.error('Your password must contain minumum 8 characters, at least 1 number and 1 letter')
+        this.$toasted.error('Your password must contain minimum 8 characters')
+      }
+      if (!this.userRole) {
+        error = true
+        this.$toasted.error('You must choose the user type')
       }
 
       return error
