@@ -1,0 +1,65 @@
+.custom-multiselect {
+  position: relative;
+
+  .multiselect {
+    min-height: unset;
+
+    &__tags {
+      border: none;
+      border-radius: 0;
+      padding: 3px 0;
+      min-height: unset;
+      border-bottom: 1px solid $blue-0;
+    }
+
+    &__select {
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      top: 50%;
+      transform: translateY(-50%);
+
+      &:before {
+        top: calc(50% + 5px);
+        transform: translateY(-50%);
+        margin-top: 0;
+      }
+    }
+
+    &__tag {
+      margin-top: 3px;
+      margin-bottom: 3px;
+      background: #1a2552;
+
+      &-icon {
+        &:hover {
+          background: #2a3b82;
+        }
+      }
+    }
+
+    &__placeholder, &__input {
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 22px;
+      color: #a9a9a9;
+      margin-bottom: 0;
+      padding: 0;
+    }
+
+    &__option {
+      &--highlight {
+        background: $blue-0;
+      }
+
+      &--highlight:after {
+        background: $blue-2;
+      }
+    }
+
+    &__single {
+      margin-bottom: 0;
+      padding: 0;
+    }
+  }
+}

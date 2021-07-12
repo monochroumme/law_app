@@ -1,0 +1,87 @@
+.common {
+  &__container {
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  &__btn-back {
+    width: 20px;
+    height: 21px;
+  }
+
+  &__label {
+    font-size: 14px;
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+
+  &__btn {
+    background: $blue-0;
+    border-radius: 4px;
+    padding: 8px 40px;
+    font-weight: 400;
+    font-size: 18px;
+    color: #fff;
+
+    &.disabled {
+      pointer-events: none;
+      background: #9a9a9a;
+    }
+  }
+
+  &__scroll {
+    &::-webkit-scrollbar-track {
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background: #f0f2f5;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      background: #6a7d9b;
+    }
+  }
+}
+
+.mb {
+  &-10 {
+    margin-bottom: 10px;
+  }
+  &-20 {
+    margin-bottom: 20px;
+  }
+}
+
+.page {
+  min-height: 100vh;
+  padding: 30px 30px 50px;
+
+  &__top {
+    position: relative;
+    margin: 0 auto 50px;
+  }
+
+  &__title {
+    text-align: center;
+    color: #fff;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 34px;
+  }
+
+  &__btn-back {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+}

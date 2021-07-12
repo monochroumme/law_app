@@ -8,6 +8,46 @@ const routes = [
     path: '/',
     name: 'index',
     component: () => import('@/pages/index.vue')
+  },
+  {
+    path: '/register',
+    redirect: '/register/client'
+  },
+  {
+    path: '/register/client',
+    name: 'register-client',
+    component: () => import('@/pages/client/Registration/index.vue')
+  },
+  {
+    path: '/register/lawyer',
+    name: 'register-lawyer',
+    component: () => import('@/pages/lawyer/Registration/index.vue')
+  },
+  {
+    path: '/rules',
+    redirect: '/rules/client'
+  },
+  {
+    path: '/rules/:userType',
+    name: 'rules',
+    props: true,
+    component: () => import('@/pages/rules.vue')
+  },
+  {
+    path: '/cases',
+    redirect: '/'
+  },
+  {
+    path: '/cases/:userType',
+    name: 'cases',
+    props: true,
+    component: () => import('@/pages/cases.vue')
+  },
+  {
+    path: '/login',
+    name: 'login',
+    props: true,
+    component: () => import('@/pages/login.vue')
   }
 ]
 
