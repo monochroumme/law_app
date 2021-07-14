@@ -86,19 +86,16 @@ export default new Vuex.Store({
   actions: {
     async login ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        localStorage.setItem('token', 'randomToken')
-        localStorage.setItem('userType', 'ROLE_CLIENT')
-        resolve()
-        // apiRequest.post('/auth/singin/', data)
-        //   .then(res => {
-        //     localStorage.setItem('token', res.data.token)
-        //     localStorage.setItem('userType', res.data.role)
-        //     resolve(res)
-        //   })
-        //   .catch(e => {
-        //     console.error(e.response.data.message)
-        //     reject(e.response.data.message)
-        //   })
+        apiRequest.post('/auth/singin/', data)
+          .then(res => {
+            localStorage.setItem('token', res.data.token)
+            localStorage.setItem('userType', res.data.role)
+            resolve(res)
+          })
+          .catch(e => {
+            console.error(e.response.data.message)
+            reject(e.response.data.message)
+          })
       })
     },
 
