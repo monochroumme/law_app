@@ -2,6 +2,7 @@
   <div id="app">
     <Header v-if="showGlobalHeader" />
     <router-view/>
+    <Footer v-if="showGlobalHeader" />
   </div>
 </template>
 
@@ -9,12 +10,14 @@
 const globalHeaderPages = [
   'cases',
   'chats',
-  'profile'
+  'profile',
+  'applied-lawyers'
 ]
 
 export default {
   components: {
-    Header: () => import('@/components/Header')
+    Header: () => import('@/components/Header'),
+    Footer: () => import('@/components/Footer')
   },
   computed: {
     showGlobalHeader () {

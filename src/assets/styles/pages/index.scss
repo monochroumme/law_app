@@ -6,21 +6,21 @@
   min-height: 100vh;
 
   &__logo {
-    width: 300px;
+    width: 226.47px;
     height: auto;
     object-fit: contain;
-    margin-bottom: 50px;
+    margin-bottom: 70px;
   }
 
   h1, &__login {
     color: $blue-0;
-    font-size: 32px;
+    font-size: 24px;
     line-height: 1;
     font-weight: 400;
   }
 
   h1 {
-    margin-bottom: 20px;
+    margin-bottom: 40px;
   }
 
   &__login {
@@ -30,16 +30,18 @@
   &__buttons {
     display: flex;
     align-items: center;
-    margin-bottom: 100px;
+    margin-bottom: 52px;
 
     a {
       font-size: 20px;
       line-height: 1;
-      background: $blue-0;
-      padding: 8px 40px;
-      border-radius: 4px;
+      background: $blue-3;
+      padding: 14px;
+      border-radius: 7px;
       color: #fff;
       text-decoration: none;
+      width: 172px;
+      text-align: center;
 
       &:first-child {
         margin-right: 30px;

@@ -9,7 +9,8 @@
       border-radius: 0;
       padding: 3px 0;
       min-height: unset;
-      border-bottom: 1px solid $blue-0;
+      background-color: unset;
+      border-bottom: 1px solid #fff;
     }
 
     &__select {
@@ -39,10 +40,10 @@
     }
 
     &__placeholder, &__input {
-      font-weight: 500;
-      font-size: 15px;
+      font-weight: 400;
+      font-size: 18px;
       line-height: 22px;
-      color: #a9a9a9;
+      color: #ffffff;
       margin-bottom: 0;
       padding: 0;
     }
@@ -60,6 +61,8 @@
     &__single {
       margin-bottom: 0;
       padding: 0;
+      background: unset;
+      color: #ffffff;
     }
   }
 }

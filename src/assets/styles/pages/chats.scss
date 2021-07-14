@@ -1,0 +1,103 @@
+.chats-page {
+  background: #F5F5F5;
+  display: flex;
+  padding-left: 171px;
+  padding-right: 126px;
+  min-height: calc(100vh - 150px);
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    width: 402px;
+    margin-right: 33px;
+
+    &__chat {
+      display: flex;
+      &__img {
+        width: 59px;
+        height: 59px;
+        border-radius: 75px;
+        background: #000000;
+        margin-right: 16px;
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+
+      &__text {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+        padding-bottom: 15px;
+
+        &__name {
+          margin-bottom: 9px;
+          font-weight: bold;
+          font-size: 18px;
+        }
+        &__short-msg {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  &__chat-block {
+    width: 708px;
+    height: 704px;
+    flex-direction: column;
+
+    &__header {
+      background-color: $blue-3;
+      display: flex;
+      align-items: center;
+      color: white;
+      padding-left: 25px;
+      border-top-left-radius: 19px;
+      border-top-right-radius: 19px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      font-size: 18px;
+
+      &__img {
+        width: 61px;
+        height: 61px;
+        border-radius: 75px;
+        background: #000000;
+        margin-right: 20px;
+      }
+    }
+
+    &__messages {
+      height: calc(100% - 77px);
+      &__msg {
+        margin-bottom: 31px;
+        div {
+          padding-top: 18px;
+          padding-bottom: 17px;
+          padding-left: 37px;
+          padding-right: 38px;
+          display: inline-block;
+        }
+
+        .client {
+          background-color: #D3D3D3;
+          border-radius: 16px;
+          font-size: 14px;
+          color: $blue-3;
+          text-align: end;
+        }
+
+        .lawyer {
+          background-color: #454545;
+          border-radius: 16px;
+          font-size: 16px;
+          color: #ffffff;
+        }
+      }
+
+      &__msg:first-child {
+        margin-top: 40px;
+      }
+    }
+  }
+}

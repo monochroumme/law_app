@@ -44,6 +44,12 @@ const routes = [
     component: () => import('@/pages/cases.vue')
   },
   {
+    path: '/:userType/cases/applied-lawyers',
+    name: 'applied-lawyers',
+    props: true,
+    component: () => import('@/pages/applied-lawyers.vue')
+  },
+  {
     path: '/:userType/chats/',
     name: 'chats',
     props: true,

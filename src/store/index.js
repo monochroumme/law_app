@@ -61,7 +61,8 @@ export default new Vuex.Store({
       }
     ],
     jurisdictions: null,
-    areasOfLaw: null
+    areasOfLaw: null,
+    activeCases: null
   },
 
   mutations: {
@@ -75,22 +76,29 @@ export default new Vuex.Store({
 
     setAreasOfLaw (state, payload) {
       state.areasOfLaw = payload
+    },
+
+    setActiveCases (state, payload) {
+      state.activeCases = payload
     }
   },
 
   actions: {
     async login ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        apiRequest.post('/auth/singin/', data)
-          .then(res => {
-            localStorage.setItem('token', res.data.token)
-            localStorage.setItem('userType', res.data.role)
-            resolve(res)
-          })
-          .catch(e => {
-            console.error(e.response.data.message)
-            reject(e.response.data.message)
-          })
+        localStorage.setItem('token', 'randomToken')
+        localStorage.setItem('userType', 'ROLE_CLIENT')
+        resolve()
+        // apiRequest.post('/auth/singin/', data)
+        //   .then(res => {
+        //     localStorage.setItem('token', res.data.token)
+        //     localStorage.setItem('userType', res.data.role)
+        //     resolve(res)
+        //   })
+        //   .catch(e => {
+        //     console.error(e.response.data.message)
+        //     reject(e.response.data.message)
+        //   })
       })
     },
 
@@ -105,6 +113,13 @@ export default new Vuex.Store({
       const res = await apiRequest.get('/practiceArea/')
       if (res.data) {
         commit('setAreasOfLaw', res.data)
+      }
+    },
+
+    async getActiveCases ({ commit }) {
+      const res = await apiRequest.get('/cases/')
+      if (res.data) {
+        commit('setActiveCases', res.data)
       }
     }
   }

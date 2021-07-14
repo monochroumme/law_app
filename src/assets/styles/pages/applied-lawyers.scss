@@ -1,0 +1,136 @@
+.applied_lawyers-page {
+  background: #F5F5F5;
+
+  &__title {
+    width: 292px;
+    padding: 13px 0;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 25px;
+    margin: 0 auto;
+    font-size: 22px;
+    color: $blue-3;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 50px;
+    max-width: 1056px;
+    margin-left: auto;
+    margin-right: auto;
+
+    &__block:hover {
+      box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
+      transition: box-shadow 0.2s ease-in-out;
+    }
+
+    &__block {
+      background: #ffffff;
+      border-radius: 20px;
+      margin-left: 25px;
+      margin-right: 25px;
+      width: 302px;
+      margin-bottom: 50px;
+
+      &__name {
+        background-color: $blue-3;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        text-align: center;
+        color: #ffffff;
+        padding: 8px 0;
+        cursor: pointer;
+      }
+
+      &__img {
+        width: 124px;
+        height: 124px;
+        border-radius: 151px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 16px;
+        margin-bottom: 23px;
+        background: #000000;
+        cursor: pointer;
+      }
+
+      span {
+        padding-left: 44px;
+      }
+
+      &__separator {
+        width: 188.5px;
+        border-bottom: 0.5px solid $blue-3;
+        margin-top: 5px;
+        margin-left: 44px;
+      }
+
+      &__commentary {
+        padding-left: 44px;
+        margin-top: 9px;
+        margin-bottom: 29px;
+      }
+
+      &__date {
+        text-align: center;
+        width: 180px;
+        margin-left: 61px;
+        padding-bottom: 8px;
+        border-bottom: .5px solid $blue-3;
+      }
+
+      &__btns {
+        display: flex;
+        flex-direction: column;
+        max-width: 214px;
+        margin-top: 22px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 21px;
+
+        &__btn-def {
+          color: $blue-3;
+          background-color: #E3E3E3;
+          margin-bottom: 11px;
+          border-radius: 5px;
+          font-size: 15px;
+          text-align: center;
+          padding: 4px 0px;
+        }
+
+        &__btn-def:hover {
+          box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
+          transition: box-shadow 0.2s ease-in-out;
+        }
+
+        &__btn-blue {
+          color: #ffffff;
+          background-color: $blue-3;
+          border-radius: 5px;
+          font-size: 15px;
+          padding: 4px 0px;
+        }
+
+        &__btn-blue:hover {
+          box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
+          transition: box-shadow 0.2s ease-in-out;
+        }
+
+        &__btn-del {
+          background: #454545;
+          color: #ffffff;
+          font-size: 15px;
+          border-radius: 5px;
+          margin-top: 15px;
+          padding: 4px 0px;
+        }
+
+        &__btn-del:hover {
+          box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
+          transition: box-shadow 0.2s ease-in-out;
+        }
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@
     <nav class="header__nav">
       <ul>
         <li>
-          <router-link :to="`/${userType}/cases`">Cases</router-link>
+          <router-link :to="`/${userType}/cases`">My cases</router-link>
         </li>
         <li>
           <router-link :to="`/${userType}/chats`">Chats</router-link>
@@ -43,7 +43,7 @@ export default {
   padding: 10px 30px;
   width: 100%;
   height: 50px;
-  background: $blue-0;
+  background: $blue-3;
   position: relative;
 
   &__nav {

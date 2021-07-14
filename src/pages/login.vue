@@ -1,28 +1,24 @@
 <template>
-  <div class="page registration-page">
-    <header class="page__top">
-      <router-link to="/" class="common__btn-back page__btn-back">
-        <img svg-inline src="@/assets/media/common/btn-back.svg" alt="Back">
-      </router-link>
-      <h1 class="page__title">Login</h1>
-    </header>
-    <form @submit.prevent="onSubmit" class="common__container registration-page__content">
-      <custom-input class="mb-20" v-model="email" placeholder="Enter your email" type="email" label="Email"/>
-      <custom-input type="password" class="mb-20" :show-password="showPassword"
-                    @toggle-password="showPassword = !showPassword" v-model="password" placeholder="Enter your password"
+  <div class="page login-page">
+    <form @submit.prevent="onSubmit" class="common__container login-page__content">
+      <h1 class="login-page__title">Sign in</h1>
+      <credentials-input class="mb-20" v-model="email" placeholder="Enter your email" type="email" label="Email"/>
+      <credentials-input type="password" class="mb-20" v-model="password" placeholder="Enter your password"
                     label="Password"/>
+      <div class="login-page__reset">
+        <router-link to="/rules/client">
+          Forgot password
+        </router-link>
+      </div>
       <custom-multiselect
         v-model="userRole"
         :options="userRoles"
         class="mb-20"
-        placeholder="User Type"
+        placeholder="Choose user type"
       />
-      <div class="registration-page__btns">
-        <router-link to="/" type="button" class="common__btn">
-          Back
-        </router-link>
+      <div class="login-page__btns">
         <button type="submit" class="common__btn">
-          Login
+          Submit
         </button>
       </div>
     </form>
@@ -62,7 +58,7 @@ export default {
 
   components: {
     CustomMultiselect: () => import('@/components/CustomMultiselect'),
-    CustomInput: () => import('@/components/CustomInput')
+    CredentialsInput: () => import('@/components/CredentialsInput')
   },
 
   methods: {
@@ -109,6 +105,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/styles/pages/registration';
 @import '@/assets/styles/pages/login';
 </style>
