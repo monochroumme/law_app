@@ -1,18 +1,33 @@
 .chats-page {
   background: #F5F5F5;
   display: flex;
-  padding-left: 171px;
-  padding-right: 126px;
+  padding-left: 141px;
+  padding-right: 106px;
+  justify-content: center;
   min-height: calc(100vh - 150px);
 
   &__list {
     display: flex;
     flex-direction: column;
-    width: 402px;
+    width: 320px;
+    border-radius: 19px;
+    height: calc(100vh - 104px);
+    overflow-y: auto;
+    background-color: white;
     margin-right: 33px;
 
+    &__chat.active {
+      color: white;
+      background-color: $blue-3;
+    }
+
     &__chat {
+      position: relative;
       display: flex;
+      cursor: pointer;
+      width: 402px;
+      margin-right: 33px;
+
       &__img {
         width: 59px;
         height: 59px;
@@ -21,6 +36,7 @@
         margin-right: 16px;
         margin-top: auto;
         margin-bottom: auto;
+        margin-left: 19px;
       }
 
       &__text {
@@ -37,6 +53,12 @@
         &__short-msg {
           font-size: 16px;
         }
+      }
+
+      &__time {
+        position: absolute;
+        top: 19px;
+        right: 12px;
       }
     }
   }
@@ -68,35 +90,116 @@
     }
 
     &__messages {
-      height: calc(100% - 77px);
+      height: calc(100vh - 254px);
+      background-color: #ffffff;
+      overflow-y: auto;
+
+      .msg-out {
+        justify-content: flex-end;
+      }
+
       &__msg {
-        margin-bottom: 31px;
-        div {
+        padding-top: 31px;
+        position:relative;
+        display: flex;
+
+        .lawyer {
           padding-top: 18px;
           padding-bottom: 17px;
           padding-left: 37px;
           padding-right: 38px;
           display: inline-block;
+          min-width: 177px;
+          text-align: center;
+          background-color: #454545;
+          color: white;
+          border-radius: 16px;
+          margin-left: 30px;
+          overflow-wrap: break-word;
+          white-space: pre-wrap;
         }
 
         .client {
+          padding-top: 18px;
+          padding-bottom: 17px;
+          padding-left: 37px;
+          padding-right: 38px;
+          display: inline-block;
+          min-width: 177px;
+          text-align: center;
           background-color: #D3D3D3;
           border-radius: 16px;
-          font-size: 14px;
-          color: $blue-3;
-          text-align: end;
-        }
-
-        .lawyer {
-          background-color: #454545;
-          border-radius: 16px;
-          font-size: 16px;
-          color: #ffffff;
+          margin-right: 20px;
+          overflow-wrap: break-word;
+          white-space: pre-wrap;
         }
       }
 
       &__msg:first-child {
-        margin-top: 40px;
+        padding-top: 40px;
+      }
+
+      &__msg:last-child {
+        padding-bottom: 20px;
+      }
+    }
+
+    &__footer {
+      padding: 8px 0;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      max-width: 100%;
+      min-height: 66px;
+      background-color: $blue-3;
+      border-radius: 0 0 19px 19px;
+
+      button {
+        width: 41px;
+        height: 41px;
+        border-radius: 50px;
+        background-color:#FFFFFF;
+        margin: 8px 0;
+      }
+
+      button:first-child {
+        margin-left: 20px;
+      }
+
+      button:last-child {
+        margin-right: 20px;
+      }
+
+      &__input-block {
+        box-sizing: border-box;
+        flex: 1 1 auto;
+        width: inherit;
+        min-width: 0;
+        min-height: 20px;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20px;
+        outline: none;
+        will-change: width;
+        padding: 9px 12px 11px;
+        margin: 8px 10px;
+        background-color: #ffffff;
+        border-radius: 21px;
+
+        &__input {
+          min-height: 20px;
+          background-color: white;
+          outline: none;
+          max-height: 100px;
+          word-wrap: break-word;
+          white-space: pre-wrap;
+          overflow-x: hidden;
+          overflow-y: auto;
+          -webkit-user-select: text;
+          -moz-user-select: text;
+          -ms-user-select: text;
+          user-select: text;
+        }
       }
     }
   }

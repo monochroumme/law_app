@@ -789,10 +789,6 @@ fieldset[disabled] .multiselect {
   vertical-align: top;
 }
 
-span.multiselect__option--highlight:after {
-  content: '';
-}
-
 *[dir="rtl"] .multiselect {
   text-align: right;
 }

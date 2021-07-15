@@ -23,11 +23,7 @@
           <div class="data">Client</div>
         </div>
       </div>
-<<<<<<< HEAD
       <button class="profile-page__user__edit" @click="editModal()">
-=======
-      <button class="profile-page__user__edit">
->>>>>>> 00d04976d1e5297c3ad7fe581b4d429033640bd3
         Edit profile
       </button>
     </div>
@@ -64,7 +60,6 @@
         </router-link>
       </div>
     </div>
-<<<<<<< HEAD
     <div class="profile-page__modal" v-if="showModal">
       <div class="profile-page__modal__block">
         <div class="profile-page__modal__block__header">
@@ -86,8 +81,6 @@
         </div>
       </div>
     </div>
-=======
->>>>>>> 00d04976d1e5297c3ad7fe581b4d429033640bd3
   </div>
 </template>
 

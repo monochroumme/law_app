@@ -1,15 +1,29 @@
-.applied_lawyers-page {
-  background: #F5F5F5;
+.lawyer-cases {
+  &__selector {
+    display: flex;
+    justify-content: center;
 
-  &__title {
-    width: 292px;
-    padding: 13px 0;
-    text-align: center;
-    background: #ffffff;
-    border-radius: 25px;
-    margin: 0 auto;
-    font-size: 22px;
-    color: $blue-3;
+    button.active {
+      background-color: $blue-3;
+      color: #FFFFFF;
+    }
+
+    button {
+      background-color: #FFFFFF;
+      border: 1px solid #DBDCE1;
+      font-size: 22px;
+      color: $blue-3;
+      width: 208px;
+      padding: 8.5px 0;
+    }
+
+    button:first-child {
+      border-radius: 99px 0 0 99px;
+    }
+
+    button:last-child {
+      border-radius: 0 99px 99px 0;
+    }
   }
 
   &__list {
@@ -20,12 +34,12 @@
     margin-left: auto;
     margin-right: auto;
 
-    &__block:hover {
+    &__case:hover {
       box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
-      transition: box-shadow 0.2s ease-in-out;
+      transition: .2s ease-in-out;
     }
 
-    &__block {
+    &__case {
       background: #ffffff;
       border-radius: 20px;
       margin-left: 25px;
@@ -33,14 +47,13 @@
       width: 302px;
       margin-bottom: 50px;
 
-      &__name {
+      &__title {
         background-color: $blue-3;
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
         text-align: center;
         color: #ffffff;
         padding: 8px 0;
-        cursor: pointer;
       }
 
       &__img {
@@ -49,42 +62,47 @@
         border-radius: 151px;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 16px;
+        margin-top: 18px;
         margin-bottom: 23px;
         background: #000000;
-        cursor: pointer;
       }
 
-      span {
-        padding-left: 44px;
-      }
-
-      &__separator {
+      &__case-descr {
+        margin: 0 28px;
+        color: $blue-3;
+        font-size: 15px;
+        border-bottom: 1px solid rgba(26, 37, 82, 0.2);
         width: 188.5px;
-        border-bottom: 0.5px solid $blue-3;
-        margin-top: 5px;
-        margin-left: 44px;
+        padding-bottom: 5px;
       }
 
-      &__commentary {
-        padding-left: 44px;
+      &__description {
+        font-size: 16px;
+        padding: 0 28px;
         margin-top: 9px;
         margin-bottom: 29px;
+        color: #4A4A4A;
       }
 
       &__date {
         text-align: center;
-        width: 180px;
-        margin-left: 61px;
         padding-bottom: 8px;
-        border-bottom: .5px solid $blue-3;
+        max-width: 180px;
+        margin: 0 auto;
+        color: $blue-3;
+      }
+
+      &__separator {
+        width: 180px;
+        border-bottom: 0.5px solid $blue-3;
+        margin: 0 auto;
+        margin-bottom: 22px;
       }
 
       &__btns {
         display: flex;
         flex-direction: column;
         max-width: 214px;
-        margin-top: 22px;
         margin-left: auto;
         margin-right: auto;
         margin-bottom: 21px;
@@ -131,6 +149,14 @@
           transition: .2s ease-in-out;
         }
       }
+    }
+
+    &__add-case {
+      width: 302px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
   }
 }

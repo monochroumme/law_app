@@ -182,8 +182,5 @@ export default {
 </script>
 
 <style lang="scss">
-<<<<<<< HEAD
 @import '@/assets/styles/pages/chats'
-=======
->>>>>>> 00d04976d1e5297c3ad7fe581b4d429033640bd3
 </style>
