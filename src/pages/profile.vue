@@ -3,6 +3,7 @@
     <div class="profile-page__user">
       <div class="profile-page__user__photo">
         <div class="profile-page__user__photo__img">
+          <img src="@/assets/media/common/photo.png" alt="">
         </div>
         <div class="profile-page__user__photo__edit">Edit photo</div>
       </div>

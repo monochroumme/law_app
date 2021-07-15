@@ -7,7 +7,7 @@
           {{ item.name }}
         </div>
         <div class="applied_lawyers-page__list__block__img">
-          {{ item.img }}
+          <img src="@/assets/media/common/photo.png" alt="">
         </div>
         <span>Comments</span>
         <div class="applied_lawyers-page__list__block__separator"/>

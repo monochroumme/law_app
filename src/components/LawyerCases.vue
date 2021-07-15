@@ -11,7 +11,9 @@
           <div class="lawyer-cases__list__case__title">
             {{ item.name }}
           </div>
-          <div class="lawyer-cases__list__case__img" />
+          <div class="lawyer-cases__list__case__img">
+            <img src="@/assets/media/common/photo.png" alt="">
+          </div>
           <div class="lawyer-cases__list__case__case-descr">
             Case Description
           </div>

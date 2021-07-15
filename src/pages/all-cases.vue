@@ -8,7 +8,7 @@
           {{ item.name }}
         </div>
         <div class="all_cases-page__list__block__img">
-          {{ item.img }}
+          <img src="@/assets/media/common/photo.png" alt="">
         </div>
         <span>Case description</span>
         <div class="all_cases-page__list__block__separator"/>
