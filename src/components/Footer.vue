@@ -12,5 +12,6 @@ export default {
   .footer {
     height: 150px;
     background-color: $blue-3;
+    display: none;
   }
 </style>
