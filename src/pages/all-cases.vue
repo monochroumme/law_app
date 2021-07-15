@@ -1,7 +1,7 @@
 <template>
   <div class="page all_cases-page">
     <button @click="openFilter()" class="all_cases-page__filter">Filter</button>
-    <div class="all_cases-page__title">Applied lawyers</div>
+    <div class="all_cases-page__title">All cases</div>
     <div class="all_cases-page__list">
       <div v-for="item in items" :key="item.id" class="all_cases-page__list__block">
         <div class="all_cases-page__list__block__name">
@@ -56,12 +56,12 @@ export default {
     return {
       showFilter: false,
       items: [
-        { id: 1, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 1' },
-        { id: 2, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 2' },
-        { id: 3, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 3' },
-        { id: 4, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 4' },
-        { id: 5, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 5' },
-        { id: 6, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 6' }
+        { id: 1, name: 'Test user', date: '07-07-2021', description: 'random descr 1' },
+        { id: 2, name: 'Test user', date: '07-07-2021', description: 'random descr 2' },
+        { id: 3, name: 'Test user', date: '07-07-2021', description: 'random descr 3' },
+        { id: 4, name: 'Test user', date: '07-07-2021', description: 'random descr 4' },
+        { id: 5, name: 'Test user', date: '07-07-2021', description: 'random descr 5' },
+        { id: 6, name: 'Test user', date: '07-07-2021', description: 'random descr 6' }
       ],
       isModalShown: false
     }
