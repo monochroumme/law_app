@@ -23,7 +23,11 @@
           <div class="data">Client</div>
         </div>
       </div>
+<<<<<<< HEAD
+      <button class="profile-page__user__edit" @click="editModal()">
+=======
       <button class="profile-page__user__edit">
+>>>>>>> 00d04976d1e5297c3ad7fe581b4d429033640bd3
         Edit profile
       </button>
     </div>
@@ -60,12 +64,49 @@
         </router-link>
       </div>
     </div>
+<<<<<<< HEAD
+    <div class="profile-page__modal" v-if="showModal">
+      <div class="profile-page__modal__block">
+        <div class="profile-page__modal__block__header">
+          Account
+        </div>
+        <div class="profile-page__modal__block__body">
+          <label>Name</label>
+          <input type="text" value="Test"/>
+          <label>Surname</label>
+          <input type="text" value="User"/>
+          <label>Email</label>
+          <input type="text" value="mr.i.mammadov@gmail.com"/>
+          <label>Phone</label>
+          <input type="text" value="+994 55 305 99 87"/>
+        </div>
+        <div class="profile-page__modal__block__footer">
+          <button @click="closeModal()" class="profile-page__modal__block__footer__cancel">Cancel</button>
+          <button @click="closeModal()" class="profile-page__modal__block__footer__save">Save</button>
+        </div>
+      </div>
+    </div>
+=======
+>>>>>>> 00d04976d1e5297c3ad7fe581b4d429033640bd3
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ProfileWrapper'
+  name: 'ProfileWrapper',
+  data () {
+    return {
+      showModal: false
+    }
+  },
+  methods: {
+    editModal: function () {
+      this.showModal = true
+    },
+    closeModal: function () {
+      this.showModal = false
+    }
+  }
 }
 </script>
 

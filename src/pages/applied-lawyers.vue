@@ -19,7 +19,11 @@
         </div>
         <div class="applied_lawyers-page__list__block__btns">
           <button class="applied_lawyers-page__list__block__btns__btn-def">Choose lawyer</button>
+<<<<<<< HEAD
+          <router-link class="applied_lawyers-page__list__block__btns__btn-def" to="/client/chats/">
+=======
           <router-link class="applied_lawyers-page__list__block__btns__btn-def" to="/client/cases/applied-lawyers">
+>>>>>>> 00d04976d1e5297c3ad7fe581b4d429033640bd3
             Contact lawyer
           </router-link>
           <button v-on:click="hideLawyer(index, item)" class="applied_lawyers-page__list__block__btns__btn-blue">Hide</button>
@@ -37,12 +41,21 @@ export default {
   data () {
     return {
       items: [
+<<<<<<< HEAD
+        { id: 1, name: 'Lawyer Name', date: '07-07-2021', description: 'random descr 1' },
+        { id: 2, name: 'Lawyer Name', date: '07-07-2021', description: 'random descr 2' },
+        { id: 3, name: 'Lawyer Name', date: '07-07-2021', description: 'random descr 3' },
+        { id: 4, name: 'Lawyer Name', date: '07-07-2021', description: 'random descr 4' },
+        { id: 5, name: 'Lawyer Name', date: '07-07-2021', description: 'random descr 5' },
+        { id: 6, name: 'Lawyer Name', date: '07-07-2021', description: 'random descr 6' }
+=======
         { id: 1, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 1' },
         { id: 2, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 2' },
         { id: 3, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 3' },
         { id: 4, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 4' },
         { id: 5, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 5' },
         { id: 6, name: 'Tofik Huseynov', date: '07-07-2021', description: 'random descr 6' }
+>>>>>>> 00d04976d1e5297c3ad7fe581b4d429033640bd3
       ]
     }
   },

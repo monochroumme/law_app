@@ -11,7 +11,12 @@ const globalHeaderPages = [
   'cases',
   'chats',
   'profile',
+<<<<<<< HEAD
+  'applied-lawyers',
+  'all-cases'
+=======
   'applied-lawyers'
+>>>>>>> 00d04976d1e5297c3ad7fe581b4d429033640bd3
 ]
 
 export default {
