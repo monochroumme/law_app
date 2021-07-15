@@ -25,7 +25,7 @@
       position: relative;
       display: flex;
       cursor: pointer;
-      width: 402px;
+      width: 100%;
       margin-right: 33px;
 
       &__img {
@@ -103,7 +103,9 @@
         position:relative;
         display: flex;
 
+
         .lawyer {
+          position: relative;
           padding-top: 18px;
           padding-bottom: 17px;
           padding-left: 37px;
@@ -117,9 +119,16 @@
           margin-left: 30px;
           overflow-wrap: break-word;
           white-space: pre-wrap;
+
+          .timestamp {
+            position: absolute;
+            font-size: 8px;
+            left: 10px;
+          }
         }
 
         .client {
+          position: relative;
           padding-top: 18px;
           padding-bottom: 17px;
           padding-left: 37px;
@@ -132,6 +141,13 @@
           margin-right: 20px;
           overflow-wrap: break-word;
           white-space: pre-wrap;
+          color: $blue-3;
+
+          .timestamp {
+            position: absolute;
+            font-size: 8px;
+            right: 10px;
+          }
         }
       }
 

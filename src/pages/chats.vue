@@ -119,28 +119,28 @@
       </div>
       <div class="chats-page__chat-block__messages main_chat">
         <div class="chats-page__chat-block__messages__msg msg-in">
-          <div class="lawyer">Hello, could you help me with my issue?</div>
+          <div class="lawyer">Hello, could you help me with my issue?<div class="timestamp">17:08</div></div>
         </div>
         <div class="chats-page__chat-block__messages__msg msg-out">
-          <div class="client">How can I help you?</div>
+          <div class="client">How can I help you?<div class="timestamp">17:08</div></div>
         </div>
         <div class="chats-page__chat-block__messages__msg msg-in">
-          <div class="lawyer">Hello, could you help me with my issue?</div>
+          <div class="lawyer">Hello, could you help me with my issue?<div class="timestamp">17:08</div></div>
         </div>
         <div class="chats-page__chat-block__messages__msg msg-out">
-          <div class="client">How can I help you?</div>
+          <div class="client">How can I help you?<div class="timestamp">17:08</div></div>
         </div>
         <div class="chats-page__chat-block__messages__msg msg-in">
-          <div class="lawyer">Hello, could you help me with my issue?</div>
+          <div class="lawyer">Hello, could you help me with my issue?<div class="timestamp">17:08</div></div>
         </div>
         <div class="chats-page__chat-block__messages__msg msg-out">
-          <div class="client">How can I help you?</div>
+          <div class="client">How can I help you?<div class="timestamp">17:08</div></div>
         </div>
         <div class="chats-page__chat-block__messages__msg msg-in">
-          <div class="lawyer">Hello, could you help me with my issue?</div>
+          <div class="lawyer">Hello, could you help me with my issue?<div class="timestamp">17:08</div></div>
         </div>
         <div class="chats-page__chat-block__messages__msg msg-out">
-          <div class="client">How can I help you?</div>
+          <div class="client">How can I help you?<div class="timestamp">17:08</div></div>
         </div>
       </div>
       <div class="chats-page__chat-block__footer">

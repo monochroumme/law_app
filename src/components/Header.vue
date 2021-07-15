@@ -18,6 +18,7 @@
 
       </div>
       <router-link :to="`/${userType}/profile`" class="header__user">
+        <span class="test-user">Test User</span>
         <span v-if="user">{{ user.name }} {{ user.surname }}</span>
         <img src="" onerror="this.src = '/media/common/user.svg'" alt="User">
       </router-link>
@@ -118,6 +119,10 @@ export default {
       line-height: 1;
       font-weight: 400;
       color: #000000;
+    }
+
+    .test-user {
+      color: #ffffff;
     }
 
     img {
