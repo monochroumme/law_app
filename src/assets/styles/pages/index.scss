@@ -53,11 +53,16 @@
 @media (max-width: 450px) {
   .index-page {
     &__logo {
-      width: 280px;
+      width: 225px;
     }
 
     &__buttons {
+      margin-bottom: 32px;
+
       a {
+        width: 135px;
+        font-size: 18px;
+        padding: 10px;
         &:first-child {
           margin-right: 10px;
         }

@@ -19,6 +19,10 @@
     width: 250px;
     height: 100%;
 
+    .x-close {
+      display: none;
+    }
+
     &__header {
       padding: 8px 6px !important;
       border-bottom: 1px solid $blue-3;
@@ -194,6 +198,55 @@
         &__btn-del:hover {
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
           transition: .2s ease-in-out;
+        }
+      }
+    }
+  }
+}
+@media (max-width: 450px) {
+  .all_cases-page {
+    &__modal {
+      width: 100vw;
+
+      .x-close {
+        display: block;
+        position: absolute;
+        right: 19.5px;
+        top: 10.5px;
+        font-weight: bold;
+        font-size: 18px;
+        color: $blue-3;
+      }
+
+      &__header {
+        margin-right: 45px;
+      }
+    }
+    &__filter {
+      top: 155px;
+      left: calc(50% - 100px);
+      padding: 10px 0;
+      width: 200px;
+      background-color: $blue-3;
+      border-radius: 19px;
+    }
+
+    &__title {
+      max-width: 260px;
+      margin-bottom: 80px;
+    }
+
+    &__list {
+      &__block {
+        margin-left: auto;
+        margin-right: auto;
+
+        &__separator {
+          width: 171.5px;
+        }
+
+        &__date {
+          margin: 0 auto;
         }
       }
     }

@@ -238,3 +238,18 @@
     }
   }
 }
+
+@media (max-width: 450px) {
+  .active-cases {
+    &__active {
+      max-width: 260px;
+    }
+
+    &__list {
+      &__case {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  }
+}

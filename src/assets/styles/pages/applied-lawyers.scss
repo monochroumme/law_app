@@ -141,3 +141,18 @@
     }
   }
 }
+
+@media (max-width: 450px) {
+  .applied_lawyers-page {
+    &__title {
+      max-width: 260px;
+    }
+
+    &__list {
+      &__block {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  }
+}

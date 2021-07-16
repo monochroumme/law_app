@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <nav class="header__nav">
+    <nav class="header__nav" :class="{ lawyer_nav: userType==='lawyer' }">
       <ul>
         <li v-if="userType==='lawyer'">
           <router-link :to="`/${userType}/all-cases`">All cases</router-link>
@@ -133,6 +133,20 @@ export default {
       object-fit: cover;
       border-radius: 50%;
       background: #fff;
+    }
+  }
+}
+@media (max-width: 450px) {
+  .header {
+    &__user {
+      span {
+        display: none;
+      }
+    }
+    .lawyer_nav {
+      left: 25%;
+      transform: translate(-25%, -50%);
+      font-size: 15px;
     }
   }
 }

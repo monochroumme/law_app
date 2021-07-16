@@ -26,6 +26,7 @@
     </div>
     <ApplyModal v-model="isModalShown" :visibility="isModalShown"></ApplyModal>
     <div v-if="showFilter" v-click-outside="closeFilter" class="all_cases-page__modal">
+      <button class="x-close" @click="closeFilterBtn">X</button>
       <div class="all_cases-page__modal__header">
         Filter
       </div>
