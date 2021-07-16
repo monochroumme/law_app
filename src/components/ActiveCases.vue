@@ -51,7 +51,7 @@
       </template>
     </div>
     <div class="active-cases__modal" v-if="showModal">
-      <div class="active-cases__modal__block">
+      <div class="active-cases__modal__block" v-click-outside="closeModalClickOut">
         <div class="active-cases__modal__block__header">
           Edit case
         </div>
@@ -106,6 +106,11 @@ export default {
     },
     closeModal: function () {
       this.showModal = false
+    },
+    closeModalClickOut: function (event) {
+      if (!event.path[0].classList.contains('active-cases__list__case__btns__btn-def') && !event.path[0].classList.contains('active-cases__list__case-add')) {
+        this.showModal = false
+      }
     }
   }
 }

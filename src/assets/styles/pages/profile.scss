@@ -139,13 +139,16 @@
     &__links {
       border-radius: 12px;
       background-color: #ffffff;
+      height: 272px;
       display: flex;
       flex-direction: column;
       text-align: center;
 
       &__link {
-        padding-top: 22px;
-        padding-bottom: 23px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
         font-size: 17px;
       }
 
@@ -243,6 +246,115 @@
           color: #000;
           font-size: 18px;
           padding: 11px 43px;
+          background: linear-gradient(270deg, #F4D071 0%, #C9B05D 100%);
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+
+  &__subscription {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+
+    &__block {
+      background-color: #515979;
+      width: 470px;
+      height: 570px;
+      padding-left: 25px;
+      padding-right: 15px;
+      border-radius: 19px;
+      color: white;
+
+      &__header {
+        padding-top: 20px;
+        margin-bottom: 50px;
+        font-size: 19px;
+      }
+
+      &__body {
+        display: flex;
+        flex-direction: column;
+
+        .label {
+          font-size: 17px;
+          margin-bottom: 30px;
+          color: #fff6;
+        }
+
+        .months {
+          margin-bottom: 65px;
+
+          input {
+            width: 10vw;
+            text-align: center;
+            font-size: 30px;
+            color: #ffffff;
+            background: transparent;
+            border-bottom: 1px solid #ffffff;
+            padding: 20px 20px 5px 20px;
+          }
+
+          input::-webkit-outer-spin-button,
+          input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+
+          button {
+            padding: 8px 30px;
+            margin-left: 5px;
+            font-size: 30px;
+            color: #e7c76b;
+            background: #5D6584;
+          }
+        }
+
+        .method {
+          display: flex;
+          flex-direction: column;
+
+          button {
+            text-align: start;
+            background: #5D6584;
+            padding: 20px 15px;
+            color: #ffffff;
+          }
+
+          button:first-of-type {
+            border-bottom: 1px solid #ffffff;
+          }
+        }
+      }
+      &__footer {
+        display: flex;
+        justify-content: center;
+        padding-top: 45px;
+
+        &__cancel {
+          border-color: $blue-3;
+          color: #fff;
+          padding: 11px 43px;
+          font-size: 18px;
+          margin-right: 20px;
+          background: #141C3A;
+          border-radius: 4px;
+        }
+
+        &__save {
+          font-weight: 400;
+          border: 1px solid #e7c76b;
+          color: #000;
+          font-size: 18px;
+          padding: 11px 0;
+          width: 127px;
           background: linear-gradient(270deg, #F4D071 0%, #C9B05D 100%);
           border-radius: 4px;
         }

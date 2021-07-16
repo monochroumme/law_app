@@ -21,7 +21,7 @@
         </div>
         <div class="profile-page__user__data-pack__data">
           <div class="type">User type:</div>
-          <div class="data">Client</div>
+          <div class="data">{{ this.userType === 'ROLE_CLIENT' ? 'Client' : 'Lawyer' }}</div>
         </div>
       </div>
       <button class="profile-page__user__edit" @click="editModal()">
@@ -53,6 +53,9 @@
         <router-link class="profile-page__block__links__link" to="/rules/client">
           Rules
         </router-link>
+        <button v-if="this.userType==='ROLE_LAWYER'" @click="openSubscription()" class="profile-page__block__links__link" to="/rules/client">
+          Subscription
+        </button>
         <router-link class="profile-page__block__links__link" to="/rules/client">
           Language
         </router-link>
@@ -61,8 +64,34 @@
         </router-link>
       </div>
     </div>
+    <div class="profile-page__subscription" v-if="showSub">
+      <div class="profile-page__subscription__block" v-click-outside="closeSubscriptionOnOut">
+        <div class="profile-page__subscription__block__header">
+          Extending
+        </div>
+        <div class="profile-page__subscription__block__body">
+          <div class="profile-page__subscription__block__body__form">
+            <div class="label">Months</div>
+            <div class="months">
+              <input type="number" min="1" max="12" :value="this.months" readonly/>
+              <button @click="decreaseMonths()">-</button>
+              <button @click="increaseMonths()">+</button>
+            </div>
+            <div class="method">
+              <div class="label">Payment method</div>
+              <button>PayPal</button>
+              <button>Bank Card</button>
+            </div>
+          </div>
+        </div>
+        <div class="profile-page__subscription__block__footer">
+          <button @click="closeSubscription()" class="profile-page__subscription__block__footer__cancel">Cancel</button>
+          <button @click="closeSubscription()" class="profile-page__subscription__block__footer__save">{{ this.rate }}$</button>
+        </div>
+      </div>
+    </div>
     <div class="profile-page__modal" v-if="showModal">
-      <div class="profile-page__modal__block">
+      <div class="profile-page__modal__block" v-click-outside="closeModalClickOut">
         <div class="profile-page__modal__block__header">
           Account
         </div>
@@ -90,15 +119,50 @@ export default {
   name: 'ProfileWrapper',
   data () {
     return {
-      showModal: false
+      userType: '',
+      showSub: false,
+      showModal: false,
+      months: 0,
+      rate: 0
+    }
+  },
+  mounted () {
+    if (localStorage.userType) {
+      this.userType = localStorage.userType
     }
   },
   methods: {
+    openSubscription: function () {
+      this.showSub = true
+    },
+    closeSubscription: function () {
+      this.showSub = false
+    },
+    closeSubscriptionOnOut: function (event) {
+      if (!event.path[0].classList.contains('profile-page__block__links__link')) {
+        this.showSub = false
+      }
+    },
     editModal: function () {
       this.showModal = true
     },
     closeModal: function () {
       this.showModal = false
+    },
+    closeModalClickOut: function (event) {
+      if (!event.path[0].classList.contains('profile-page__user__edit')) {
+        this.showModal = false
+      }
+    },
+    increaseMonths: function () {
+      this.months = this.months + 1
+      this.rate = this.months * 10
+    },
+    decreaseMonths: function () {
+      if (this.months !== 0) {
+        this.months = this.months - 1
+        this.rate = this.months * 10
+      }
     }
   }
 }

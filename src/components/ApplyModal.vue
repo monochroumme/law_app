@@ -1,6 +1,6 @@
 <template>
   <div class="modal-backdrop" :class="{visible: visibility}">
-    <div class="modal-backdrop__modal">
+    <div class="modal-backdrop__modal" v-click-outside="close">
       <div class="modal-backdrop__modal__header">
         Comments
       </div>
@@ -8,7 +8,7 @@
         <textarea name="" id="" cols="40" rows="5" placeholder="Enter your comment"></textarea>
       </div>
       <div class="modal-backdrop__modal__footer">
-        <button @click="close()">Apply</button>
+        <button class="closeMod" @click="closeMod()">Apply</button>
       </div>
     </div>
   </div>
@@ -24,8 +24,13 @@ export default {
     }
   },
   methods: {
-    close: function () {
-      this.visibility = false
+    close: function (event) {
+      if (!event.path[0].classList.contains('all_cases-page__list__block__btns__btn-def')) {
+        this.$parent.isModalShown = false
+      }
+    },
+    closeMod: function () {
+      this.$parent.isModalShown = false
     }
   }
 }

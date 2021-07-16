@@ -1,6 +1,6 @@
 <template>
   <div class="page all_cases-page">
-    <button @click="openFilter()" class="all_cases-page__filter">Filter</button>
+    <button id="openFilterBtn" @click="openFilter()" class="all_cases-page__filter">Filter</button>
     <div class="all_cases-page__title">All cases</div>
     <div class="all_cases-page__list">
       <div v-for="item in items" :key="item.id" class="all_cases-page__list__block">
@@ -25,7 +25,7 @@
       </div>
     </div>
     <ApplyModal v-model="isModalShown" :visibility="isModalShown"></ApplyModal>
-    <div v-if="showFilter" class="all_cases-page__modal">
+    <div v-if="showFilter" v-click-outside="closeFilter" class="all_cases-page__modal">
       <div class="all_cases-page__modal__header">
         Filter
       </div>
@@ -43,7 +43,7 @@
         <div class="all_cases-page__modal__body__radio">
           <input type="radio"/> Old ones
         </div>
-        <button @click="closeFilter()">Done</button>
+        <button @click="closeFilterBtn()">Done</button>
       </div>
     </div>
   </div>
@@ -76,7 +76,12 @@ export default {
     openFilter: function () {
       this.showFilter = true
     },
-    closeFilter: function () {
+    closeFilter: function (event) {
+      if (event.path[0] !== document.getElementById('openFilterBtn')) {
+        this.showFilter = false
+      }
+    },
+    closeFilterBtn: function () {
       this.showFilter = false
     }
   }
