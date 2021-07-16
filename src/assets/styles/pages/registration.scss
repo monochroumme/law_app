@@ -5,6 +5,18 @@
     background: #ffffff;
     padding: 30px 40px;
     max-width: 800px;
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: -15px;
+      margin-bottom: 15px;
+    }
+
+    .pwdMatch {
+      margin-top: 5px;
+      margin-bottom: 0;
+    }
   }
 
   &__btns {

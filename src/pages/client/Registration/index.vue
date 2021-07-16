@@ -8,7 +8,9 @@
     </header>
     <form @submit.prevent="onSubmit" class="common__container registration-page__content">
       <custom-input class="mb-20" v-model="name" placeholder="Enter your name" label="Name" />
+      <div v-if="this.errorObj.name" class="error">Please, enter your name</div>
       <custom-input class="mb-20" v-model="surname" placeholder="Enter your surname" label="Surname" />
+      <div v-if="this.errorObj.surname" class="error">Please, enter your surname</div>
       <custom-input
         :is-textarea="true"
         :show-character-count="true"
@@ -17,6 +19,7 @@
         label="Case Description"
         placeholder="Enter your case description"
       />
+      <div v-if="this.errorObj.caseDescription" class="error">Please, enter your case description</div>
       <custom-multiselect
         :loading="loading"
         class="mb-20"
@@ -30,6 +33,7 @@
         group-label-name="jurisdiction"
         label-name="jurisdiction"
       />
+      <div v-if="this.errorObj.jurisdiction" class="error">Please, choose your jurisdiction</div>
       <custom-multiselect
         :loading="loading"
         class="mb-20"
@@ -41,10 +45,15 @@
         :close-on-select="false"
         label-name="practiceArea"
       />
+      <div v-if="this.errorObj.areaOfLaw" class="error">Please, choose your area of law</div>
       <custom-input class="mb-20" v-model="phone" @set-phone-valid="isPhoneValid = $event" :is-phone="true" placeholder="Enter your phone number" label="Phone Number" />
+      <div v-if="this.errorObj.isPhoneValid" class="error">Please, enter a valid phone number</div>
       <custom-input class="mb-20" v-model="email" placeholder="Enter your email" label="Email" />
+      <div v-if="this.errorObj.email" class="error">Please, enter a valid email</div>
       <custom-input class="mb-20" type="password" :show-password="showPassword" @toggle-password="showPassword = !showPassword" v-model="password" placeholder="Enter your password" label="Password" />
+      <div v-if="this.errorObj.password" class="error">Your password must contain minimum 8 characters, at least 1 number and 1 letter</div>
       <custom-input type="password" :show-password="showPassword" @toggle-password="showPassword = !showPassword" v-model="confirmPassword" placeholder="Enter your password again" label="Confirm Password" />
+      <div v-if="this.errorObj.passwordConfirm" class="error pwdMatch">Passwords must match</div>
       <div class="registration-page__btns">
         <router-link to="/" type="button" class="common__btn">
           Cancel
@@ -86,7 +95,19 @@ export default {
       phone: '',
 
       isPhoneValid: false,
-      showPassword: false
+      showPassword: false,
+
+      errorObj: {
+        name: false,
+        surname: false,
+        caseDescription: false,
+        jurisdiction: false,
+        areaOfLaw: false,
+        isPhoneValid: false,
+        email: false,
+        password: false,
+        passwordConfirm: false
+      }
     }
   },
 
@@ -111,40 +132,49 @@ export default {
       let error = false
 
       if (!this.name?.trim()?.length) {
+        this.errorObj.name = true
         error = true
-        this.$toasted.error('Please, enter your name')
+        // this.$toasted.error('Please, enter your name')
       }
       if (!this.surname?.trim()?.length) {
+        this.errorObj.surname = true
         error = true
-        this.$toasted.error('Please, enter your surname')
+        // this.$toasted.error('Please, enter your surname')
       }
       if (!this.caseDescription?.trim()?.length) {
+        this.errorObj.caseDescription = true
         error = true
-        this.$toasted.error('Please, enter your case description')
+        // this.$toasted.error('Please, enter your case description')
       }
       if (!this.jurisdiction?.length) {
+        this.errorObj.jurisdiction = true
         error = true
-        this.$toasted.error('Please, choose your jurisdiction')
+        // this.$toasted.error('Please, choose your jurisdiction')
       }
       if (!this.areaOfLaw?.length) {
+        this.errorObj.areaOfLaw = true
         error = true
-        this.$toasted.error('Please, choose your area of law')
+        // this.$toasted.error('Please, choose your area of law')
       }
       if (!this.isPhoneValid) {
+        this.errorObj.isPhoneValid = true
         error = true
-        this.$toasted.error('Please, enter a valid phone number')
+        // this.$toasted.error('Please, enter a valid phone number')
       }
       if (!this.email?.trim()?.length || !validateEmail(this.email)) {
+        this.errorObj.email = true
         error = true
-        this.$toasted.error('Please, enter a valid email')
+        // this.$toasted.error('Please, enter a valid email')
       }
       if (!this.password?.trim()?.length || !validatePassword(this.password)) {
+        this.errorObj.password = true
         error = true
-        this.$toasted.error('Your password must contain minimum 8 characters, at least 1 number and 1 letter')
+        // this.$toasted.error('Your password must contain minimum 8 characters, at least 1 number and 1 letter')
       }
       if (this.password !== this.confirmPassword || !validatePassword(this.password)) {
+        this.errorObj.passwordConfirm = true
         error = true
-        this.$toasted.error('Passwords must match')
+        // this.$toasted.error('Passwords must match')
       }
 
       return !error // error => false, valid => true
