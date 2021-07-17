@@ -44,6 +44,9 @@
             <input type="password" class="custom-input" value=""
                    placeholder="Repeat new password">
           </div>
+          <div class="profile-page__block__pwd__edit__submit">
+            <button>Save</button>
+          </div>
         </div>
       </div>
       <div class="profile-page__block__links">
