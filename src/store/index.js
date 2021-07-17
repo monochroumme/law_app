@@ -117,7 +117,7 @@ export default new Vuex.Store({
     },
 
     async getActiveCases ({ commit }) {
-      const res = await apiRequest.get('/cases/')
+      const res = await apiRequest.get('/cases/filtered/')
       if (res.data) {
         commit('setActiveCases', res.data)
       }
