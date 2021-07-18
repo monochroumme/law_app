@@ -1,0 +1,86 @@
+.user-modal {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display:none;
+
+  &__modal {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 47px 43px 21px 44px;
+    border-radius: 32px;
+
+    &__header {
+      font-size: 18px;
+      color: $blue-3;
+      position: relative;
+
+      button {
+        position: absolute;
+        top: -25px;
+        right: 0;
+        font-size: 30px;
+      }
+    }
+
+    &__body {
+      &__user {
+        display: flex;
+        width: 500px;
+        flex-wrap: wrap;
+
+        &__data {
+          width: 30%;
+          height: 84px;
+
+          div {
+            margin-bottom: 18px;
+          }
+
+          span {
+            font-weight: bold;
+          }
+        }
+
+        &__data-w {
+          width: 50%;
+          margin-bottom: 30px;
+          height: 84px;
+
+          div {
+            margin-bottom: 18px;
+          }
+
+          span {
+            font-weight: bold;
+          }
+        }
+        img {
+          border-radius: 150px;
+          width: 120px;
+          margin-right: 45px;
+          margin-bottom: 30px;
+        }
+      }
+    }
+    &__footer {
+      display: flex;
+      justify-content: center;
+
+      button {
+        background-color: $blue-3;
+        color: #ffffff;
+        padding: 7px 62px;
+        border-radius: 4px;
+      }
+    }
+  }
+}
+.user-modal.visible{ display: flex; }

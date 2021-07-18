@@ -8,11 +8,11 @@
     <div class="lawyer-cases__list">
       <template v-for="item in cases">
         <div class="lawyer-cases__list__case" :key="item.id" v-if="item.caseState===caseState">
-          <div class="lawyer-cases__list__case__title">
+          <div class="lawyer-cases__list__case__title open-user-modal" @click="openDataModal()">
             {{ item.name }}
           </div>
-          <div class="lawyer-cases__list__case__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="lawyer-cases__list__case__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="lawyer-cases__list__case__case-descr">
             Case Description
@@ -34,6 +34,7 @@
         </div>
       </template>
     </div>
+    <UserDataModal v-model="dataModal" :visibility="dataModal"></UserDataModal>
   </div>
 </template>
 
@@ -47,8 +48,12 @@ export default {
   },
   data () {
     return {
-      caseState: 'ACTIVE'
+      caseState: 'ACTIVE',
+      dataModal: false
     }
+  },
+  components: {
+    UserDataModal: () => import('@/components/UserDataModal')
   },
   methods: {
     archiveToggler: function (item) {
@@ -66,6 +71,9 @@ export default {
     },
     showCompleted: function () {
       this.caseState = 'DONE'
+    },
+    openDataModal: function () {
+      this.dataModal = true
     }
   }
 }

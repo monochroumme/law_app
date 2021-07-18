@@ -3,11 +3,11 @@
     <div class="applied_lawyers-page__title">Applied lawyers</div>
     <div class="applied_lawyers-page__list">
       <div v-for="(item, index) in items" :key="item.id" class="applied_lawyers-page__list__block">
-        <div class="applied_lawyers-page__list__block__name">
+        <div class="applied_lawyers-page__list__block__name open-user-modal" @click="openUserModal()">
           {{ item.name }}
         </div>
-        <div class="applied_lawyers-page__list__block__img">
-          <img src="@/assets/media/common/photo.png" alt="">
+        <div class="applied_lawyers-page__list__block__img open-user-modal" @click="openUserModal()">
+          <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
         </div>
         <span>Comments</span>
         <div class="applied_lawyers-page__list__block__separator"/>
@@ -26,6 +26,7 @@
         </div>
       </div>
     </div>
+    <UserDataModal v-model="userModal" :visibility="userModal"></UserDataModal>
   </div>
 </template>
 
@@ -43,12 +44,22 @@ export default {
         { id: 4, name: 'Lawyer Name', date: '07-07-2021', description: 'random descr 4' },
         { id: 5, name: 'Lawyer Name', date: '07-07-2021', description: 'random descr 5' },
         { id: 6, name: 'Lawyer Name', date: '07-07-2021', description: 'random descr 6' }
-      ]
+      ],
+      userModal: false
     }
+  },
+  components: {
+    UserDataModal: () => import('@/components/UserDataModal')
   },
   methods: {
     hideLawyer: function (index, item) {
       this.items.splice(index, 1)
+    },
+    openUserModal: function () {
+      this.userModal = true
+    },
+    openUserModalImg: function () {
+      this.userModal = true
     }
   }
 }

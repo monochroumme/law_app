@@ -4,11 +4,11 @@
     <div class="all_cases-page__title">All cases</div>
     <div class="all_cases-page__list">
       <div v-for="item in items" :key="item.id" class="all_cases-page__list__block">
-        <div class="all_cases-page__list__block__name">
+        <div class="all_cases-page__list__block__name open-user-modal" @click="openDataModal()">
           {{ item.name }}
         </div>
-        <div class="all_cases-page__list__block__img">
-          <img src="@/assets/media/common/photo.png" alt="">
+        <div class="all_cases-page__list__block__img open-user-modal" @click="openDataModal()">
+          <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
         </div>
         <span>Case description</span>
         <div class="all_cases-page__list__block__separator"/>
@@ -47,6 +47,7 @@
         <button @click="closeFilterBtn()">Done</button>
       </div>
     </div>
+    <UserDataModal v-model="dataModal" :visibility="dataModal"></UserDataModal>
   </div>
 </template>
 
@@ -64,11 +65,13 @@ export default {
         { id: 5, name: 'Test user', date: '07-07-2021', description: 'random descr 5' },
         { id: 6, name: 'Test user', date: '07-07-2021', description: 'random descr 6' }
       ],
-      isModalShown: false
+      isModalShown: false,
+      dataModal: false
     }
   },
   components: {
-    ApplyModal: () => import('@/components/ApplyModal')
+    ApplyModal: () => import('@/components/ApplyModal'),
+    UserDataModal: () => import('@/components/UserDataModal')
   },
   methods: {
     launch: function () {
@@ -84,6 +87,9 @@ export default {
     },
     closeFilterBtn: function () {
       this.showFilter = false
+    },
+    openDataModal: function () {
+      this.dataModal = true
     }
   }
 }

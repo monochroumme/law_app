@@ -20,31 +20,31 @@
         placeholder="Enter your case description"
       />
       <div v-if="this.errorObj.caseDescription" class="error">Please, enter your case description</div>
-<!--      <custom-multiselect-->
-<!--        :loading="loading"-->
-<!--        class="mb-20"-->
-<!--        v-model="jurisdiction"-->
-<!--        placeholder="Choose your jurisdiction"-->
-<!--        label="Jurisdiction"-->
-<!--        :options="jurisdictions || defaultJurisdictions"-->
-<!--        :multiple="true"-->
-<!--        :close-on-select="true"-->
-<!--        group-values-name="states"-->
-<!--        group-label-name="jurisdiction"-->
-<!--        label-name="jurisdiction"-->
-<!--      />-->
+      <custom-multiselect
+        :loading="loading"
+        class="mb-20"
+        v-model="jurisdiction"
+        placeholder="Choose your jurisdiction"
+        label="Jurisdiction"
+        :options="defaultJurisdictions"
+        :multiple="true"
+        :close-on-select="true"
+        group-values-name="states"
+        group-label-name="jurisdiction"
+        label-name="jurisdiction"
+      />
       <div v-if="this.errorObj.jurisdiction" class="error">Please, choose your jurisdiction</div>
-<!--      <custom-multiselect-->
-<!--        :loading="loading"-->
-<!--        class="mb-20"-->
-<!--        v-model="areaOfLaw"-->
-<!--        placeholder="Choose your area of law"-->
-<!--        label="Area of Law"-->
-<!--        :options="areasOfLaw || defaultAreasOfLaw"-->
-<!--        :multiple="true"-->
-<!--        :close-on-select="false"-->
-<!--        label-name="practiceArea"-->
-<!--      />-->
+      <custom-multiselect
+        :loading="loading"
+        class="mb-20"
+        v-model="areaOfLaw"
+        placeholder="Choose your area of law"
+        label="Area of Law"
+        :options="defaultAreasOfLaw"
+        :multiple="true"
+        :close-on-select="false"
+        label-name="practiceArea"
+      />
       <div v-if="this.errorObj.areaOfLaw" class="error">Please, choose your area of law</div>
       <custom-input class="mb-20" v-model="phone" @set-phone-valid="isPhoneValid = $event" :is-phone="true" placeholder="Enter your phone number" label="Phone Number" />
       <div v-if="this.errorObj.isPhoneValid" class="error">Please, enter a valid phone number</div>
@@ -75,7 +75,7 @@ export default {
   name: 'ClientRegistration',
 
   components: {
-    // CustomMultiselect: () => import('@/components/CustomMultiselect'),
+    CustomMultiselect: () => import('@/components/CustomMultiselect'),
     CustomInput: () => import('@/components/CustomInput')
   },
 
@@ -111,14 +111,14 @@ export default {
     }
   },
 
-  async created () {
-    if (!this.jurisdictions) {
-      this.loading = true
-      await this.getJurisdictions()
-      await this.getAreasOfLaw()
-      this.loading = false
-    }
-  },
+  // async created () {
+  //   if (!this.jurisdictions) {
+  //     this.loading = true
+  //     await this.getJurisdictions()
+  //     await this.getAreasOfLaw()
+  //     this.loading = false
+  //   }
+  // },
 
   computed: {
     ...mapState(['defaultJurisdictions', 'defaultAreasOfLaw', 'jurisdictions', 'areasOfLaw'])
@@ -192,10 +192,10 @@ export default {
             lastName: this.surname,
             phoneNumber: this.phone,
             caseDto: {
-              description: this.caseDescription
-              // jurisdictionDto: this.jurisdiction.map(j => ({
-              //   id: parseInt(j.id.toString())
-              // })),
+              description: this.caseDescription,
+              jurisdictionDto: this.jurisdiction.map(j => ({
+                id: parseInt(j.id.toString())
+              }))
               // practiceAreaDtos: this.areaOfLaw.map(p => ({
               //   id: parseInt(p.id.toString())
               // }))

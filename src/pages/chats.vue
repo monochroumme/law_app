@@ -3,8 +3,8 @@
     <div class="chats-page__list">
       <div class="chats-page__list__chat" @click="activate(1)" :class="{ active : active_el === 1 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -15,8 +15,8 @@
       </div>
       <div class="chats-page__list__chat" @click="activate(2)" :class="{ active : active_el === 2 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -27,8 +27,8 @@
       </div>
       <div class="chats-page__list__chat" @click="activate(3)" :class="{ active : active_el === 3 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -39,8 +39,8 @@
       </div>
       <div class="chats-page__list__chat" @click="activate(4)" :class="{ active : active_el === 4 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -51,8 +51,8 @@
       </div>
       <div class="chats-page__list__chat" @click="activate(5)" :class="{ active : active_el === 5 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -63,8 +63,8 @@
       </div>
       <div class="chats-page__list__chat" @click="activate(6)" :class="{ active : active_el === 6 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -75,8 +75,8 @@
       </div>
       <div class="chats-page__list__chat" @click="activate(7)" :class="{ active : active_el === 7 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -87,8 +87,8 @@
       </div>
       <div class="chats-page__list__chat" @click="activate(8)" :class="{ active : active_el === 8 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -99,8 +99,8 @@
       </div>
       <div class="chats-page__list__chat" @click="activate(9)" :class="{ active : active_el === 9 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -111,8 +111,8 @@
       </div>
       <div class="chats-page__list__chat" @click="activate(10)" :class="{ active : active_el === 10 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -123,8 +123,8 @@
       </div>
       <div class="chats-page__list__chat" @click="activate(11)" :class="{ active : active_el === 11 }">
         <template>
-          <div class="chats-page__list__chat__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="chats-page__list__chat__text">
             <span class="chats-page__list__chat__text__name">Lawyer name</span>
@@ -135,9 +135,9 @@
       </div>
     </div>
     <div class="chats-page__chat-block">
-      <div class="chats-page__chat-block__header">
-        <div class="chats-page__chat-block__header__img">
-          <img src="@/assets/media/common/photo.png" alt="">
+      <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal()">
+        <div class="chats-page__chat-block__header__img open-user-modal">
+          <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
         </div>
         Lawyer name
       </div>
@@ -179,6 +179,8 @@
         </svg></button>
       </div>
     </div>
+
+    <UserDataModal v-model="dataModal" :visibility="dataModal"></UserDataModal>
   </div>
 </template>
 
@@ -191,16 +193,23 @@ export default {
         { id: 1, userType: 'client', userName: 'Tofik Huseynov', time: '18:00', message: 'Hello, could you help me with my issue?' },
         { id: 2, userType: 'lawyer', userName: 'Lawyer guy', time: '18:00', message: 'How can I help you?' }
       ],
-      active_el: 1
+      active_el: 1,
+      dataModal: false
     }
   },
   methods: {
     activate: function (el) {
       this.active_el = el
+    },
+    openDataModal: function () {
+      this.dataModal = true
     }
   },
   mounted () {
     this.$el.querySelector('.main_chat').scrollTop = this.$el.querySelector('.main_chat').scrollHeight
+  },
+  components: {
+    UserDataModal: () => import('@/components/UserDataModal')
   }
 }
 </script>

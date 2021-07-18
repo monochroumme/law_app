@@ -17,12 +17,6 @@ export default {
     LawyerCases: () => import('@/components/LawyerCases')
   },
 
-  async created () {
-    if (!this.activeCases) {
-      await this.getActiveCases()
-    }
-  },
-
   data () {
     return {
       userType: '',
