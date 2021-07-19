@@ -187,7 +187,7 @@ export default {
     onSubmit () {
       if (!this.wait) {
         if (!this.validateInputs()) {
-          this.register({
+          const postData = {
             email: this.email,
             password: this.password,
             repeatPassword: this.confirmPassword,
@@ -195,16 +195,13 @@ export default {
             lastName: this.surname,
             phoneNumber: this.phone,
             webSiteLink: this.websiteLink,
-            licenseNumber: this.licenseNumber,
+            licenceNumber: this.licenseNumber,
             BARAssociation: this.barAssociation,
-            jurisdictionDtoList: this.jurisdiction.map(j => ({
-              id: parseInt(j.id.toString())
-            })),
-            practiceAreas: this.areaOfLaw.map(p => ({
-              id: parseInt(p.id.toString())
-            }))
-          }).then(() => {
-            this.$router.push('/lawyer/cases')
+            jurisdictionIdList: this.jurisdiction.map(j => parseInt(j.id.toString())),
+            practiceAreaIdList: this.areaOfLaw.map(p => parseInt(p.id.toString()))
+          }
+          this.register(postData).then(() => {
+            this.$router.push('/login')
           }).catch(() => {})
           this.wait = false
         }

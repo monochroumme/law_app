@@ -9,7 +9,7 @@ export default {
     // eslint-disable-next-line no-empty-pattern
     async register ({}, data) {
       return new Promise((resolve, reject) => {
-        apiRequest.post('/auth/client_register/', data)
+        apiRequest.postWithoutAuth('/auth/client_register/', data)
           .then(res => {
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('userType', res.data.role)

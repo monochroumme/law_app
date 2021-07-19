@@ -86,13 +86,12 @@ export default new Vuex.Store({
   actions: {
     async login ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        // localStorage.setItem('token', 'randomToken')
-        // localStorage.setItem('userType', data.role)
-        // resolve()
-        apiRequest.post('/auth/singin/', data)
+        apiRequest.postWithoutAuth('/auth/singin/', data)
           .then(res => {
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('userType', res.data.role)
+            localStorage.setItem('userId', res.data.id)
+            console.log(res.data, res.data.id)
             resolve(res)
           })
           .catch(e => {
@@ -103,24 +102,37 @@ export default new Vuex.Store({
     },
 
     async getJurisdictions ({ commit }) {
-      const res = await apiRequest.get('/jurisdiction/')
+      const res = await apiRequest.getWithoutAuth('/jurisdiction/')
       if (res.data) {
         commit('setJurisdictions', res.data)
       }
     },
 
     async getAreasOfLaw ({ commit }) {
-      const res = await apiRequest.get('/practiceArea/')
+      const res = await apiRequest.getWithoutAuth('/practiceArea/')
       if (res.data) {
         commit('setAreasOfLaw', res.data)
       }
     },
 
     async getActiveCases ({ commit }) {
-      const res = await apiRequest.get('/cases/filtered/')
+      const res = await apiRequest.get('/client/case/')
       if (res.data) {
         commit('setActiveCases', res.data)
       }
+    },
+    async addClientCase ({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        apiRequest.post('/client/case/create', data)
+          .then(res => {
+            console.log(data)
+            resolve(res)
+          })
+          .catch(e => {
+            console.error(e.response.data.message)
+            reject(e.response.data.message)
+          })
+      })
     }
   }
 })

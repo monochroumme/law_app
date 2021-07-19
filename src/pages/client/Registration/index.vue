@@ -26,7 +26,7 @@
         v-model="jurisdiction"
         placeholder="Choose your jurisdiction"
         label="Jurisdiction"
-        :options="defaultJurisdictions"
+        :options="jurisdictions || defaultJurisdictions"
         :multiple="true"
         :close-on-select="true"
         group-values-name="states"
@@ -40,7 +40,7 @@
         v-model="areaOfLaw"
         placeholder="Choose your area of law"
         label="Area of Law"
-        :options="defaultAreasOfLaw"
+        :options="areasOfLaw || defaultAreasOfLaw"
         :multiple="true"
         :close-on-select="false"
         label-name="practiceArea"
@@ -111,14 +111,14 @@ export default {
     }
   },
 
-  // async created () {
-  //   if (!this.jurisdictions) {
-  //     this.loading = true
-  //     await this.getJurisdictions()
-  //     await this.getAreasOfLaw()
-  //     this.loading = false
-  //   }
-  // },
+  async created () {
+    if (!this.jurisdictions) {
+      this.loading = true
+      await this.getJurisdictions()
+      await this.getAreasOfLaw()
+      this.loading = false
+    }
+  },
 
   computed: {
     ...mapState(['defaultJurisdictions', 'defaultAreasOfLaw', 'jurisdictions', 'areasOfLaw'])
@@ -146,16 +146,16 @@ export default {
         error = true
         // this.$toasted.error('Please, enter your case description')
       }
-      // if (!this.jurisdiction?.length) {
-      //   this.errorObj.jurisdiction = true
-      //   error = true
-      //   // this.$toasted.error('Please, choose your jurisdiction')
-      // }
-      // if (!this.areaOfLaw?.length) {
-      //   this.errorObj.areaOfLaw = true
-      //   error = true
-      //   // this.$toasted.error('Please, choose your area of law')
-      // }
+      if (!this.jurisdiction?.length) {
+        this.errorObj.jurisdiction = true
+        error = true
+        // this.$toasted.error('Please, choose your jurisdiction')
+      }
+      if (!this.areaOfLaw?.length) {
+        this.errorObj.areaOfLaw = true
+        error = true
+        // this.$toasted.error('Please, choose your area of law')
+      }
       if (!this.isPhoneValid) {
         this.errorObj.isPhoneValid = true
         error = true
@@ -191,17 +191,11 @@ export default {
             firstName: this.name,
             lastName: this.surname,
             phoneNumber: this.phone,
-            caseDto: {
-              description: this.caseDescription,
-              jurisdictionDto: this.jurisdiction.map(j => ({
-                id: parseInt(j.id.toString())
-              }))
-              // practiceAreaDtos: this.areaOfLaw.map(p => ({
-              //   id: parseInt(p.id.toString())
-              // }))
-            }
+            caseDescription: this.caseDescription,
+            jurisdictionDtos: this.jurisdiction.map(j => parseInt(j.id.toString())),
+            practiceAreaDtos: this.areaOfLaw.map(p => parseInt(p.id.toString()))
           }).then(() => {
-            this.$router.push('/client/cases')
+            this.$router.push('/login')
           }).catch(() => {})
           this.wait = false
         }

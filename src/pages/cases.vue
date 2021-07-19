@@ -1,6 +1,6 @@
 <template>
   <div class="page cases-page">
-    <active-cases v-if="this.userType==='ROLE_CLIENT'" v-model="cases" :cases="items"/>
+    <active-cases v-if="this.userType==='ROLE_CLIENT'" v-model="this.activeCases" :cases="this.activeCases"/>
     <lawyer-cases v-else v-model="cases" :cases="lawyerItems" />
   </div>
 </template>
@@ -16,10 +16,15 @@ export default {
     ActiveCases: () => import('@/components/ActiveCases'),
     LawyerCases: () => import('@/components/LawyerCases')
   },
-
+  async created () {
+    if (!this.activeCases) {
+      await this.getActiveCases()
+    }
+  },
   data () {
     return {
       userType: '',
+      clientCases: '',
       items: [
         { id: 1, date: '07-07-2021', description: 'random descr 1', ARCHIVED_BY_CLIENT: 'ARCHIVED_BY_CLIENT' },
         { id: 2, date: '07-07-2021', description: 'random descr 2', ARCHIVED_BY_CLIENT: 'ARCHIVED_BY_CLIENT' },
@@ -42,7 +47,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['cases'])
+    ...mapState(['activeCases'])
   },
   mounted () {
     if (localStorage.userType) {

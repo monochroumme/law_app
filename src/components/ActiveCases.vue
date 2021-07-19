@@ -3,7 +3,7 @@
     <div class="active-cases__active">Active Cases</div>
     <div class="active-cases__list">
       <template v-for="item in cases">
-        <div class="active-cases__list__case" :key="item.id" v-if="item.ARCHIVED_BY_CLIENT">
+        <div class="active-cases__list__case" :key="item.id" v-if="!item.ARCHIVED_BY_CLIENT">
           <div class="active-cases__list__case__title">
             Case Description
           </div>
@@ -16,7 +16,7 @@
           </div>
           <div class="active-cases__list__case__separator"></div>
           <div class="active-cases__list__case__btns">
-            <button class="active-cases__list__case__btns__btn-def" @click="editModal()">Edit</button>
+            <button class="active-cases__list__case__btns__btn-def" @click="openEditModal(item)">Edit</button>
             <router-link class="active-cases__list__case__btns__btn-def" to="/client/cases/applied-lawyers">
               Lawyers Applied
             </router-link>
@@ -31,7 +31,7 @@
     <div class="active-cases__active">Archived Cases</div>
     <div class="active-cases__list">
       <template v-for="item in cases">
-        <div class="active-cases__list__case" :key="item.id" v-if="!item.ARCHIVED_BY_CLIENT">
+        <div class="active-cases__list__case" :key="item.id" v-if="item.ARCHIVED_BY_CLIENT">
           <div class="active-cases__list__case__title">
             Case Description
           </div>
@@ -53,28 +53,87 @@
     <div class="active-cases__modal" v-if="showModal">
       <div class="active-cases__modal__block" v-click-outside="closeModalClickOut">
         <div class="active-cases__modal__block__header">
-          Edit case
+          Add case
         </div>
-        <div class="active-cases__modal__block__body">
-          <label>Case description</label>
-          <textarea minlength="8" rows="4"></textarea>
-          <label>Jurisdiction</label>
-          <select>
-            <option value="Jurisdiction" selected>Jurisdiction</option>
-          </select>
-          <label>Practice area</label>
-          <input type="text"/>
+        <form @submit.prevent="onSubmit">
+          <div class="active-cases__modal__block__body">
+            <label>Case description</label>
+            <textarea v-model="caseDescription" minlength="8" rows="4"></textarea>
+            <custom-multiselect
+              class="mb-20"
+              v-model="jurisdiction"
+              placeholder="Choose your jurisdiction"
+              label="Jurisdiction"
+              :options="jurisdictions || defaultJurisdictions"
+              :multiple="true"
+              :close-on-select="true"
+              group-values-name="states"
+              group-label-name="jurisdiction"
+              label-name="jurisdiction"
+            />
+            <custom-multiselect
+              class="mb-20"
+              v-model="areaOfLaw"
+              placeholder="Choose your area of law"
+              label="Area of Law"
+              :options="areasOfLaw || defaultAreasOfLaw"
+              :multiple="true"
+              :close-on-select="false"
+              label-name="practiceArea"
+            />
+          </div>
+          <div class="active-cases__modal__block__footer">
+            <button @click="closeModal()" class="active-cases__modal__block__footer__cancel">Cancel</button>
+            <button type="submit" class="active-cases__modal__block__footer__save">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="active-cases__modal" v-if="showEditModal">
+      <div class="active-cases__modal__block" v-click-outside="closeModalClickOut">
+        <div class="active-cases__modal__block__header">
+          Add case
         </div>
-        <div class="active-cases__modal__block__footer">
-          <button @click="closeModal()" class="active-cases__modal__block__footer__cancel">Cancel</button>
-          <button @click="closeModal()" class="active-cases__modal__block__footer__save">Save</button>
-        </div>
+        <form @submit.prevent="onSubmit">
+          <div class="active-cases__modal__block__body">
+            <label>Case description</label>
+            <textarea v-model="modalData.description" minlength="8" rows="4"></textarea>
+            <custom-multiselect
+              class="mb-20"
+              v-model="modalData.jurisdictionList"
+              placeholder="Choose your jurisdiction"
+              label="Jurisdiction"
+              :options="jurisdictions || defaultJurisdictions"
+              :multiple="true"
+              :close-on-select="true"
+              group-values-name="states"
+              group-label-name="jurisdiction"
+              label-name="jurisdiction"
+            />
+            <custom-multiselect
+              class="mb-20"
+              v-model="modalData.practiceAreaIdList"
+              placeholder="Choose your area of law"
+              label="Area of Law"
+              :options="areasOfLaw || defaultAreasOfLaw"
+              :multiple="true"
+              :close-on-select="false"
+              label-name="practiceArea"
+            />
+          </div>
+          <div class="active-cases__modal__block__footer">
+            <button @click="closeModal()" class="active-cases__modal__block__footer__cancel">Cancel</button>
+            <button type="submit" class="active-cases__modal__block__footer__save">Save</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
   name: 'ActiveCases',
   props: {
@@ -88,12 +147,40 @@ export default {
       type: Array
     }
   },
+  components: {
+    CustomMultiselect: () => import('@/components/CustomMultiselect')
+  },
+  computed: {
+    ...mapState(['defaultJurisdictions', 'defaultAreasOfLaw', 'jurisdictions', 'areasOfLaw'])
+  },
   data () {
     return {
-      showModal: false
+      showModal: false,
+      showEditModal: false,
+      caseDescription: '',
+      jurisdiction: '',
+      areaOfLaw: '',
+      modalData: {
+        id: '',
+        description: '',
+        jurisdictionIdList: '',
+        practiceAreaIdList: '',
+        jurisdictionList: ''
+      }
+    }
+  },
+  async created () {
+    if (!this.jurisdictions) {
+      this.loading = true
+      await this.getJurisdictions()
+      await this.getAreasOfLaw()
+      this.loading = false
     }
   },
   methods: {
+    ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
+    ...mapActions(['addClientCase', 'getActiveCases']),
+
     archiveToggler: function (item) {
       if (item.ARCHIVED_BY_CLIENT) {
         item.ARCHIVED_BY_CLIENT = ''
@@ -101,15 +188,57 @@ export default {
         item.ARCHIVED_BY_CLIENT = 'ARCHIVED_BY_CLIENT'
       }
     },
+    openEditModal: function (data) {
+      this.showEditModal = true
+      this.modalData = data
+    },
     editModal: function () {
       this.showModal = true
     },
     closeModal: function () {
       this.showModal = false
+      this.showEditModal = false
     },
     closeModalClickOut: function (event) {
       if (!event.path[0].classList.contains('active-cases__list__case__btns__btn-def') && !event.path[0].classList.contains('active-cases__list__case-add')) {
         this.showModal = false
+        this.showEditModal = false
+      }
+    },
+    validateInputs () {
+      let error = false
+
+      if (!this.caseDescription?.trim()?.length) {
+        error = true
+        this.$toasted.error('Please, enter your case description')
+      }
+      if (!this.jurisdiction?.length) {
+        error = true
+        this.$toasted.error('Please, choose your jurisdiction')
+      }
+      if (!this.areaOfLaw?.length) {
+        error = true
+        this.$toasted.error('Please, choose your area of law')
+      }
+
+      return error // error => false, valid => true
+    },
+    async onSubmit () {
+      if (!this.wait) {
+        if (!this.validateInputs()) {
+          await this.addClientCase({
+            assignedLawyerId: 0,
+            caseState: 'FREE',
+            clientId: localStorage.getItem('userId'),
+            description: this.caseDescription,
+            jurisdictionIdList: this.jurisdiction.map(j => parseInt(j.id.toString())),
+            practiceAreaIdList: this.areaOfLaw.map(p => parseInt(p.id.toString()))
+          }).then(() => {
+            this.getActiveCases()
+            this.closeModal()
+          }).catch(() => {
+          })
+        }
       }
     }
   }

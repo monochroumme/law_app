@@ -10,6 +10,15 @@ function headers () {
   }
 }
 
+function headersWithoutAuth () {
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
+  }
+}
+
 function headersFormData () {
   return {
     headers: {
@@ -51,5 +60,13 @@ export default class apiRequest {
 
   static postFormData (path, data) {
     return request(axios.post(path, data, headersFormData()))
+  }
+
+  static postWithoutAuth (path, data) {
+    return request(axios.post(path, data, headersWithoutAuth()))
+  }
+
+  static getWithoutAuth (path) {
+    return request(axios.get(path, headersWithoutAuth()))
   }
 }
