@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import apiRequest from '@/utils/apiRequest'
-import store from '../'
 
 export default {
   namespaced: true,
@@ -11,9 +10,6 @@ export default {
       return new Promise((resolve, reject) => {
         apiRequest.postWithoutAuth('/auth/client_register/', data)
           .then(res => {
-            localStorage.setItem('token', res.data.token)
-            localStorage.setItem('userType', res.data.role)
-            store.commit('setUser', res.data)
             resolve(res)
           })
           .catch(e => {

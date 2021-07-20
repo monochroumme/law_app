@@ -253,6 +253,8 @@ export default {
       //     phoneNumber: this.phoneNumber
       //   }).then(() => {
       //     this.closeModal()
+      //     localStorage.removeItem('userToken')
+      //     this.$router.push('/login')
       //   }).catch(() => {})
       //   this.wait = false
       // }

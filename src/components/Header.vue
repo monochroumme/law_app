@@ -23,7 +23,7 @@
         <img src="@/assets/media/common/photo.png" alt="">
 <!--        <img src="" onerror="this.src = '/media/common/user.svg'" alt="User">-->
       </router-link>
-      <div class="hidden"><router-link to="/">Logout</router-link></div>
+      <div class="hidden"><div @click="logout()">Logout</div></div>
     </div>
   </header>
 </template>
@@ -63,6 +63,10 @@ export default {
     },
     closeFilter: function () {
       this.showFilter = false
+    },
+    logout: function () {
+      localStorage.removeItem('userToken')
+      this.$router.push('/')
     }
   }
 }

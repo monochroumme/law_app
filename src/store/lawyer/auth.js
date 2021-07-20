@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import apiRequest from '@/utils/apiRequest'
-import store from '@/store'
 
 export default {
   namespaced: true,
@@ -8,11 +7,8 @@ export default {
   actions: {
     async register ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        apiRequest.post('/auth/lawyer_register/', data)
+        apiRequest.postWithoutAuth('/auth/lawyer_register/', data)
           .then(res => {
-            localStorage.setItem('token', res.data.token)
-            localStorage.setItem('userType', res.data.role)
-            store.commit('setUser', res.data)
             resolve(res)
           })
           .catch(e => {
