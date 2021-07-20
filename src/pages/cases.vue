@@ -1,7 +1,7 @@
 <template>
   <div class="page cases-page">
-    <active-cases v-if="this.userType==='ROLE_CLIENT'" v-model="this.activeCases" :cases="this.activeCases"/>
-    <lawyer-cases v-else v-model="cases" :cases="lawyerItems" />
+    <active-cases v-if="this.userType==='ROLE_CLIENT'" v-model="this.activeCases" :cases="this.activeCases" :archieved="this.inactiveCases"/>
+    <lawyer-cases v-if="this.userType==='ROLE_LAWYER'" v-model="this.lawyerItems" :cases="this.lawyerItems" />
   </div>
 </template>
 
@@ -16,15 +16,11 @@ export default {
     ActiveCases: () => import('@/components/ActiveCases'),
     LawyerCases: () => import('@/components/LawyerCases')
   },
-  async created () {
-    if (!this.activeCases) {
-      await this.getActiveCases()
-    }
-  },
   data () {
     return {
       userType: '',
-      clientCases: '',
+      activeCases: null,
+      inactiveCases: null,
       items: [
         { id: 1, date: '07-07-2021', description: 'random descr 1', ARCHIVED_BY_CLIENT: 'ARCHIVED_BY_CLIENT' },
         { id: 2, date: '07-07-2021', description: 'random descr 2', ARCHIVED_BY_CLIENT: 'ARCHIVED_BY_CLIENT' },
@@ -47,15 +43,30 @@ export default {
   },
 
   computed: {
-    ...mapState(['activeCases'])
+    ...mapState(['freeCases', 'appliedCases', 'archievedCases', 'doneCases', 'lawyerFilteredCases'])
   },
-  mounted () {
+  async created () {
     if (localStorage.userType) {
       this.userType = localStorage.userType
     }
+    if (!this.activeCases && this.userType === 'ROLE_CLIENT') {
+      await this.getFreeCases({ caseState: 'FREE' })
+      await this.getAppliedCases({ caseState: 'APPLIED' })
+      if (this.freeCases || this.appliedCases) {
+        this.activeCases = [...this.freeCases, ...this.appliedCases]
+      }
+    }
+
+    if (!this.inactiveCases && this.userType === 'ROLE_CLIENT') {
+      await this.getArchievedCases({ caseState: 'ARCHIVED_BY_CLIENT' })
+      await this.getDoneCases({ caseState: 'DONE' })
+      if (this.archievedCases || this.doneCases) {
+        this.inactiveCases = [...this.archievedCases, ...this.doneCases]
+      }
+    }
   },
   methods: {
-    ...mapActions(['getActiveCases'])
+    ...mapActions(['getFreeCases', 'getAppliedCases', 'getArchievedCases', 'getDoneCases', 'getLawyerFilteredCases'])
   }
 }
 </script>

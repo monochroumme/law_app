@@ -39,8 +39,10 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  name: 'ActiveCases',
+  name: 'LawyerCases',
   props: {
     cases: {
       type: Array
@@ -56,6 +58,7 @@ export default {
     UserDataModal: () => import('@/components/UserDataModal')
   },
   methods: {
+    ...mapActions(['getFilteredCases']),
     archiveToggler: function (item) {
       if (item.ARCHIVED_BY_LAWYER) {
         item.ARCHIVED_BY_LAWYER = ''

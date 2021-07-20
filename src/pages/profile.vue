@@ -8,16 +8,16 @@
         <div class="profile-page__user__photo__edit">Edit photo</div>
       </div>
       <div class="profile-page__user__name">
-        Test User
+        {{ this.firstName }} {{ this.lastName }}
       </div>
       <div class="profile-page__user__data-pack">
         <div class="profile-page__user__data-pack__data">
           <div class="type">Email:</div>
-          <div class="data">mr.i.mammadov@gmail.com</div>
+          <div class="data">{{ this.email }}</div>
         </div>
         <div class="profile-page__user__data-pack__data">
           <div class="type">Phone:</div>
-          <div class="data">+994 55 305 99 87</div>
+          <div class="data">{{ this.phoneNumber }}</div>
         </div>
         <div class="profile-page__user__data-pack__data">
           <div class="type">User type:</div>
@@ -32,21 +32,23 @@
       <div class="profile-page__block__pwd">
         <div class="profile-page__block__pwd__title">Change Password</div>
         <div class="profile-page__block__pwd__edit">
-          <div class="profile-page__block__pwd__edit__old">
-            <label>Old password</label>
-            <input type="password" class="custom-input" value=""
-                   placeholder="Write your current password">
-          </div>
-          <div class="profile-page__block__pwd__edit__new">
-            <label>New password</label>
-            <input type="password" class="custom-input" value=""
-                   placeholder="Write new password">
-            <input type="password" class="custom-input" value=""
-                   placeholder="Repeat new password">
-          </div>
-          <div class="profile-page__block__pwd__edit__submit">
-            <button>Save</button>
-          </div>
+          <form @submit.prevent="onReset">
+            <div class="profile-page__block__pwd__edit__old">
+              <label>Old password</label>
+              <input v-model="oldPassword" type="password" class="custom-input" value=""
+                     placeholder="Write your current password">
+            </div>
+            <div class="profile-page__block__pwd__edit__new">
+              <label>New password</label>
+              <input v-model="newPassword" type="password" class="custom-input" value=""
+                     placeholder="Write new password">
+              <input v-model="repeatPassword" type="password" class="custom-input" value=""
+                     placeholder="Repeat new password">
+            </div>
+            <div class="profile-page__block__pwd__edit__submit">
+              <button type="submit">Save</button>
+            </div>
+          </form>
         </div>
       </div>
       <div class="profile-page__block__links">
@@ -98,43 +100,118 @@
         <div class="profile-page__modal__block__header">
           Account
         </div>
-        <div class="profile-page__modal__block__body">
-          <label>Name</label>
-          <input type="text" value="Test"/>
-          <label>Surname</label>
-          <input type="text" value="User"/>
-          <label>Email</label>
-          <input type="text" value="mr.i.mammadov@gmail.com"/>
-          <label>Phone</label>
-          <input type="text" value="+994 55 305 99 87"/>
-        </div>
-        <div class="profile-page__modal__block__footer">
-          <button @click="closeModal()" class="profile-page__modal__block__footer__cancel">Cancel</button>
-          <button @click="closeModal()" class="profile-page__modal__block__footer__save">Save</button>
-        </div>
+        <form @submit.prevent="onSubmit">
+          <div class="profile-page__modal__block__body">
+            <custom-input class="mb-20" v-model="firstName" placeholder="Enter your name" label="Name" />
+            <custom-input class="mb-20" v-model="lastName" placeholder="Enter your surname" label="Surname" />
+            <custom-input class="mb-20" v-model="email" placeholder="Enter your email" label="Email" />
+            <custom-input class="mb-20" v-model="phoneNumber" :is-phone="true" placeholder="Enter your phone" label="Phone" />
+          </div>
+          <div class="profile-page__modal__block__footer">
+            <button @click="closeModal()" class="profile-page__modal__block__footer__cancel">Cancel</button>
+            <button v-if="this.userType === 'ROLE_CLIENT'" type="submit" class="profile-page__modal__block__footer__save">Save</button>
+            <button v-else @click="closeModal()" class="profile-page__modal__block__footer__save">Save</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import validatePassword from '@/utils/validatePassword'
+import validateEmail from '@/utils/validateEmail'
+import { mapActions } from 'vuex'
+
 export default {
   name: 'ProfileWrapper',
   data () {
     return {
       userType: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
       showSub: false,
       showModal: false,
       months: 0,
-      rate: 0
+      rate: 0,
+      oldPassword: '',
+      newPassword: '',
+      repeatPassword: ''
     }
+  },
+  components: {
+    CustomInput: () => import('@/components/CustomInput')
   },
   mounted () {
     if (localStorage.userType) {
       this.userType = localStorage.userType
     }
+    if (localStorage.firstName) {
+      this.firstName = localStorage.firstName
+    }
+    if (localStorage.lastName) {
+      this.lastName = localStorage.lastName
+    }
+    if (localStorage.email) {
+      this.email = localStorage.email
+    }
+    if (localStorage.phoneNumber) {
+      this.phoneNumber = localStorage.phoneNumber
+    }
   },
   methods: {
+    ...mapActions(['resetPassword', 'editUser']),
+    validateInputs () {
+      let error = false
+      if (!this.oldPassword?.trim()?.length || !validatePassword(this.oldPassword)) {
+        error = true
+        this.$toasted.error('Your password must contain minimum 8 characters, at least 1 number and 1 letter')
+      }
+      if (!this.newPassword?.trim()?.length || !validatePassword(this.newPassword)) {
+        error = true
+        this.$toasted.error('Your password must contain minimum 8 characters, at least 1 number and 1 letter')
+      }
+      if (this.newPassword !== this.repeatPassword || !validatePassword(this.repeatPassword)) {
+        error = true
+        this.$toasted.error('Passwords must match')
+      }
+      return error
+    },
+    validateEdit () {
+      let error = false
+      if (!this.firstName?.trim()?.length) {
+        error = true
+        this.$toasted.error('Please, enter your name')
+      }
+      if (!this.lastName?.trim()?.length) {
+        error = true
+        this.$toasted.error('Please, enter your surname')
+      }
+      if (!this.phoneNumber) {
+        error = true
+        this.$toasted.error('Please, enter a valid phone number')
+      }
+      if (!this.email?.trim()?.length || !validateEmail(this.email)) {
+        error = true
+        this.$toasted.error('Please, enter a valid email')
+      }
+      return !error
+    },
+    onReset () {
+      if (!this.validateInputs()) {
+        const postData = {
+          newPassword: this.newPassword,
+          oldPassword: this.oldPassword,
+          repeatPassword: this.repeatPassword
+        }
+        this.resetPassword(postData).then((res) => {
+          console.log(res)
+        }).catch(() => {})
+        this.wait = false
+      }
+    },
     openSubscription: function () {
       this.showSub = true
     },
@@ -166,6 +243,20 @@ export default {
         this.months = this.months - 1
         this.rate = this.months * 10
       }
+    },
+    async onSubmit () {
+      // if (this.validateEdit()) {
+      //   this.wait = true
+      //   await this.editUser({
+      //     firstName: this.firstName,
+      //     lastName: this.lastName,
+      //     phoneNumber: this.phoneNumber
+      //   }).then(() => {
+      //     this.closeModal()
+      //   }).catch(() => {})
+      //   this.wait = false
+      // }
+      this.closeModal()
     }
   }
 }

@@ -18,9 +18,9 @@
 
       </div>
       <router-link :to="`/${userType}/profile`" class="header__user">
-        <span v-if="!user" class="test-user">Ilham Pirmamedov</span>
+        <span v-if="!this.firstName" class="test-user">Ilham Pirmamedov</span>
+        <span v-if="this.firstName" class="test-user">{{ this.firstName }} {{ this.lastName }}</span>
         <img src="@/assets/media/common/photo.png" alt="">
-        <span v-if="user">{{ user.name }} {{ user.surname }}</span>
 <!--        <img src="" onerror="this.src = '/media/common/user.svg'" alt="User">-->
       </router-link>
       <div class="hidden"><router-link to="/">Logout</router-link></div>
@@ -43,7 +43,18 @@ export default {
   },
   data () {
     return {
-      showFilter: false
+      showFilter: false,
+      userData: null,
+      firstName: '',
+      lastName: ''
+    }
+  },
+  mounted () {
+    if (localStorage.firstName) {
+      this.firstName = localStorage.firstName
+    }
+    if (localStorage.lastName) {
+      this.lastName = localStorage.lastName
     }
   },
   methods: {

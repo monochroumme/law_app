@@ -224,38 +224,11 @@
       &__body {
         display: flex;
         flex-direction: column;
-
-        label {
-          padding-bottom: 15px;
-          color: $blue-3;
-        }
-
-        textarea {
-          background: white;
-          color: #000000;
-          border: none;
-          border-bottom: 1px solid #EBEBEB;
-          outline: none;
-          margin-bottom: 45px;
-        }
-
-        select {
-          border: none;
-          border-bottom: 1px solid #EBEBEB;
-          margin-bottom: 45px;
-        }
-
-        input {
-          border: none;
-          padding-bottom: 4px;
-          border-bottom: 1px solid #EBEBEB;
-          margin-bottom: 35px;
-        }
       }
       &__footer {
         display: flex;
         justify-content: flex-end;
-        padding-top: 75px;
+        padding-top: 145px;
 
         &__cancel {
           border-color: $blue-3;

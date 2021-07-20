@@ -46,6 +46,17 @@ export default class apiRequest {
     return request(axios.get(path, headers()))
   }
 
+  static getWithParams (path, params) {
+    return request(axios.get(path, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params
+    }))
+  }
+
   static post (path, data) {
     return request(axios.post(path, data, headers()))
   }

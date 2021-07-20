@@ -31,12 +31,28 @@
         Filter
       </div>
       <div class="all_cases-page__modal__body">
-        <label>Jurisdiction</label>
-        <select>
-          <option value="Jurisdiction">Jurisdiction</option>
-        </select>
-        <label>Practice Area</label>
-        <input type="text" value=""/>
+        <form @submit.prevent="onSubmit"></form>
+        <custom-multiselect
+          class="mb-20"
+          v-model="jurisdiction"
+          placeholder="Choose your jurisdiction"
+          label="Jurisdiction"
+          :options="jurisdictions || defaultJurisdictions"
+          :multiple="true"
+          :close-on-select="true"
+          group-values-name="states"
+          group-label-name="jurisdiction"
+          label-name="jurisdiction"
+        />
+        <custom-multiselect
+          v-model="areaOfLaw"
+          placeholder="Choose your area of law"
+          label="Area of Law"
+          :options="areasOfLaw || defaultAreasOfLaw"
+          :multiple="true"
+          :close-on-select="false"
+          label-name="practiceArea"
+        />
         <label class="sort">Sort by date:</label>
         <div class="all_cases-page__modal__body__radio">
           <input type="radio"/> Most recent
@@ -44,7 +60,7 @@
         <div class="all_cases-page__modal__body__radio">
           <input type="radio"/> Old ones
         </div>
-        <button @click="closeFilterBtn()">Done</button>
+        <button type="submit">Done</button>
       </div>
     </div>
     <UserDataModal v-model="dataModal" :visibility="dataModal"></UserDataModal>
@@ -52,10 +68,14 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
   name: 'all-cases',
   data () {
     return {
+      jurisdiction: null,
+      areaOfLaw: null,
       showFilter: false,
       items: [
         { id: 1, name: 'Test user', date: '07-07-2021', description: 'random descr 1' },
@@ -69,11 +89,32 @@ export default {
       dataModal: false
     }
   },
+  computed: {
+    ...mapState(['lawyerFilteredCases', 'defaultJurisdictions', 'defaultAreasOfLaw', 'jurisdictions', 'areasOfLaw'])
+  },
   components: {
     ApplyModal: () => import('@/components/ApplyModal'),
-    UserDataModal: () => import('@/components/UserDataModal')
+    UserDataModal: () => import('@/components/UserDataModal'),
+    CustomMultiselect: () => import('@/components/CustomMultiselect')
+  },
+  async created () {
+    if (!this.jurisdictions) {
+      await this.getJurisdictions()
+    }
+    if (!this.areasOfLaw) {
+      await this.getAreasOfLaw()
+    }
+    // if (!this.lawyerFilteredCases) {
+    //   await this.getLawyerFilteredCases({
+    //     jurisdictionIdList: ['1', '2', '3'],
+    //     practiceAreaIdList: ['1', '2', '3'],
+    //     isAscending: true
+    //   })
+    // }
   },
   methods: {
+    ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
+    ...mapActions(['getLawyerFilteredCases']),
     launch: function () {
       this.isModalShown = true
     },
