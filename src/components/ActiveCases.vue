@@ -171,12 +171,10 @@ export default {
       }
     }
   },
-  async created () {
+  created () {
     if (!this.jurisdictions) {
-      this.loading = true
-      await this.getJurisdictions()
-      await this.getAreasOfLaw()
-      this.loading = false
+      this.getJurisdictions()
+      this.getAreasOfLaw()
     }
   },
   methods: {
