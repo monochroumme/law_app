@@ -1,6 +1,6 @@
 <template>
   <div class="page cases-page">
-    <active-cases v-if="this.userType==='ROLE_CLIENT'" v-model="this.activeCases" :cases="this.activeCases" :archieved="this.inactiveCases"/>
+    <active-cases v-if="this.userType==='ROLE_CLIENT' && clientAllCases" v-model="clientAllCases" :cases="clientAllCases"/>
     <lawyer-cases v-if="this.userType==='ROLE_LAWYER'" v-model="this.lawyerItems" :cases="this.lawyerItems" />
   </div>
 </template>
@@ -19,8 +19,6 @@ export default {
   data () {
     return {
       userType: '',
-      activeCases: null,
-      inactiveCases: null,
       items: [
         { id: 1, date: '07-07-2021', description: 'random descr 1', ARCHIVED_BY_CLIENT: 'ARCHIVED_BY_CLIENT' },
         { id: 2, date: '07-07-2021', description: 'random descr 2', ARCHIVED_BY_CLIENT: 'ARCHIVED_BY_CLIENT' },
@@ -43,30 +41,30 @@ export default {
   },
 
   computed: {
-    ...mapState(['freeCases', 'appliedCases', 'archievedCases', 'doneCases', 'lawyerFilteredCases'])
+    ...mapState(['clientAllCases', 'lawyerFilteredCases', 'lawyerCases'])
   },
   async created () {
     if (localStorage.userType) {
       this.userType = localStorage.userType
     }
-    if (!this.activeCases && this.userType === 'ROLE_CLIENT') {
-      await this.getFreeCases({ caseState: 'FREE' })
-      await this.getAppliedCases({ caseState: 'APPLIED' })
-      if (this.freeCases || this.appliedCases) {
-        this.activeCases = [...this.freeCases, ...this.appliedCases]
-      }
+    if (!this.clientAllCases && this.userType === 'ROLE_CLIENT') {
+      await this.getClientAllCases({
+        caseStates: [
+          'FREE',
+          'APPLIED',
+          'DONE',
+          'ARCHIVED_BY_CLIENT'
+        ]
+      })
     }
-
-    if (!this.inactiveCases && this.userType === 'ROLE_CLIENT') {
-      await this.getArchievedCases({ caseState: 'ARCHIVED_BY_CLIENT' })
-      await this.getDoneCases({ caseState: 'DONE' })
-      if (this.archievedCases || this.doneCases) {
-        this.inactiveCases = [...this.archievedCases, ...this.doneCases]
-      }
+    if (!this.lawyerCases && this.userType === 'ROLE_LAWYER') {
+      await this.getLawyerCases().then(() => {
+        console.log(this.lawyerCases)
+      })
     }
   },
   methods: {
-    ...mapActions(['getFreeCases', 'getAppliedCases', 'getArchievedCases', 'getDoneCases', 'getLawyerFilteredCases'])
+    ...mapActions(['getClientAllCases', 'getLawyerFilteredCases', 'getLawyerCases'])
   }
 }
 </script>

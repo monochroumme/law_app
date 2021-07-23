@@ -2,23 +2,23 @@
   <div class="page applied_lawyers-page">
     <div class="applied_lawyers-page__title">Applied lawyers</div>
     <div class="applied_lawyers-page__list">
-      <div v-for="(item, index) in items" :key="item.id" class="applied_lawyers-page__list__block">
-        <div class="applied_lawyers-page__list__block__name open-user-modal" @click="openUserModal()">
-          {{ item.name }}
+      <div v-for="(item, index) in lawyersApplied" :key="item.id" class="applied_lawyers-page__list__block">
+        <div class="applied_lawyers-page__list__block__name open-user-modal" @click="openUserModal(item.lawyerDto.id)">
+          {{ item.lawyerDto.firstName }} {{ item.lawyerDto.lastName }}
         </div>
-        <div class="applied_lawyers-page__list__block__img open-user-modal" @click="openUserModal()">
+        <div class="applied_lawyers-page__list__block__img open-user-modal" @click="openUserModal(item.lawyerDto.id)">
           <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
         </div>
         <span>Comments</span>
         <div class="applied_lawyers-page__list__block__separator"/>
         <div class="applied_lawyers-page__list__block__commentary">
-          {{ item.description }}
+          {{ item.comment }}
         </div>
         <div class="applied_lawyers-page__list__block__date">
           {{ item.date }}
         </div>
         <div class="applied_lawyers-page__list__block__btns">
-          <button class="applied_lawyers-page__list__block__btns__btn-def">Choose lawyer</button>
+          <button class="applied_lawyers-page__list__block__btns__btn-def" @click="chooseLawyer(item.id)">Choose lawyer</button>
           <router-link class="applied_lawyers-page__list__block__btns__btn-def" to="/client/chats/">
             Contact lawyer
           </router-link>
@@ -26,11 +26,13 @@
         </div>
       </div>
     </div>
-    <UserDataModal v-model="userModal" :visibility="userModal"></UserDataModal>
+    <UserDataModal v-if="userModal" :clientData="userData" :visibility="userModal"></UserDataModal>
   </div>
 </template>
 
 <script>
+
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'applied-lawyers',
@@ -51,15 +53,55 @@ export default {
   components: {
     UserDataModal: () => import('@/components/UserDataModal')
   },
+  computed: {
+    ...mapState(['lawyersApplied', 'userData', 'jurisdictions', 'areasOfLaw']),
+    caseId () {
+      return this.$route.params.caseId
+    }
+  },
+  created () {
+    if (!this.lawyersApplied) {
+      this.getAppliedLawyers(this.caseId)
+    }
+    if (!this.jurisdictions) {
+      this.getJurisdictions()
+      this.getAreasOfLaw()
+    }
+  },
   methods: {
+    ...mapActions(['getAppliedLawyers', 'getLawyerDataById', 'getJurisdictions', 'getAreasOfLaw', 'assignLawyer']),
     hideLawyer: function (index, item) {
       this.items.splice(index, 1)
     },
-    openUserModal: function () {
-      this.userModal = true
+    async chooseLawyer (id) {
+      await this.assignLawyer(id).then(() => {
+        this.$router.push('/client/chats')
+      })
     },
-    openUserModalImg: function () {
+    async openUserModal (id) {
+      await this.getLawyerDataById(id).then(() => {
+        this.userModal = true
+        this.userData.jurisdictions = []
+        this.userData.practiceAreas = []
+        this.jurisdictions.map(j => {
+          this.userData.jurisdictionIdList.map(jL => {
+            if (j.id === jL) {
+              this.userData.jurisdictions.push(j)
+            }
+          })
+        })
+        this.areasOfLaw.map(p => {
+          this.userData.practiceIdList.map(pL => {
+            if (p.id === pL) {
+              this.userData.practiceAreas.push(p)
+            }
+          })
+        })
+      })
+    },
+    openUserModalImg: function (id) {
       this.userModal = true
+      this.getLawyerDataById(id)
     }
   }
 }

@@ -63,7 +63,10 @@ export default new Vuex.Store({
     jurisdictions: null,
     areasOfLaw: null,
     activeCases: null,
-    lawyerFilteredCases: null
+    lawyerFilteredCases: null,
+    clientData: null,
+    clientAllCases: null,
+    lawyersApplied: null
   },
 
   mutations: {
@@ -78,6 +81,10 @@ export default new Vuex.Store({
 
     setAreasOfLaw (state, payload) {
       state.areasOfLaw = payload
+      if (localStorage.getItem('userType') === 'ROLE_CLIENT') {
+        const iDK = { id: 999, practiceArea: 'I don\'t know' }
+        state.areasOfLaw.unshift(iDK)
+      }
     },
 
     setActiveCases (state, payload) {
@@ -101,8 +108,29 @@ export default new Vuex.Store({
     },
 
     setLawyerFilteredCases (state, payload) {
+      state.lawyerFilteredCases = null
       state.lawyerFilteredCases = payload
-      console.log(state.lawyerFilteredCases)
+    },
+
+    setClientData (state, payload) {
+      state.userData = payload
+    },
+
+    setLawyerData (state, payload) {
+      state.userData = payload
+    },
+
+    setClientAllCases (state, payload) {
+      state.clientAllCases = payload
+    },
+
+    setAppliedLawyers (state, payload) {
+      state.lawyersApplied = payload
+    },
+
+    setLawyerCases (state, payload) {
+      state.lawyerCases = payload
+      console.log(payload)
     }
   },
 
@@ -118,6 +146,10 @@ export default new Vuex.Store({
             localStorage.setItem('lastName', res.data.lastName)
             localStorage.setItem('email', res.data.email)
             localStorage.setItem('phoneNumber', res.data.phoneNumber)
+            if (res.data.role === 'ROLE_LAWYER') {
+              localStorage.setItem('jurisdictionDtoList', JSON.stringify(res.data.jurisdictionDtoList))
+              localStorage.setItem('practiceAreaDtoList', JSON.stringify(res.data.practiceAreaDtoList))
+            }
             commit('setUser', res.data)
             resolve(res)
           })
@@ -129,19 +161,33 @@ export default new Vuex.Store({
     },
 
     async editUser ({ commit }, data) {
-      return new Promise((resolve, reject) => {
-        apiRequest.put(`/client/update?firstName=${data.firstName}&lastName=${data.lastName}&phoneNumber=${data.phoneNumber}`)
-          .then(res => {
-            localStorage.setItem('firstName', data.firstName)
-            localStorage.setItem('lastName', data.lastName)
-            localStorage.setItem('phoneNumber', data.phoneNumber)
-            resolve(res)
-          })
-          .catch(e => {
-            console.error(e.response.data.message)
-            reject(e.response.data.message)
-          })
-      })
+      if (localStorage.getItem('userType') === 'ROLE_CLIENT') {
+        return new Promise((resolve, reject) => {
+          apiRequest.put('/client/update/', data)
+            .then(res => {
+              localStorage.setItem('firstName', data.firstName)
+              localStorage.setItem('lastName', data.lastName)
+              localStorage.setItem('phoneNumber', data.phoneNumber)
+              localStorage.setItem('email', data.email)
+              resolve(res)
+            })
+            .catch(e => {
+              console.error(e.response.data.message)
+              reject(e.response.data.message)
+            })
+        })
+      } else {
+        return new Promise((resolve, reject) => {
+          apiRequest.put('/lawyer/update/', data)
+            .then(res => {
+              resolve(res)
+            })
+            .catch(e => {
+              console.error(e.response.data.message)
+              reject(e.response.data.message)
+            })
+        })
+      }
     },
 
     async resetPassword ({ commit }, data) {
@@ -182,38 +228,45 @@ export default new Vuex.Store({
       }
     },
 
-    async getFreeCases ({ commit }, params) {
-      const res = await apiRequest.getWithParams('/client/case/filtered', params)
+    async getClientAllCases ({ commit }, params) {
+      let url = ''
+      if (params.caseStates) {
+        for (let i = 0; i < params.caseStates.length; ++i) {
+          if (url.indexOf('?') === -1) {
+            url = url + '?caseState=' + params.caseStates[i]
+          } else {
+            url = url + '&caseState=' + params.caseStates[i]
+          }
+        }
+      }
+      const res = await apiRequest.get(`/client/case/filtered${url}`)
       if (res.data) {
-        commit('setFreeCases', res.data)
+        commit('setClientAllCases', res.data)
       }
     },
 
-    async getAppliedCases ({ commit }, params) {
-      const res = await apiRequest.getWithParams('/client/case/filtered', params)
+    async getAppliedLawyers ({ commit }, caseId) {
+      const res = await apiRequest.get(`/client/case/applications/${caseId}`)
       if (res.data) {
-        commit('setAppliedCases', res.data)
-      }
-    },
-
-    async getArchievedCases ({ commit }, params) {
-      const res = await apiRequest.getWithParams('/client/case/filtered', params)
-      if (res.data) {
-        commit('setArchievedCases', res.data)
-      }
-    },
-
-    async getDoneCases ({ commit }, params) {
-      const res = await apiRequest.getWithParams('/client/case/filtered', params)
-      if (res.data) {
-        commit('setDoneCases', res.data)
+        commit('setAppliedLawyers', res.data)
       }
     },
 
     async getLawyerFilteredCases ({ commit }, params) {
-      const res = await apiRequest.getWithParams('/lawyer/filtered', params)
+      let url = '?isAscending=' + params.isAscending
+      if (params.jurisdictionIdList) {
+        for (let i = 0; i < params.jurisdictionIdList.length; ++i) {
+          url = url + '&jurisdictionIdList=' + params.jurisdictionIdList[i].id
+        }
+      }
+      if (params.practiceAreaIdList) {
+        for (let i = 0; i < params.practiceAreaIdList.length; ++i) {
+          url = url + '&practiceAreaIdList=' + params.practiceAreaIdList[i].id
+        }
+      }
+      const res = await apiRequest.get(`/lawyer/filtered${url}`)
       if (res.data) {
-        commit('setLawyerFilteredCases')
+        commit('setLawyerFilteredCases', res.data)
       }
     },
 
@@ -224,10 +277,67 @@ export default new Vuex.Store({
       }
     },
 
+    async unarchiveClientCase ({ commit }, id) {
+      const res = await apiRequest.put(`/client/case/unarchive?caseId=${id}`)
+      if (res.data) {
+        console.log('Case successfully unarchieved by client')
+      }
+    },
+
     async deleteClientCase ({ commit }, data) {
       const res = await apiRequest.delete(`/client/case/delete/${data}`)
+      console.log(res)
       if (res.data) {
         console.log('Case successfully deleted by client')
+      }
+    },
+
+    async archiveLawyerCase ({ commit }, id) {
+      const res = await apiRequest.put(`/lawyer/archive?caseId=${id}`)
+      if (res.data) {
+        console.log('Case successfully archieved by lawyer')
+      }
+    },
+
+    async unarchiveLawyerCase ({ commit }, id) {
+      const res = await apiRequest.put(`/lawyer/unarchive?caseId=${id}`)
+      if (res.data) {
+        console.log('Case successfully unarchieved by lawyer')
+      }
+    },
+
+    async applyToCase ({ commit }, data) {
+      const res = await apiRequest.post(`lawyer/${data.id}/apply?comment=${data.comment}`)
+      if (res.data) {
+        console.log('Successfully applied to case')
+      }
+    },
+
+    async assignLawyer ({ commit }, id) {
+      const res = await apiRequest.put(`/client/case/application/assign?applicationId=${id}`)
+      if (res.data) {
+        console.log('Successfully assigned lawyer to case')
+      }
+    },
+
+    async getClientDataById ({ commit }, id) {
+      const res = await apiRequest.get(`/lawyer/client?clientId=${id}`)
+      if (res.data) {
+        commit('setClientData', res.data)
+      }
+    },
+
+    async getLawyerDataById ({ commit }, id) {
+      const res = await apiRequest.get(`/client/lawyer?lawyerId=${id}`)
+      if (res.data) {
+        commit('setLawyerData', res.data)
+      }
+    },
+
+    async getLawyerCases ({ commit }) {
+      const res = await apiRequest.get('/lawyer/myCases/')
+      if (res.data) {
+        commit('setLawyerCases', res.data)
       }
     },
 
@@ -246,6 +356,22 @@ export default new Vuex.Store({
           .catch(e => {
             console.error(e.response.data.message)
             reject(e.response.data.message)
+          })
+      })
+    },
+    async editClientCase ({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        apiRequest.put(`/client/case/update/${data.id}`, {
+          description: data.description,
+          jurisdictionIdList: data.jurisdictionIdList,
+          practiceAreaIdList: data.practiceAreaIdList
+        })
+          .then(res => {
+            console.log(res)
+            resolve(res)
+          })
+          .catch(e => {
+            console.log(e.response.data)
           })
       })
     }

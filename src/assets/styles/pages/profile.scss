@@ -4,7 +4,10 @@
   justify-content: center;
   padding-top: 83px;
   padding-bottom: 84px;
-
+  .noPadding {
+    padding: 0 !important;
+    margin-bottom: 15px;
+  }
   &__user {
     width: 398px;
     max-height: 564px;
@@ -209,7 +212,7 @@
     &__block {
       background-color: white;
       width: 600px;
-      height: 611px;
+      min-height: 611px;
       padding-left: 25px;
       padding-right: 15px;
       border-radius: 19px;

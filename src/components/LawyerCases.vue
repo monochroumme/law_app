@@ -34,7 +34,7 @@
         </div>
       </template>
     </div>
-    <UserDataModal v-model="dataModal" :visibility="dataModal"></UserDataModal>
+    <UserDataModal v-if="this.dataModal" v-model="dataModal" :visibility="dataModal"></UserDataModal>
   </div>
 </template>
 

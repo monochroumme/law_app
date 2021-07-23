@@ -11,20 +11,19 @@
           </div>
           <div class="user-modal__modal__body__user__data">
             <div>Name/Surname:</div>
-            <span v-if="this.userType==='ROLE_LAWYER'">Test Client</span>
-            <span v-else>Test Lawyer</span>
+            <span>{{ this.$parent.userData.firstName }} {{ this.$parent.userData.lastName }}</span>
           </div>
          <div class="user-modal__modal__body__user__data">
            <div>Contact No:</div>
-           <span>+994 55 555 55 55</span>
+           <span>{{ this.$parent.userData.phoneNumber }}</span>
          </div>
           <div class="user-modal__modal__body__user__data-w">
             <div>Email: </div>
-            <span>test@test.test</span>
+            <span>{{ this.$parent.userData.email }}</span>
           </div>
           <div class="user-modal__modal__body__user__data-w" v-if="this.userType==='ROLE_CLIENT'">
             <div>Bar Association:</div>
-            <span>hyu-98</span>
+            <span>{{ this.$parent.userData.barassociation }}</span>
           </div>
           <div class="user-modal__modal__body__user__data-w">
             <div>Jurisdiction: </div>
@@ -32,7 +31,7 @@
           </div>
           <div class="user-modal__modal__body__user__data-w" v-if="this.userType==='ROLE_CLIENT'">
             <div>Specialization:</div>
-            <span>Charities</span>
+            <span v-for="(item, i) in this.$parent.userData.practiceAreas" :key="i">{{ item.practiceArea }}</span>
           </div>
         </div>
       </div>

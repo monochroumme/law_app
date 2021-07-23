@@ -84,6 +84,7 @@ export default {
     },
 
     onSubmit () {
+      console.log(localStorage.getItem('token'))
       if (!this.wait) {
         if (!this.validateInputs()) {
           this.login({

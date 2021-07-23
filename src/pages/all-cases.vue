@@ -3,11 +3,11 @@
     <button id="openFilterBtn" @click="openFilter()" class="all_cases-page__filter">Filter</button>
     <div class="all_cases-page__title">All cases</div>
     <div class="all_cases-page__list">
-      <div v-for="item in items" :key="item.id" class="all_cases-page__list__block">
-        <div class="all_cases-page__list__block__name open-user-modal" @click="openDataModal()">
-          {{ item.name }}
+      <div v-for="item in this.lawyerFilteredCases" :key="item.id" class="all_cases-page__list__block">
+        <div class="all_cases-page__list__block__name open-user-modal" @click="openDataModal(item.clientId)">
+          {{ item.clientFirstName }} {{ item.clientLastName }}
         </div>
-        <div class="all_cases-page__list__block__img open-user-modal" @click="openDataModal()">
+        <div class="all_cases-page__list__block__img open-user-modal" @click="openDataModal(item.clientId)">
           <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
         </div>
         <span>Case description</span>
@@ -16,54 +16,55 @@
           {{ item.description }}
         </div>
         <div class="all_cases-page__list__block__date">
-          {{ item.date }}
+          {{ item.creationDate.slice(0, 10) }}
         </div>
         <div class="all_cases-page__list__block__btns">
-          <button class="all_cases-page__list__block__btns__btn-def" @click="launch()">Apply</button>
+          <button class="all_cases-page__list__block__btns__btn-def" @click="launch(item.id)">Apply</button>
           <button class="all_cases-page__list__block__btns__btn-blue">Archive</button>
         </div>
       </div>
     </div>
-    <ApplyModal v-model="isModalShown" :visibility="isModalShown"></ApplyModal>
+    <ApplyModal v-if="isModalShown" :visibility="isModalShown" :caseId="this.applyId"></ApplyModal>
     <div v-if="showFilter" v-click-outside="closeFilter" class="all_cases-page__modal">
       <button class="x-close" @click="closeFilterBtn">X</button>
       <div class="all_cases-page__modal__header">
         Filter
       </div>
       <div class="all_cases-page__modal__body">
-        <form @submit.prevent="onSubmit"></form>
-        <custom-multiselect
-          class="mb-20"
-          v-model="jurisdiction"
-          placeholder="Choose your jurisdiction"
-          label="Jurisdiction"
-          :options="jurisdictions || defaultJurisdictions"
-          :multiple="true"
-          :close-on-select="true"
-          group-values-name="states"
-          group-label-name="jurisdiction"
-          label-name="jurisdiction"
-        />
-        <custom-multiselect
-          v-model="areaOfLaw"
-          placeholder="Choose your area of law"
-          label="Area of Law"
-          :options="areasOfLaw || defaultAreasOfLaw"
-          :multiple="true"
-          :close-on-select="false"
-          label-name="practiceArea"
-        />
-        <label class="sort">Sort by date:</label>
-        <div class="all_cases-page__modal__body__radio">
-          <input type="radio"/> Most recent
-        </div>
-        <div class="all_cases-page__modal__body__radio">
-          <input type="radio"/> Old ones
-        </div>
-        <button type="submit">Done</button>
+        <form @submit.prevent="onSubmit">
+          <custom-multiselect
+            class="mb-20"
+            v-model="jurisdiction"
+            placeholder="Choose your jurisdiction"
+            label="Jurisdiction"
+            :options="jurisdictions || defaultJurisdictions"
+            :multiple="true"
+            :close-on-select="true"
+            group-values-name="states"
+            group-label-name="jurisdiction"
+            label-name="jurisdiction"
+          />
+          <custom-multiselect
+            v-model="areaOfLaw"
+            placeholder="Choose your area of law"
+            label="Area of Law"
+            :options="areasOfLaw || defaultAreasOfLaw"
+            :multiple="true"
+            :close-on-select="false"
+            label-name="practiceArea"
+          />
+          <label class="sort">Sort by date:</label>
+          <div class="all_cases-page__modal__body__radio">
+            <input type="radio"/> Most recent
+          </div>
+          <div class="all_cases-page__modal__body__radio">
+            <input type="radio"/> Old ones
+          </div>
+          <button type="submit">Done</button>
+        </form>
       </div>
     </div>
-    <UserDataModal v-model="dataModal" :visibility="dataModal"></UserDataModal>
+    <UserDataModal v-if="dataModal" v-model="userData" :visibility="dataModal"></UserDataModal>
   </div>
 </template>
 
@@ -86,11 +87,12 @@ export default {
         { id: 6, name: 'Test user', date: '07-07-2021', description: 'random descr 6' }
       ],
       isModalShown: false,
-      dataModal: false
+      dataModal: false,
+      applyId: null
     }
   },
   computed: {
-    ...mapState(['lawyerFilteredCases', 'defaultJurisdictions', 'defaultAreasOfLaw', 'jurisdictions', 'areasOfLaw'])
+    ...mapState(['lawyerFilteredCases', 'defaultJurisdictions', 'defaultAreasOfLaw', 'jurisdictions', 'areasOfLaw', 'userData'])
   },
   components: {
     ApplyModal: () => import('@/components/ApplyModal'),
@@ -104,19 +106,18 @@ export default {
     if (!this.areasOfLaw) {
       await this.getAreasOfLaw()
     }
-    // if (!this.lawyerFilteredCases) {
-    //   await this.getLawyerFilteredCases({
-    //     jurisdictionIdList: ['1', '2', '3'],
-    //     practiceAreaIdList: ['1', '2', '3'],
-    //     isAscending: true
-    //   })
-    // }
+    if (!this.lawyerFilteredCases) {
+      await this.getLawyerFilteredCases({
+        isAscending: true
+      })
+    }
   },
   methods: {
     ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
-    ...mapActions(['getLawyerFilteredCases']),
-    launch: function () {
+    ...mapActions(['getLawyerFilteredCases', 'getClientDataById']),
+    launch: function (id) {
       this.isModalShown = true
+      this.applyId = id
     },
     openFilter: function () {
       this.showFilter = true
@@ -129,8 +130,27 @@ export default {
     closeFilterBtn: function () {
       this.showFilter = false
     },
-    openDataModal: function () {
-      this.dataModal = true
+    async openDataModal (id) {
+      await this.getClientDataById(id).then(() => {
+        this.dataModal = true
+      })
+    },
+    async application (item) {
+      await this.applyToCase(parseInt(item.id))
+        .then(() => {
+          this.lawyerFilteredCases.map((obj, index) => {
+            if (obj.id === item.id) {
+              this.lawyerFilteredCases.splice(index, 1)
+            }
+          })
+        })
+    },
+    async onSubmit () {
+      await this.getLawyerFilteredCases({
+        isAscending: true,
+        jurisdictionIdList: this.jurisdiction,
+        practiceAreaIdList: this.areaOfLaw
+      })
     }
   }
 }

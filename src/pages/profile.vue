@@ -106,11 +106,34 @@
             <custom-input class="mb-20" v-model="lastName" placeholder="Enter your surname" label="Surname" />
             <custom-input class="mb-20" v-model="email" placeholder="Enter your email" label="Email" />
             <custom-input class="mb-20" v-model="phoneNumber" :is-phone="true" placeholder="Enter your phone" label="Phone" />
+            <custom-multiselect
+              v-if="userType==='ROLE_LAWYER'"
+              class="mb-20"
+              v-model="jurisdictionsDto"
+              placeholder="Choose your jurisdiction"
+              label="Jurisdiction"
+              :options="jurisdictions || defaultJurisdictions"
+              :multiple="true"
+              :close-on-select="true"
+              group-values-name="states"
+              group-label-name="jurisdiction"
+              label-name="jurisdiction"
+            />
+            <custom-multiselect
+              v-if="userType==='ROLE_LAWYER'"
+              class="mb-20"
+              v-model="practiceAreasDto"
+              placeholder="Choose your area of law"
+              label="Area of Law"
+              :options="areasOfLaw || defaultAreasOfLaw"
+              :multiple="true"
+              :close-on-select="false"
+              label-name="practiceArea"
+            />
           </div>
-          <div class="profile-page__modal__block__footer">
+          <div class="profile-page__modal__block__footer" :class="{noPadding: userType === 'ROLE_LAWYER'}">
             <button @click="closeModal()" class="profile-page__modal__block__footer__cancel">Cancel</button>
-            <button v-if="this.userType === 'ROLE_CLIENT'" type="submit" class="profile-page__modal__block__footer__save">Save</button>
-            <button v-else @click="closeModal()" class="profile-page__modal__block__footer__save">Save</button>
+            <button type="submit" class="profile-page__modal__block__footer__save">Save</button>
           </div>
         </form>
       </div>
@@ -121,17 +144,22 @@
 <script>
 import validatePassword from '@/utils/validatePassword'
 import validateEmail from '@/utils/validateEmail'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'ProfileWrapper',
   data () {
     return {
+      userId: '',
       userType: '',
       firstName: '',
       lastName: '',
       email: '',
       phoneNumber: '',
+      jurisdictionDtoList: null,
+      practiceAreaDtoList: null,
+      jurisdictionsDto: [],
+      practiceAreasDto: [],
       showSub: false,
       showModal: false,
       months: 0,
@@ -142,7 +170,17 @@ export default {
     }
   },
   components: {
-    CustomInput: () => import('@/components/CustomInput')
+    CustomInput: () => import('@/components/CustomInput'),
+    CustomMultiselect: () => import('@/components/CustomMultiselect')
+  },
+  computed: {
+    ...mapState(['defaultJurisdictions', 'defaultAreasOfLaw', 'jurisdictions', 'areasOfLaw'])
+  },
+  created () {
+    if (!this.jurisdictions) {
+      this.getJurisdictions()
+      this.getAreasOfLaw()
+    }
   },
   mounted () {
     if (localStorage.userType) {
@@ -160,8 +198,18 @@ export default {
     if (localStorage.phoneNumber) {
       this.phoneNumber = localStorage.phoneNumber
     }
+    if (localStorage.userId) {
+      this.userId = localStorage.userId
+    }
+    if (localStorage.jurisdictionDtoList) {
+      this.jurisdictionDtoList = JSON.parse(localStorage.jurisdictionDtoList)
+    }
+    if (localStorage.practiceAreaDtoList) {
+      this.practiceAreaDtoList = JSON.parse(localStorage.practiceAreaDtoList)
+    }
   },
   methods: {
+    ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
     ...mapActions(['resetPassword', 'editUser']),
     validateInputs () {
       let error = false
@@ -225,6 +273,22 @@ export default {
     },
     editModal: function () {
       this.showModal = true
+      this.jurisdictionsDto = []
+      this.practiceAreasDto = []
+      this.jurisdictions.map((j) => {
+        this.jurisdictionDtoList.map((jL) => {
+          if (j.id === jL) {
+            this.jurisdictionsDto.push(j)
+          }
+        })
+      })
+      this.areasOfLaw.map((p) => {
+        this.practiceAreaDtoList.map((pL) => {
+          if (p.id === pL) {
+            this.practiceAreasDto.push(p)
+          }
+        })
+      })
     },
     closeModal: function () {
       this.showModal = false
@@ -245,19 +309,25 @@ export default {
       }
     },
     async onSubmit () {
-      // if (this.validateEdit()) {
-      //   this.wait = true
-      //   await this.editUser({
-      //     firstName: this.firstName,
-      //     lastName: this.lastName,
-      //     phoneNumber: this.phoneNumber
-      //   }).then(() => {
-      //     this.closeModal()
-      //     localStorage.removeItem('userToken')
-      //     this.$router.push('/login')
-      //   }).catch(() => {})
-      //   this.wait = false
-      // }
+      if (this.validateEdit()) {
+        this.wait = true
+        const editData = {
+          id: this.userId,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
+          phoneNumber: this.phoneNumber
+        }
+        if (this.userType === 'ROLE_LAWYER') {
+          editData.jurisdictionIdList = this.jurisdictionsDto.map((j) => parseInt(j.id))
+          editData.practiceIdList = this.practiceAreasDto.map((p) => parseInt(p.id))
+        }
+        await this.editUser(editData).then(() => {
+          localStorage.clear()
+          this.$router.push('/login')
+        }).catch(() => {})
+        this.wait = false
+      }
       this.closeModal()
     }
   }
