@@ -8,10 +8,10 @@
     <div class="lawyer-cases__list">
       <template v-for="item in cases">
         <div class="lawyer-cases__list__case" :key="item.id" v-if="item.caseState===caseState">
-          <div class="lawyer-cases__list__case__title open-user-modal" @click="openDataModal()">
+          <div class="lawyer-cases__list__case__title open-user-modal" @click="openDataModal(item.clientDto.id)">
             {{ item.clientDto.firstName }} {{ item.clientDto.lastName }}
           </div>
-          <div class="lawyer-cases__list__case__img open-user-modal" @click="openDataModal()">
+          <div class="lawyer-cases__list__case__img open-user-modal" @click="openDataModal(item.clientDto.id)">
             <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
           </div>
           <div class="lawyer-cases__list__case__case-descr">
@@ -34,12 +34,12 @@
         </div>
       </template>
     </div>
-    <UserDataModal v-if="this.dataModal" v-model="dataModal" :visibility="dataModal"></UserDataModal>
+    <UserDataModal v-if="this.dataModal" v-model="userData" :visibility="dataModal"></UserDataModal>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'LawyerCases',
@@ -54,11 +54,14 @@ export default {
       dataModal: false
     }
   },
+  computed: {
+    ...mapState(['userData'])
+  },
   components: {
     UserDataModal: () => import('@/components/UserDataModal')
   },
   methods: {
-    ...mapActions(['getFilteredCases']),
+    ...mapActions(['getFilteredCases', 'getClientDataById']),
     archiveToggler: function (item) {
       if (item.ARCHIVED_BY_LAWYER) {
         item.ARCHIVED_BY_LAWYER = ''
@@ -75,8 +78,10 @@ export default {
     showCompleted: function () {
       this.caseState = 'DONE'
     },
-    openDataModal: function () {
-      this.dataModal = true
+    async openDataModal (id) {
+      await this.getClientDataById(id).then(() => {
+        this.dataModal = true
+      })
     }
   }
 }
