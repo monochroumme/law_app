@@ -52,6 +52,7 @@ export default {
         caseStates: [
           'FREE',
           'APPLIED',
+          'BUSY',
           'DONE',
           'ARCHIVED_BY_CLIENT'
         ]

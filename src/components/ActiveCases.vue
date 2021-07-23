@@ -167,7 +167,7 @@ export default {
   },
   mounted () {
     this.$parent.clientAllCases.map(c => {
-      if (c.caseState === 'FREE' || c.caseState === 'APPLIED') {
+      if (c.caseState === 'FREE' || c.caseState === 'APPLIED' || c.caseState === 'BUSY') {
         this.activeCases.push(c)
       }
       if (c.caseState === 'ARCHIVED_BY_CLIENT' || c.caseState === 'DONE') {
