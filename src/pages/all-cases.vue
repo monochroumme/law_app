@@ -4,10 +4,10 @@
     <div class="all_cases-page__title">All cases</div>
     <div class="all_cases-page__list">
       <div v-for="item in this.lawyerFilteredCases" :key="item.id" class="all_cases-page__list__block">
-        <div class="all_cases-page__list__block__name open-user-modal" @click="openDataModal(item.clientId)">
+        <div class="all_cases-page__list__block__name open-user-modal" @click="openDataModal(item.clientDto.id)">
           {{ item.clientFirstName }} {{ item.clientLastName }}
         </div>
-        <div class="all_cases-page__list__block__img open-user-modal" @click="openDataModal(item.clientId)">
+        <div class="all_cases-page__list__block__img open-user-modal" @click="openDataModal(item.clientDto.id)">
           <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
         </div>
         <span>Case description</span>
