@@ -20,7 +20,7 @@
         </div>
         <div class="all_cases-page__list__block__btns">
           <button class="all_cases-page__list__block__btns__btn-def" @click="launch(item.id)">Apply</button>
-          <button class="all_cases-page__list__block__btns__btn-blue">Archive</button>
+          <button class="all_cases-page__list__block__btns__btn-blue">Hide</button>
         </div>
       </div>
     </div>
