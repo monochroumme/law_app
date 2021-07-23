@@ -3,7 +3,7 @@
     <div class="lawyer-cases__selector">
       <button :class="{active: this.caseState==='BUSY'}" @click="showActive()">Active</button>
       <button :class="{active: this.caseState==='APPLIED'}" @click="showApplied()">Applied</button>
-      <button :class="{active: this.caseState==='DONE'}" @click="showCompleted()">Completed</button>
+      <button :class="{active: this.caseState==='ARCHIVED_BY_LAWYER'}" @click="showCompleted()">Completed</button>
     </div>
     <div class="lawyer-cases__list">
       <template v-for="item in cases">
@@ -24,12 +24,12 @@
             {{ item.creationDate.slice(0, 10) }}
           </div>
           <div class="lawyer-cases__list__case__separator"></div>
-          <div v-if="caseState==='BUSY' || caseState==='DONE'" class="lawyer-cases__list__case__btns">
+          <div v-if="caseState==='BUSY' || caseState==='ARCHIVED_BY_LAWYER'" class="lawyer-cases__list__case__btns">
             <router-link class="lawyer-cases__list__case__btns__btn-def" to="/lawyer/chats">
               Chat
             </router-link>
-            <button v-if="caseState!=='DONE'" v-on:click="archiveToggler(item)" class="lawyer-cases__list__case__btns__btn-blue">Archive</button>
-            <button v-if="caseState==='DONE'" class="lawyer-cases__list__case__btns__btn-blue">Delete</button>
+            <button v-if="caseState!=='ARCHIVED_BY_LAWYER'" v-on:click="archiveToggler(item)" class="lawyer-cases__list__case__btns__btn-blue">Archive</button>
+            <button v-if="caseState==='ARCHIVED_BY_LAWYER'" class="lawyer-cases__list__case__btns__btn-blue">Delete</button>
           </div>
         </div>
       </template>
@@ -76,7 +76,7 @@ export default {
       this.caseState = 'APPLIED'
     },
     showCompleted: function () {
-      this.caseState = 'DONE'
+      this.caseState = 'ARCHIVED_BY_LAWYER'
     },
     async openDataModal (id) {
       await this.getClientDataById(id).then(() => {

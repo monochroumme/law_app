@@ -292,6 +292,14 @@ export default new Vuex.Store({
       }
     },
 
+    async deleteLawyerCase ({ commit }, data) {
+      const res = await apiRequest.delete(`/lawyer/delete/${data}`)
+      console.log(res)
+      if (res.data) {
+        console.log('Case successfully deleted by lawyer')
+      }
+    },
+
     async archiveLawyerCase ({ commit }, id) {
       const res = await apiRequest.put(`/lawyer/archive?caseId=${id}`)
       if (res.data) {

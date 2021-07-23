@@ -20,7 +20,7 @@
         </div>
         <div class="all_cases-page__list__block__btns">
           <button class="all_cases-page__list__block__btns__btn-def" @click="launch(item.id)">Apply</button>
-          <button class="all_cases-page__list__block__btns__btn-blue">Hide</button>
+          <button class="all_cases-page__list__block__btns__btn-blue" @click="deleteCase(item.id)">Hide</button>
         </div>
       </div>
     </div>
@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
-    ...mapActions(['getLawyerFilteredCases', 'getClientDataById']),
+    ...mapActions(['getLawyerFilteredCases', 'getClientDataById', 'deleteLawyerCase']),
     launch: function (id) {
       this.isModalShown = true
       this.applyId = id
@@ -144,6 +144,15 @@ export default {
             }
           })
         })
+    },
+    async deleteCase (id) {
+      await this.deleteLawyerCase(parseInt(id.toString())).then(() => {
+        this.lawyerFilteredCases.map((obj, index) => {
+          if (obj.id === id) {
+            this.lawyerFilteredCases.splice(index, 1)
+          }
+        })
+      })
     },
     async onSubmit () {
       await this.getLawyerFilteredCases({
