@@ -1,7 +1,7 @@
 <template>
   <div class="page cases-page">
     <active-cases v-if="this.userType==='ROLE_CLIENT' && clientAllCases" v-model="clientAllCases" :cases="clientAllCases"/>
-    <lawyer-cases v-if="this.userType==='ROLE_LAWYER'" v-model="this.lawyerItems" :cases="this.lawyerItems" />
+    <lawyer-cases v-if="this.userType==='ROLE_LAWYER' && lawyerCases" v-model="lawyerCases" :cases="lawyerCases" />
   </div>
 </template>
 
@@ -58,9 +58,7 @@ export default {
       })
     }
     if (!this.lawyerCases && this.userType === 'ROLE_LAWYER') {
-      await this.getLawyerCases().then(() => {
-        console.log(this.lawyerCases)
-      })
+      await this.getLawyerCases()
     }
   },
   methods: {

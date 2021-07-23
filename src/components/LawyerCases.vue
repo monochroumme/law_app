@@ -1,7 +1,7 @@
 <template>
   <div class="lawyer-cases">
     <div class="lawyer-cases__selector">
-      <button :class="{active: this.caseState==='ACTIVE'}" @click="showActive()">Active</button>
+      <button :class="{active: this.caseState==='BUSY'}" @click="showActive()">Active</button>
       <button :class="{active: this.caseState==='APPLIED'}" @click="showApplied()">Applied</button>
       <button :class="{active: this.caseState==='DONE'}" @click="showCompleted()">Completed</button>
     </div>
@@ -9,7 +9,7 @@
       <template v-for="item in cases">
         <div class="lawyer-cases__list__case" :key="item.id" v-if="item.caseState===caseState">
           <div class="lawyer-cases__list__case__title open-user-modal" @click="openDataModal()">
-            {{ item.name }}
+            {{ item.clientDto.firstName }} {{ item.clientDto.lastName }}
           </div>
           <div class="lawyer-cases__list__case__img open-user-modal" @click="openDataModal()">
             <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
@@ -21,10 +21,10 @@
             {{ item.description }}
           </div>
           <div class="lawyer-cases__list__case__date">
-            {{ item.date }}
+            {{ item.creationDate.slice(0, 10) }}
           </div>
           <div class="lawyer-cases__list__case__separator"></div>
-          <div v-if="caseState==='ACTIVE' || caseState==='DONE'" class="lawyer-cases__list__case__btns">
+          <div v-if="caseState==='BUSY' || caseState==='DONE'" class="lawyer-cases__list__case__btns">
             <router-link class="lawyer-cases__list__case__btns__btn-def" to="/lawyer/chats">
               Chat
             </router-link>
@@ -50,7 +50,7 @@ export default {
   },
   data () {
     return {
-      caseState: 'ACTIVE',
+      caseState: 'BUSY',
       dataModal: false
     }
   },
@@ -67,7 +67,7 @@ export default {
       }
     },
     showActive: function () {
-      this.caseState = 'ACTIVE'
+      this.caseState = 'BUSY'
     },
     showApplied: function () {
       this.caseState = 'APPLIED'
