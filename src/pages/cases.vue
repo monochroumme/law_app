@@ -1,7 +1,7 @@
 <template>
   <div class="page cases-page">
     <active-cases v-if="this.userType==='ROLE_CLIENT' && clientAllCases" v-model="clientAllCases" :cases="clientAllCases"/>
-    <lawyer-cases v-if="this.userType==='ROLE_LAWYER' && lawyerCases" v-model="lawyerCases" :cases="lawyerCases" />
+    <lawyer-cases v-if="this.userType==='ROLE_LAWYER'" />
   </div>
 </template>
 
@@ -41,7 +41,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['clientAllCases', 'lawyerFilteredCases', 'lawyerCases'])
+    ...mapState(['clientAllCases', 'lawyerFilteredCases', 'lawyerCases', 'lawyerAppliedCases', 'lawyerDoneCases'])
   },
   async created () {
     if (localStorage.userType) {
@@ -60,10 +60,12 @@ export default {
     }
     if (!this.lawyerCases && this.userType === 'ROLE_LAWYER') {
       await this.getLawyerCases()
+      await this.getLawyerAppliedCases()
+      await this.getLawyerDoneCases()
     }
   },
   methods: {
-    ...mapActions(['getClientAllCases', 'getLawyerFilteredCases', 'getLawyerCases'])
+    ...mapActions(['getClientAllCases', 'getLawyerFilteredCases', 'getLawyerCases', 'getLawyerAppliedCases', 'getLawyerDoneCases'])
   }
 }
 </script>

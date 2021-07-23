@@ -66,7 +66,10 @@ export default new Vuex.Store({
     lawyerFilteredCases: null,
     clientData: null,
     clientAllCases: null,
-    lawyersApplied: null
+    lawyersApplied: null,
+    lawyerCases: null,
+    lawyerAppliedCases: null,
+    lawyerDoneCases: null
   },
 
   mutations: {
@@ -130,7 +133,14 @@ export default new Vuex.Store({
 
     setLawyerCases (state, payload) {
       state.lawyerCases = payload
-      console.log(payload)
+    },
+
+    setLawyerAppliedCases (state, payload) {
+      state.lawyerAppliedCases = payload
+    },
+
+    setLawyerDoneCases (state, payload) {
+      state.lawyerDoneCases = payload
     }
   },
 
@@ -264,7 +274,7 @@ export default new Vuex.Store({
           url = url + '&practiceAreaIdList=' + params.practiceAreaIdList[i].id
         }
       }
-      const res = await apiRequest.get(`/lawyer/filtered${url}`)
+      const res = await apiRequest.get(`/lawyer/case/filtered${url}`)
       if (res.data) {
         commit('setLawyerFilteredCases', res.data)
       }
@@ -293,7 +303,7 @@ export default new Vuex.Store({
     },
 
     async deleteLawyerCase ({ commit }, data) {
-      const res = await apiRequest.delete(`/lawyer/delete/${data}`)
+      const res = await apiRequest.delete(`/lawyer/case/delete/${data}`)
       console.log(res)
       if (res.data) {
         console.log('Case successfully deleted by lawyer')
@@ -301,21 +311,21 @@ export default new Vuex.Store({
     },
 
     async archiveLawyerCase ({ commit }, id) {
-      const res = await apiRequest.put(`/lawyer/archive?caseId=${id}`)
+      const res = await apiRequest.put(`/lawyer/case/archive?caseId=${id}`)
       if (res.data) {
         console.log('Case successfully archieved by lawyer')
       }
     },
 
     async unarchiveLawyerCase ({ commit }, id) {
-      const res = await apiRequest.put(`/lawyer/unarchive?caseId=${id}`)
+      const res = await apiRequest.put(`/lawyer/case/unarchive?caseId=${id}`)
       if (res.data) {
         console.log('Case successfully unarchieved by lawyer')
       }
     },
 
     async applyToCase ({ commit }, data) {
-      const res = await apiRequest.post(`lawyer/${data.id}/apply?comment=${data.comment}`)
+      const res = await apiRequest.post(`lawyer/case/${data.id}/apply?comment=${data.comment}`)
       if (res.data) {
         console.log('Successfully applied to case')
       }
@@ -343,9 +353,23 @@ export default new Vuex.Store({
     },
 
     async getLawyerCases ({ commit }) {
-      const res = await apiRequest.get('/lawyer/myCases/')
+      const res = await apiRequest.get('/lawyer/case/myCases/')
       if (res.data) {
         commit('setLawyerCases', res.data)
+      }
+    },
+
+    async getLawyerAppliedCases ({ commit }) {
+      const res = await apiRequest.get('/lawyer/case/applied')
+      if (res.data) {
+        commit('setLawyerAppliedCases', res.data)
+      }
+    },
+
+    async getLawyerDoneCases ({ commit }) {
+      const res = await apiRequest.get('/lawyer/case/done')
+      if (res.data) {
+        commit('setLawyerDoneCases', res.data)
       }
     },
 
