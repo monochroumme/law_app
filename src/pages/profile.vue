@@ -155,6 +155,7 @@ export default {
       firstName: '',
       lastName: '',
       email: '',
+      oldEmail: '',
       phoneNumber: '',
       jurisdictionDtoList: null,
       practiceAreaDtoList: null,
@@ -194,6 +195,7 @@ export default {
     }
     if (localStorage.email) {
       this.email = localStorage.email
+      this.oldEmail = localStorage.email
     }
     if (localStorage.phoneNumber) {
       this.phoneNumber = localStorage.phoneNumber
@@ -244,6 +246,16 @@ export default {
       if (!this.email?.trim()?.length || !validateEmail(this.email)) {
         error = true
         this.$toasted.error('Please, enter a valid email')
+      }
+      if (this.userType === 'ROLE_LAWYER') {
+        if (!this.jurisdictionsDto?.length) {
+          error = true
+          this.$toasted.error('Please, choose your jurisdiction')
+        }
+        if (!this.practiceAreasDto?.length) {
+          error = true
+          this.$toasted.error('Please, choose your area of law')
+        }
       }
       return !error
     },
@@ -324,7 +336,9 @@ export default {
         }
         await this.editUser(editData).then(() => {
           localStorage.clear()
-          this.$router.push('/login')
+          if (this.oldEmail !== this.email) {
+            this.$router.push('/login')
+          }
         }).catch(() => {})
         this.wait = false
       }
