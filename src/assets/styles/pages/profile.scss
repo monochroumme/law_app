@@ -64,6 +64,36 @@
         color: #9D9D9D;
         font-size: 22px;
         line-height: 25.78px;
+        position: relative;
+        cursor: pointer;
+
+        .photo-dd {
+          position: absolute;
+          left: 50%;
+          transform: translate(-50%, 0);
+          background: #ffffff;
+          border-radius: 6px;
+          border: 1px solid $blue-3;
+
+          button {
+            padding: 6px 0;
+            width: 100%;
+          }
+
+          button:hover {
+            background-color: $blue-3;
+            color: #ffffff;
+          }
+
+          button:first-of-type {
+            border-bottom: $blue-3;
+            border-radius: 6px 6px 0 0;
+          }
+
+          button:last-of-type {
+            border-radius: 0 0 6px 6px;
+          }
+        }
       }
     }
 

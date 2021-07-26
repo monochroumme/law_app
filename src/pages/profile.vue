@@ -3,9 +3,20 @@
     <div class="profile-page__user">
       <div class="profile-page__user__photo">
         <div class="profile-page__user__photo__img">
-          <img src="@/assets/media/common/photo.png" alt="">
+          <img v-if="!this.profilePhoto" src="@/assets/media/common/photo.png" alt="Profile photo">
+          <img v-else :src="this.profilePhoto" alt="Profile photo">
         </div>
-        <div class="profile-page__user__photo__edit">Edit photo</div>
+        <div v-if="this.profilePhoto" @click="openImageDd()" v-click-outside="closeImageDd" class="profile-page__user__photo__edit">
+          Edit photo
+          <div v-if="this.imageDd" class="photo-dd">
+            <button @click="chooseFile()" class="photo-dd-btn">Upload photo</button>
+            <button @click="deleteImage()" class="photo-dd-btn">Delete photo</button>
+          </div>
+        </div>
+        <div v-else class="profile-page__user__photo__edit">
+          <span @click="chooseFile()">Upload photo</span>
+        </div>
+        <input id="fileUpload" type="file"  accept="image/*" @change="uploadImage($event)" hidden>
       </div>
       <div class="profile-page__user__name">
         {{ this.firstName }} {{ this.lastName }}
@@ -167,7 +178,9 @@ export default {
       rate: 0,
       oldPassword: '',
       newPassword: '',
-      repeatPassword: ''
+      repeatPassword: '',
+      profilePhoto: null,
+      imageDd: false
     }
   },
   components: {
@@ -209,10 +222,48 @@ export default {
     if (localStorage.practiceAreaDtoList) {
       this.practiceAreaDtoList = JSON.parse(localStorage.practiceAreaDtoList)
     }
+    if (localStorage.profilePic) {
+      this.profilePhoto = localStorage.profilePic
+    }
   },
   methods: {
     ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
-    ...mapActions(['resetPassword', 'editUser']),
+    ...mapActions(['resetPassword', 'editUser', 'uploadImg', 'deleteImg']),
+    openImageDd () {
+      this.imageDd = true
+    },
+    closeImageDd: function (event) {
+      if (!event.path[0].classList.contains('photo-dd') && !event.path[0].classList.contains('photo-dd-btn')) {
+        this.imageDd = false
+      }
+    },
+    chooseFile () {
+      document.getElementById('fileUpload').click()
+    },
+    async uploadImage (e) {
+      this.imageDd = false
+      const data = new FormData()
+      data.append('name', e.target.files[0].name)
+      data.append('file', e.target.files[0])
+      await this.uploadImg(data)
+        .then(() => {
+          this.profilePhoto = localStorage.getItem('profilePic')
+        })
+        .catch(() => {
+          console.log('Error')
+        })
+    },
+    async deleteImage () {
+      await this.deleteImg()
+        .then(() => {
+          this.profilePhoto = null
+          this.imageDd = false
+        })
+        .catch(() => {
+          console.log('Error')
+          this.imageDd = false
+        })
+    },
     validateInputs () {
       let error = false
       if (!this.oldPassword?.trim()?.length || !validatePassword(this.oldPassword)) {

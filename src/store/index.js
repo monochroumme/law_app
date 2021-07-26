@@ -149,6 +149,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         apiRequest.postWithoutAuth('/auth/singin/', data)
           .then(res => {
+            console.log(res.data)
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('userType', res.data.role)
             localStorage.setItem('userId', res.data.id)
@@ -156,6 +157,9 @@ export default new Vuex.Store({
             localStorage.setItem('lastName', res.data.lastName)
             localStorage.setItem('email', res.data.email)
             localStorage.setItem('phoneNumber', res.data.phoneNumber)
+            if (res.data.imageUrl) {
+              localStorage.setItem('profilePic', res.data.imageUrl)
+            }
             if (res.data.role === 'ROLE_LAWYER') {
               localStorage.setItem('jurisdictionDtoList', JSON.stringify(res.data.jurisdictionDtoList))
               localStorage.setItem('practiceAreaDtoList', JSON.stringify(res.data.practiceAreaDtoList))
@@ -214,6 +218,60 @@ export default new Vuex.Store({
         } else {
           apiRequest.post('/lawyer/password_reset/', data)
             .then(res => {
+              resolve(res)
+            })
+            .catch(e => {
+              console.error(e.response.data.message)
+              reject(e.response.data.message)
+            })
+        }
+      })
+    },
+
+    async uploadImg ({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        if (localStorage.getItem('userType') === 'ROLE_LAWYER') {
+          apiRequest.postFile('/lawyer/pic/upload', data)
+            .then(res => {
+              console.log(res)
+              localStorage.setItem('profilePic', res.data.url)
+              resolve(res)
+            })
+            .catch(e => {
+              console.error(e.response.data.message)
+              reject(e.response.data.message)
+            })
+        } else {
+          apiRequest.postFile('/client/pic/upload', data)
+            .then(res => {
+              localStorage.setItem('profilePic', res.data.url)
+              resolve(res)
+            })
+            .catch(e => {
+              console.error(e.response.data.message)
+              reject(e.response.data.message)
+            })
+        }
+      })
+    },
+
+    async deleteImg () {
+      return new Promise((resolve, reject) => {
+        if (localStorage.getItem('userType') === 'ROLE_LAWYER') {
+          apiRequest.delete('/lawyer/pic/delete')
+            .then(res => {
+              console.log(res)
+              localStorage.removeItem('profilePic')
+              resolve(res)
+            })
+            .catch(e => {
+              console.error(e.response.data.message)
+              reject(e.response.data.message)
+            })
+        } else {
+          apiRequest.delete('/client/pic/delete')
+            .then(res => {
+              localStorage.removeItem('profilePic')
               resolve(res)
             })
             .catch(e => {

@@ -80,4 +80,13 @@ export default class apiRequest {
   static getWithoutAuth (path) {
     return request(axios.get(path, headersWithoutAuth()))
   }
+
+  static postFile (path, data) {
+    return request(axios.post(path, data, {
+      headers: {
+        'Content-Type': 'image/*',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }))
+  }
 }

@@ -65,7 +65,7 @@ export default {
       this.showFilter = false
     },
     logout: function () {
-      localStorage.removeItem('token')
+      localStorage.clear()
       this.$router.push('/')
     }
   }
