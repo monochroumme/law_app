@@ -4,12 +4,24 @@
   align-items: center;
 
   &__content {
+    position: relative;
     background: $blue-3;
     width: 355px;
     max-width: 486px;
     border-radius: 25px;
     padding: 0 66px;
     box-sizing: content-box;
+
+    &__back {
+      position: absolute;
+      right: 25px;
+      top: 25px;
+      font-size: 24px;
+
+      a {
+        color: #FFC840;
+      }
+    }
   }
 
   &__title {

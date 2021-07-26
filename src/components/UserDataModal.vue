@@ -21,15 +21,15 @@
             <div>Email: </div>
             <span>{{ this.$parent.userData.email }}</span>
           </div>
-          <div class="user-modal__modal__body__user__data-w" v-if="this.userType==='ROLE_CLIENT'">
+          <div class="user-modal__modal__body__user__data-w" :class="{ block_to_right: this.userType === 'ROLE_CLIENT' }" v-if="this.userType==='ROLE_CLIENT'">
             <div>Bar Association:</div>
             <span>{{ this.$parent.userData.barassociation }}</span>
           </div>
-          <div class="user-modal__modal__body__user__data-w">
+          <div class="user-modal__modal__body__user__data-w" :class="{ block_to_right: this.userType === 'ROLE_LAWYER' }">
             <div>Jurisdiction: </div>
             <span>Azerbaijan</span>
           </div>
-          <div class="user-modal__modal__body__user__data-w" v-if="this.userType==='ROLE_CLIENT'">
+          <div class="user-modal__modal__body__user__data-w" :class="{ block_to_right: this.userType === 'ROLE_CLIENT' }" v-if="this.userType==='ROLE_CLIENT'">
             <div>Specialization:</div>
             <span v-for="(item, i) in this.$parent.userData.practiceAreas" :key="i">{{ item.practiceArea }}</span>
           </div>

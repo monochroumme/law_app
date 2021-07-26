@@ -3,7 +3,7 @@
     <div class="profile-page__user">
       <div class="profile-page__user__photo">
         <div class="profile-page__user__photo__img">
-          <img v-if="!this.profilePhoto" src="@/assets/media/common/photo.png" alt="Profile photo">
+          <img v-if="!this.profilePhoto" src="/media/common/user.svg" alt="Profile photo">
           <img v-else :src="this.profilePhoto" alt="Profile photo">
         </div>
         <div v-if="this.profilePhoto" @click="openImageDd()" v-click-outside="closeImageDd" class="profile-page__user__photo__edit">
@@ -138,7 +138,7 @@
               label="Area of Law"
               :options="areasOfLaw || defaultAreasOfLaw"
               :multiple="true"
-              :close-on-select="false"
+              :close-on-select="true"
               label-name="practiceArea"
             />
           </div>

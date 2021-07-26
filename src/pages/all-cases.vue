@@ -50,7 +50,7 @@
             label="Area of Law"
             :options="areasOfLaw || defaultAreasOfLaw"
             :multiple="true"
-            :close-on-select="false"
+            :close-on-select="true"
             label-name="practiceArea"
           />
           <label class="sort">Sort by date:</label>
@@ -101,14 +101,33 @@ export default {
   },
   async created () {
     if (!this.jurisdictions) {
-      await this.getJurisdictions()
+      await this.getJurisdictions().then(() => {
+        this.jurisdiction = JSON.parse(localStorage.jurisdictionDtoList)
+        this.jurisdictions.map((j) => {
+          this.jurisdiction.map((jL, index) => {
+            if (j.id === jL) {
+              this.jurisdiction[index] = j
+            }
+          })
+        })
+      })
     }
     if (!this.areasOfLaw) {
       await this.getAreasOfLaw()
+      this.areaOfLaw = JSON.parse(localStorage.practiceAreaDtoList)
+      this.areasOfLaw.map((p) => {
+        this.areaOfLaw.map((pL, index) => {
+          if (p.id === pL) {
+            this.areaOfLaw[index] = p
+          }
+        })
+      })
     }
     if (!this.lawyerFilteredCases) {
       await this.getLawyerFilteredCases({
-        isAscending: true
+        isAscending: true,
+        jurisdictionIdList: this.jurisdiction,
+        practiceAreaIdList: this.areaOfLaw
       })
     }
   },

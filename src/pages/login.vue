@@ -2,6 +2,11 @@
   <div class="page login-page">
     <form @submit.prevent="onSubmit" class="common__container login-page__content">
       <h1 class="login-page__title">Sign in</h1>
+      <div class="login-page__content__back">
+        <router-link to="/">
+          X
+        </router-link>
+      </div>
       <credentials-input class="mb-20" v-model="email" placeholder="Enter your email" type="email" label="Email"/>
       <credentials-input type="password" class="mb-20" v-model="password" placeholder="Enter your password"
                     label="Password"/>

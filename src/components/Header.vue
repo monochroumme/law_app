@@ -20,8 +20,8 @@
       <router-link :to="`/${userType}/profile`" class="header__user">
         <span v-if="!this.firstName" class="test-user">Ilham Pirmamedov</span>
         <span v-if="this.firstName" class="test-user">{{ this.firstName }} {{ this.lastName }}</span>
-        <img src="@/assets/media/common/photo.png" alt="">
-<!--        <img src="" onerror="this.src = '/media/common/user.svg'" alt="User">-->
+        <img v-if="this.profilePhoto" :src="this.profilePhoto" alt="Profile pic">
+        <img v-else src="/media/common/user.svg" alt="">
       </router-link>
       <div class="hidden"><div @click="logout()">Logout</div></div>
     </div>
@@ -46,7 +46,8 @@ export default {
       showFilter: false,
       userData: null,
       firstName: '',
-      lastName: ''
+      lastName: '',
+      profilePhoto: null
     }
   },
   mounted () {
@@ -55,6 +56,9 @@ export default {
     }
     if (localStorage.lastName) {
       this.lastName = localStorage.lastName
+    }
+    if (localStorage.profilePic) {
+      this.profilePhoto = localStorage.profilePic
     }
   },
   methods: {

@@ -48,7 +48,10 @@
             font-weight: bold;
           }
         }
-
+        .block_to_right {
+          text-align: end;
+          padding-right: 10%;
+        }
         &__data-w {
           width: 50%;
           margin-bottom: 30px;

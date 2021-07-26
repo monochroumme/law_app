@@ -78,7 +78,7 @@
               label="Area of Law"
               :options="areasOfLaw || defaultAreasOfLaw"
               :multiple="true"
-              :close-on-select="false"
+              :close-on-select="true"
               label-name="practiceArea"
             />
           </div>

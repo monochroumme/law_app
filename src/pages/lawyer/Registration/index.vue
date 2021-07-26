@@ -33,7 +33,7 @@
         label="Area of Law"
         :options="areasOfLaw || defaultAreasOfLaw"
         :multiple="true"
-        :close-on-select="false"
+        :close-on-select="true"
         label-name="practiceArea"
       />
       <div v-if="this.errorObj.areaOfLaw" class="error">Please, choose your area of law</div>
