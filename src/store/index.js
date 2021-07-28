@@ -69,7 +69,9 @@ export default new Vuex.Store({
     lawyersApplied: null,
     lawyerCases: null,
     lawyerAppliedCases: null,
-    lawyerDoneCases: null
+    lawyerDoneCases: null,
+    allChats: null,
+    chatMessages: null
   },
 
   mutations: {
@@ -141,6 +143,14 @@ export default new Vuex.Store({
 
     setLawyerDoneCases (state, payload) {
       state.lawyerDoneCases = payload
+    },
+
+    setAllChats (state, payload) {
+      state.allChats = payload
+    },
+
+    setChatMessages (state, payload) {
+      state.chatMessages = payload
     }
   },
 
@@ -464,6 +474,29 @@ export default new Vuex.Store({
             console.log(e.response.data)
           })
       })
+    },
+    async establishChatSession ({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        apiRequest.put('/private-chat/channel/', data)
+          .then(res => {
+            resolve(res)
+          })
+          .catch(e => {
+            console.log(e.response.data)
+          })
+      })
+    },
+    async getAllChats ({ commit }, data) {
+      const res = await apiRequest.get(`/private-chat?${data.userId}&${data.userRole}`)
+      if (res.data) {
+        commit('setAllChats', res.data)
+      }
+    },
+    async getExistingChatSessionMessages ({ commit }, data) {
+      const res = await apiRequest.get(`/private-chat/channel/${data.chatId}`)
+      if (res.data) {
+        commit('setChatMessages', res.data)
+      }
     }
   }
 })
