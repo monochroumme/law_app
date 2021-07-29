@@ -2,7 +2,7 @@
   <div class="active-cases">
     <div class="active-cases__active">Active Cases</div>
     <div class="active-cases__list">
-      <template v-for="item in this.activeCases">
+      <template v-for="item in this.$parent.clientActiveCases">
         <div class="active-cases__list__case" :key="item.id">
           <div class="active-cases__list__case__title">
             Case Description
@@ -30,7 +30,7 @@
     </div>
     <div class="active-cases__active">Archived Cases</div>
     <div class="active-cases__list">
-      <template v-for="item in this.archivedCases">
+      <template v-for="item in this.$parent.clientArchivedCases">
         <div class="active-cases__list__case" :key="item.id">
           <div class="active-cases__list__case__title">
             Case Description
@@ -149,8 +149,6 @@ export default {
       caseDescription: '',
       jurisdiction: '',
       areaOfLaw: '',
-      activeCases: [],
-      archivedCases: [],
       modalData: {
         id: '',
         description: '',
@@ -165,48 +163,38 @@ export default {
       this.getAreasOfLaw()
     }
   },
-  mounted () {
-    this.$parent.clientAllCases.map(c => {
-      if (c.caseState === 'FREE' || c.caseState === 'APPLIED' || c.caseState === 'BUSY') {
-        this.activeCases.push(c)
-      }
-      if (c.caseState === 'ARCHIVED_BY_CLIENT' || c.caseState === 'DONE') {
-        this.archivedCases.push(c)
-      }
-    })
-  },
   methods: {
     ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
-    ...mapActions(['addClientCase', 'editClientCase', 'getActiveCases', 'archiveClientCase', 'deleteClientCase', 'unarchiveClientCase']),
+    ...mapActions(['addClientCase', 'editClientCase', 'archiveClientCase', 'deleteClientCase', 'unarchiveClientCase']),
 
     async archiveToggler (item) {
       await this.archiveClientCase(parseInt(item.id))
         .then(() => {
-          this.activeCases.map((obj, index) => {
+          this.clientActiveCases.map((obj, index) => {
             if (obj.id === item.id) {
-              this.activeCases.splice(index, 1)
+              this.clientActiveCases.splice(index, 1)
             }
           })
-          this.archivedCases.push(item)
+          this.clientArchivedCases.push(item)
         })
     },
     async unarchiveToggler (item) {
       await this.unarchiveClientCase(parseInt(item.id))
         .then(() => {
-          this.archivedCases.map((obj, index) => {
+          this.clientArchivedCases.map((obj, index) => {
             if (obj.id === item.id) {
-              this.archivedCases.splice(index, 1)
+              this.clientArchivedCases.splice(index, 1)
             }
           })
-          this.activeCases.push(item)
+          this.clientActiveCases.push(item)
         })
     },
     async deleteCase (id) {
       await this.deleteClientCase(parseInt(id.toString()))
         .then(() => {
-          this.archivedCases.map((obj, index) => {
+          this.clientArchivedCases.map((obj, index) => {
             if (obj.id === id) {
-              this.archivedCases.splice(index, 1)
+              this.clientArchivedCases.splice(index, 1)
             }
           })
         })
@@ -276,7 +264,7 @@ export default {
       }
       await this.editClientCase(putData)
         .then(() => {
-          this.activeCases.map((c) => {
+          this.clientActiveCases.map((c) => {
             if (c.id === this.modalData.id) {
               c = this.modalData
             }
@@ -295,12 +283,11 @@ export default {
             }
           })
           await this.addClientCase({
-            clientId: localStorage.getItem('userId'),
             description: this.caseDescription,
             jurisdictionIdList: this.jurisdiction.map(j => parseInt(j.id.toString())),
             practiceAreaIdList: (allAreas ? allAreas.map(aA => parseInt(aA.id.toString())) : this.areaOfLaw.map(p => parseInt(p.id.toString())))
           }).then(() => {
-            this.activeCases.push({
+            this.clientActiveCases.push({
               clientId: localStorage.getItem('userId'),
               description: this.caseDescription,
               jurisdictionIdList: this.jurisdiction.map(j => parseInt(j.id.toString())),

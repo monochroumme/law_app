@@ -1,6 +1,6 @@
 <template>
   <div class="page cases-page">
-    <active-cases v-if="this.userType==='ROLE_CLIENT' && clientAllCases" v-model="clientAllCases" :cases="clientAllCases"/>
+    <active-cases v-if="this.userType==='ROLE_CLIENT' && clientActiveCases" :cases="clientActiveCases" :archived="clientArchivedCases"/>
     <lawyer-cases v-if="this.userType==='ROLE_LAWYER'" />
   </div>
 </template>
@@ -41,22 +41,19 @@ export default {
   },
 
   computed: {
-    ...mapState(['clientAllCases', 'lawyerFilteredCases', 'lawyerCases', 'lawyerAppliedCases', 'lawyerDoneCases'])
+    ...mapState(['clientActiveCases', 'clientArchivedCases', 'lawyerFilteredCases', 'lawyerCases', 'lawyerAppliedCases', 'lawyerDoneCases'])
   },
   async created () {
     if (localStorage.userType) {
       this.userType = localStorage.userType
     }
-    if (!this.clientAllCases && this.userType === 'ROLE_CLIENT') {
-      await this.getClientAllCases({
-        caseStates: [
-          'FREE',
-          'APPLIED',
-          'BUSY',
-          'DONE',
-          'ARCHIVED_BY_CLIENT'
-        ]
-      })
+    if (this.userType === 'ROLE_CLIENT') {
+      if (!this.clientActiveCases) {
+        await this.getClientActiveCases()
+      }
+      if (!this.clientArchivedCases) {
+        await this.getClientArchivedCases()
+      }
     }
     if (!this.lawyerCases && this.userType === 'ROLE_LAWYER') {
       await this.getLawyerCases()
@@ -65,7 +62,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getClientAllCases', 'getLawyerFilteredCases', 'getLawyerCases', 'getLawyerAppliedCases', 'getLawyerDoneCases'])
+    ...mapActions(['getClientActiveCases', 'getClientArchivedCases', 'getLawyerFilteredCases', 'getLawyerCases', 'getLawyerAppliedCases', 'getLawyerDoneCases'])
   }
 }
 </script>

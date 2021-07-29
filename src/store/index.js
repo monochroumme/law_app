@@ -66,12 +66,15 @@ export default new Vuex.Store({
     lawyerFilteredCases: null,
     clientData: null,
     clientAllCases: null,
+    clientActiveCases: null,
+    clientArchivedCases: null,
     lawyersApplied: null,
     lawyerCases: null,
     lawyerAppliedCases: null,
     lawyerDoneCases: null,
     allChats: null,
-    chatMessages: null
+    chatMessages: null,
+    chatSession: null
   },
 
   mutations: {
@@ -129,6 +132,14 @@ export default new Vuex.Store({
       state.clientAllCases = payload
     },
 
+    setClientActiveCases (state, payload) {
+      state.clientActiveCases = payload
+    },
+
+    setClientArchivedCases (state, payload) {
+      state.clientArchivedCases = payload
+    },
+
     setAppliedLawyers (state, payload) {
       state.lawyersApplied = payload
     },
@@ -143,6 +154,10 @@ export default new Vuex.Store({
 
     setLawyerDoneCases (state, payload) {
       state.lawyerDoneCases = payload
+    },
+
+    setChatSession (state, payload) {
+      state.chatSession = payload
     },
 
     setAllChats (state, payload) {
@@ -323,6 +338,21 @@ export default new Vuex.Store({
       }
     },
 
+    async getClientActiveCases ({ commit }) {
+      const res = await apiRequest.get('/client/case/active/')
+      if (res.data) {
+        console.log(res)
+        commit('setClientActiveCases', res.data)
+      }
+    },
+
+    async getClientArchivedCases ({ commit }) {
+      const res = await apiRequest.get('/client/case/archived/')
+      if (res.data) {
+        commit('setClientArchivedCases', res.data)
+      }
+    },
+
     async getAppliedLawyers ({ commit }, caseId) {
       const res = await apiRequest.get(`/client/case/applications/${caseId}`)
       if (res.data) {
@@ -479,6 +509,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         apiRequest.put('/private-chat/channel/', data)
           .then(res => {
+            commit('setChatSession', res.data)
             resolve(res)
           })
           .catch(e => {

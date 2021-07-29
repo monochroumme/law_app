@@ -86,19 +86,15 @@ export default {
       this.dataModal = true
     },
     async onOpen () {
-      // await this.establishChatSession({
-      //   clientId: 10,
-      //   clientName: 'Tofik',
-      //   clientSurname: 'Client',
-      //   lawyerId: localStorage.userId,
-      //   lawyerName: localStorage.firstName,
-      //   lawyerSurname: localStorage.lastName
-      // }).then((data) => {
-      //    console.log(data.channelUuid)
-      //    this.channelUuid = data.channelUuid
-      //    this.otherUser = 10
-      //    this.socket.subscribe('/topic/private.chat.' + data.channelUuid, data.firstName, data.2ndFirstName, this.onMessage)
-      // })
+      await this.establishChatSession({
+        receiver: 1,
+        receiverRole: 'ROLE_CLIENT',
+        sender: parseInt(localStorage.userId),
+        senderRole: 'ROLE_LAWYER'
+      }).then((data) => {
+        this.channelUuid = data.data.channelUuid
+        this.otherUser = 1
+      })
       console.log('You just connected to websocket server')
     },
     onClose: function () {
@@ -119,30 +115,30 @@ export default {
     },
     onInput (e) {
       this.currentMessage = e.target.innerHTML
+    },
+    addChatMessageToUI: function (message) {
+      // this.messages
+      //   .push({
+      //     contents: message.contents,
+      //     isFromRecipient: message.fromUserId !== localStorage.userId,
+      //     author: (message.fromUserId === localStorage.userId) ? this.fullName : this.2ndFullName
+      //   })
+    },
+    onMessage: function (response) {
+      this.addChatMessageToUI(JSON.parse(response.body))
+    },
+    sendChatMessage: function () {
+      if (!this.currentMessage || this.currentMessage.trim() === '') {
+        return
+      } else {
+        this.socket.send('/app/private.chat.' + this.channelUuid, {}, {
+          fromUserId: parseInt(localStorage.userId),
+          toUserId: 1,
+          contents: this.currentMessage
+        })
+      }
+      this.currentMessage = ''
     }
-    // addChatMessageToUI: function(message) {
-    //   this.messages
-    //     .push({
-    //       contents: message.contents,
-    //       isFromRecipient: message.fromUserId !== localStorage.userId,
-    //       author: (message.fromUserId === localStorage.userId) ? this.fullName : this.2ndFullName
-    //     })
-    // },
-    // onMessage: function (response) {
-    //   this.addChatMessageToUI(JSON.parse(response.body))
-    // },
-    // sendChatMessage: function () {
-    //   if (!this.currentMessage || this.currentMessage.trim() === '') {
-    //     return
-    //   } else {
-    //     this.socket.send("/app/private.chat." + this.channelUuid, {}, JSON.stringify({
-    //       fromUserId: localStorage.userId,
-    //       toUserId: this.otherUser,
-    //       contents: this.currentMessage
-    //     }))
-    //   }
-    //   this.currentMessage = ''
-    // }
   },
   created () {
     this.socket = Stomp.over(new SockJS('https://law-app-shrinkcom.herokuapp.com/ws'))
