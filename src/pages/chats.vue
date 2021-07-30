@@ -128,7 +128,13 @@ export default {
           senderId: res.data.senderId,
           senderLastName: res.data.senderLastName
         }
-        this.rmDataForChat()
+        if (this.goToChat) {
+          this.getAllChats({
+            userId: localStorage.getItem('userId'),
+            userRole: localStorage.getItem('userType')
+          })
+          this.rmDataForChat()
+        }
         return res
       }).then((info) => {
         this.socket.subscribe('/topic/private.chat.' + this.channelUuid, function (data) {
@@ -191,10 +197,12 @@ export default {
     this.socket.connect({
       Authorization: 'Bearer ' + localStorage.getItem('token')
     }, this.onOpen, this.onError)
-    await this.getAllChats({
-      userId: localStorage.getItem('userId'),
-      userRole: localStorage.getItem('userType')
-    })
+    if (!this.goToChat) {
+      await this.getAllChats({
+        userId: localStorage.getItem('userId'),
+        userRole: localStorage.getItem('userType')
+      })
+    }
   }
   // components: {
   //   UserDataModal: () => import('@/components/UserDataModal')
