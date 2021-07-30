@@ -48,14 +48,10 @@ export default {
       this.userType = localStorage.userType
     }
     if (this.userType === 'ROLE_CLIENT') {
-      if (!this.clientActiveCases) {
-        await this.getClientActiveCases()
-      }
-      if (!this.clientArchivedCases) {
-        await this.getClientArchivedCases()
-      }
+      await this.getClientActiveCases()
+      await this.getClientArchivedCases()
     }
-    if (!this.lawyerCases && this.userType === 'ROLE_LAWYER') {
+    if (this.userType === 'ROLE_LAWYER') {
       await this.getLawyerCases()
       await this.getLawyerAppliedCases()
       await this.getLawyerDoneCases()

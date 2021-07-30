@@ -124,13 +124,11 @@ export default {
         })
       })
     }
-    if (!this.lawyerFilteredCases) {
-      await this.getLawyerFilteredCases({
-        isAscending: true,
-        jurisdictionIdList: this.jurisdiction,
-        practiceAreaIdList: this.areaOfLaw
-      })
-    }
+    await this.getLawyerFilteredCases({
+      isAscending: false,
+      jurisdictionIdList: this.jurisdiction,
+      practiceAreaIdList: this.areaOfLaw
+    })
   },
   methods: {
     ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
@@ -176,7 +174,7 @@ export default {
     },
     async onSubmit () {
       await this.getLawyerFilteredCases({
-        isAscending: true,
+        isAscending: false,
         jurisdictionIdList: this.jurisdiction,
         practiceAreaIdList: this.areaOfLaw
       })

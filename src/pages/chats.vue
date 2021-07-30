@@ -107,6 +107,7 @@ export default {
       if (this.goToChat) {
         putData = this.goToChat
         this.active_el = putData.receiver
+        this.putData = null
       } else {
         putData = {
           receiver: this.allChats[this.active_el].receiverId,
@@ -133,14 +134,8 @@ export default {
         this.socket.subscribe('/topic/private.chat.' + this.channelUuid, function (data) {
           console.log('subdata:', data)
         }, { Authorization: 'Bearer ' + localStorage.getItem('token') })
-        this.getAllChats({
-          userId: localStorage.getItem('userId'),
-          userRole: localStorage.getItem('userType')
-        })
         this.getExistingChatSessionMessages(info.data.channelUuid).then(() => {
           this.messages = this.chatMessages
-          const dv = document.getElementById('main-chat')
-          dv.scrollTop = dv.scrollHeight
         })
       })
       console.log('You just connected to websocket server')

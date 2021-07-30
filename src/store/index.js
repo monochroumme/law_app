@@ -173,7 +173,7 @@ export default new Vuex.Store({
       state.goToChat = payload
     },
 
-    unsetDataForChat (state, payload) {
+    unsetDataForChat (state) {
       state.goToChat = null
     }
   },

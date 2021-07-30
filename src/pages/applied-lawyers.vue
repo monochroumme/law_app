@@ -60,13 +60,11 @@ export default {
       return this.$route.params.caseId
     }
   },
-  created () {
-    if (!this.lawyersApplied) {
-      this.getAppliedLawyers(this.caseId)
-    }
+  async created () {
+    await this.getAppliedLawyers(this.caseId)
     if (!this.jurisdictions) {
-      this.getJurisdictions()
-      this.getAreasOfLaw()
+      await this.getJurisdictions()
+      await this.getAreasOfLaw()
     }
   },
   methods: {

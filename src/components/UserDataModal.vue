@@ -7,7 +7,8 @@
       <div class="user-modal__modal__body">
         <div class="user-modal__modal__body__user">
           <div class="user-modal__modal__body__user__img">
-            <img src="@/assets/media/common/photo.png" alt="">
+            <img v-if="this.$parent.userData.imageDto" :src="this.$parent.userData.imageDto.url" alt="">
+            <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
           </div>
           <div class="user-modal__modal__body__user__data">
             <div>Name/Surname:</div>

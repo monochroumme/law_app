@@ -60,6 +60,9 @@ export default {
     if (localStorage.profilePic) {
       this.profilePhoto = localStorage.profilePic
     }
+    setInterval(() => {
+      this.profilePhoto = localStorage.profilePic
+    }, 1000)
   },
   methods: {
     openFilter: function () {
