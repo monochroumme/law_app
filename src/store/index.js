@@ -125,8 +125,16 @@ export default new Vuex.Store({
       state.userData = payload
     },
 
+    unsetClientData (state) {
+      state.userData = null
+    },
+
     setLawyerData (state, payload) {
       state.userData = payload
+    },
+
+    unsetLawyerData (state, payload) {
+      state.userData = null
     },
 
     setClientAllCases (state, payload) {
@@ -446,6 +454,7 @@ export default new Vuex.Store({
     },
 
     async getClientDataById ({ commit }, id) {
+      commit('unsetClientData')
       const res = await apiRequest.get(`/lawyer/client?clientId=${id}`)
       if (res.data) {
         commit('setClientData', res.data)
@@ -453,6 +462,7 @@ export default new Vuex.Store({
     },
 
     async getLawyerDataById ({ commit }, id) {
+      commit('unsetLawyerData')
       const res = await apiRequest.get(`/client/lawyer?lawyerId=${id}`)
       if (res.data) {
         commit('setLawyerData', res.data)

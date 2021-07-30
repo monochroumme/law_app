@@ -65,7 +65,7 @@
         </form>
       </div>
     </div>
-    <UserDataModal v-if="dataModal" v-model="userData" :visibility="dataModal"></UserDataModal>
+    <UserDataModal v-if="dataModal && userData" v-model="userData" :visibility="dataModal"></UserDataModal>
   </div>
 </template>
 

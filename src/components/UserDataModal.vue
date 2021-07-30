@@ -7,24 +7,24 @@
       <div class="user-modal__modal__body">
         <div class="user-modal__modal__body__user">
           <div class="user-modal__modal__body__user__img">
-            <img v-if="this.$parent.userData.imageDto" :src="this.$parent.userData.imageDto.url" alt="">
+            <img v-if="this.userData.imageDto" :src="this.userData.imageDto.url" alt="">
             <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
           </div>
           <div class="user-modal__modal__body__user__data">
             <div>Name/Surname:</div>
-            <span>{{ this.$parent.userData.firstName }} {{ this.$parent.userData.lastName }}</span>
+            <span>{{ this.userData.firstName }} {{ this.userData.lastName }}</span>
           </div>
          <div class="user-modal__modal__body__user__data">
            <div>Contact No:</div>
-           <span>{{ this.$parent.userData.phoneNumber }}</span>
+           <span>{{ this.userData.phoneNumber }}</span>
          </div>
           <div class="user-modal__modal__body__user__data-w">
             <div>Email: </div>
-            <span>{{ this.$parent.userData.email }}</span>
+            <span>{{ this.userData.email }}</span>
           </div>
           <div class="user-modal__modal__body__user__data-w" :class="{ block_to_right: this.userType === 'ROLE_CLIENT' }" v-if="this.userType==='ROLE_CLIENT'">
             <div>Bar Association:</div>
-            <span>{{ this.$parent.userData.barassociation }}</span>
+            <span>{{ this.userData.barassociation }}</span>
           </div>
           <div class="user-modal__modal__body__user__data-w" :class="{ block_to_right: this.userType === 'ROLE_LAWYER' }">
             <div>Jurisdiction: </div>
@@ -32,7 +32,7 @@
           </div>
           <div class="user-modal__modal__body__user__data-w" :class="{ block_to_right: this.userType === 'ROLE_CLIENT' }" v-if="this.userType==='ROLE_CLIENT'">
             <div>Specialization:</div>
-            <span v-for="(item, i) in this.$parent.userData.practiceAreas" :key="i">{{ item.practiceArea }}</span>
+            <span v-for="(item, i) in this.userData.practiceAreas" :key="i">{{ item.practiceArea }}</span>
           </div>
         </div>
       </div>
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'UserDataModal',
   props: {
@@ -58,6 +60,9 @@ export default {
     if (localStorage.userType) {
       this.userType = localStorage.userType
     }
+  },
+  computed: {
+    ...mapState(['userData'])
   },
   methods: {
     close: function (event) {
