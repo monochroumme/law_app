@@ -145,7 +145,7 @@ export default {
           senderRole: localStorage.userType,
           contents: this.currentMessage
         }
-        this.socket.send('/private.chat.' + this.channelUuid, {}, JSON.stringify(sendData))
+        this.socket.send('https://law-app-shrinkcom.herokuapp.com/law_app/Global-Legal/private.chat.' + this.channelUuid, {}, JSON.stringify(sendData))
       }
       this.currentMessage = ''
     }
