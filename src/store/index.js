@@ -518,13 +518,13 @@ export default new Vuex.Store({
       })
     },
     async getAllChats ({ commit }, data) {
-      const res = await apiRequest.get(`/private-chat?${data.userId}&${data.userRole}`)
+      const res = await apiRequest.get(`/private-chat/channel/chats?userId=${data.userId}&role=${data.userRole}`)
       if (res.data) {
         commit('setAllChats', res.data)
       }
     },
-    async getExistingChatSessionMessages ({ commit }, data) {
-      const res = await apiRequest.get(`/private-chat/channel/${data.chatId}`)
+    async getExistingChatSessionMessages ({ commit }, chatId) {
+      const res = await apiRequest.get(`/private-chat/channel/${chatId}`)
       if (res.data) {
         commit('setChatMessages', res.data)
       }

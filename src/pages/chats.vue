@@ -1,37 +1,27 @@
 <template>
   <div class="page chats-page">
     <div class="chats-page__list">
-      <div class="chats-page__list__chat" @click="activate(1)" :class="{ active : active_el === 1 }">
-        <template>
-          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
-            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
-          </div>
-          <div class="chats-page__list__chat__text">
-            <span class="chats-page__list__chat__text__name">Lawyer name</span>
-            <span class="chats-page__list__chat__text__short-msg">Short message...</span>
-          </div>
-          <div class="chats-page__list__chat__time">07:18</div>
-        </template>
-      </div>
-      <div class="chats-page__list__chat" @click="activate(11)" :class="{ active : active_el === 11 }">
-        <template>
-          <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
-            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
-          </div>
-          <div class="chats-page__list__chat__text">
-            <span class="chats-page__list__chat__text__name">Lawyer name</span>
-            <span class="chats-page__list__chat__text__short-msg">Short message...</span>
-          </div>
-          <div class="chats-page__list__chat__time">07:18</div>
-        </template>
-      </div>
+      <template v-if="this.allChats">
+        <div class="chats-page__list__chat" v-for="chat in this.allChats" :key="chat.receiverId" @click="activate(chat.receiverId)" :class="{ active : active_el === chat.receiverId }">
+          <template>
+            <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
+              <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
+            </div>
+            <div class="chats-page__list__chat__text">
+              <span class="chats-page__list__chat__text__name">{{ chat.receiverFirstName }} {{ chat.receiverLastName }}</span>
+              <span class="chats-page__list__chat__text__short-msg">Short message...</span>
+            </div>
+            <div class="chats-page__list__chat__time">07:18</div>
+          </template>
+        </div>
+      </template>
     </div>
     <div class="chats-page__chat-block" v-if="this.messages">
       <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal()">
         <div class="chats-page__chat-block__header__img open-user-modal">
           <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
         </div>
-        Lawyer name
+        {{ this.receiverData.receiverFirstName }} {{ this.receiverData.receiverLastName }}
       </div>
       <div class="chats-page__chat-block__messages main_chat">
         <div class="chats-page__chat-block__messages__msg msg-in" v-for="(msg, index) in this.messages" :key="index">
@@ -54,20 +44,20 @@
       </div>
     </div>
 
-    <UserDataModal v-model="dataModal" :visibility="dataModal"></UserDataModal>
+<!--    <UserDataModal v-model="dataModal" :visibility="dataModal"></UserDataModal>-->
   </div>
 </template>
 
 <script>
 import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'chats',
   data () {
     return {
-      active_el: 1,
+      active_el: 2,
       dataModal: false,
       socket: null,
       messages: [],
@@ -78,20 +68,24 @@ export default {
       WHEN_CONNECTED_CALLBACK_WAIT_INTERVAL: 1000
     }
   },
+  computed: {
+    ...mapState(['allChats', 'chatMessages'])
+  },
   methods: {
-    ...mapActions(['establishChatSession', 'getExistingChatSessionMessages']),
+    ...mapActions(['establishChatSession', 'getAllChats', 'getExistingChatSessionMessages']),
     activate: function (el) {
       this.active_el = el
+      this.onOpen()
     },
     openDataModal: function () {
       this.dataModal = true
     },
     async onOpen () {
       await this.establishChatSession({
-        receiver: 1,
-        receiverRole: 'ROLE_CLIENT',
+        receiver: this.active_el,
+        receiverRole: (localStorage.userType === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
         sender: parseInt(localStorage.userId),
-        senderRole: 'ROLE_LAWYER'
+        senderRole: localStorage.userType
       }).then((res) => {
         this.channelUuid = res.data.channelUuid
         this.receiverData = {
@@ -104,6 +98,9 @@ export default {
           senderId: res.data.senderId,
           senderLastName: res.data.senderLastName
         }
+        return res
+      }).then((info) => {
+        this.getExistingChatSessionMessages(info.data.channelUuid)
       })
       console.log('You just connected to websocket server')
     },
@@ -142,27 +139,31 @@ export default {
         return
       } else {
         const sendData = {
-          fromUserId: 1,
-          toUserId: 1,
-          receiverRole: 'ROLE_CLIENT',
-          senderRole: 'ROLE_LAWYER',
+          fromUserId: this.senderData.senderId,
+          toUserId: this.receiverData.receiverId,
+          receiverRole: (localStorage.userType === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
+          senderRole: localStorage.userType,
           contents: this.currentMessage
         }
-        this.socket.send('/app/private.chat.' + this.channelUuid, {}, JSON.stringify(sendData))
+        this.socket.send('/private.chat.' + this.channelUuid, {}, JSON.stringify(sendData))
       }
       this.currentMessage = ''
     }
   },
-  created () {
+  async created () {
     this.socket = Stomp.over(new SockJS('https://law-app-shrinkcom.herokuapp.com/ws'))
     this.socket.connect({}, this.onOpen, this.onError)
+    await this.getAllChats({
+      userId: localStorage.getItem('userId'),
+      userRole: localStorage.getItem('userType')
+    })
   },
   mounted () {
     this.$el.querySelector('.main_chat').scrollTop = this.$el.querySelector('.main_chat').scrollHeight
-  },
-  components: {
-    UserDataModal: () => import('@/components/UserDataModal')
   }
+  // components: {
+  //   UserDataModal: () => import('@/components/UserDataModal')
+  // }
 }
 </script>
 
