@@ -144,6 +144,8 @@ export default {
         const sendData = {
           fromUserId: 1,
           toUserId: 1,
+          receiverRole: 'ROLE_CLIENT',
+          senderRole: 'ROLE_LAWYER',
           contents: this.currentMessage
         }
         this.socket.send('/app/private.chat.' + this.channelUuid, {}, JSON.stringify(sendData))
