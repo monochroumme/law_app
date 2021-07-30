@@ -2,7 +2,7 @@
   <div class="page chats-page">
     <div class="chats-page__list">
       <template v-if="this.allChats">
-        <div class="chats-page__list__chat" v-for="chat in this.allChats" :key="chat.receiverId" @click="activate(chat.receiverId)" :class="{ active : active_el === chat.receiverId }">
+        <div class="chats-page__list__chat" v-for="(chat, index) in this.allChats" :key="index" @click="activate(index)" :class="{ active : active_el === index }">
           <template>
             <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
               <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
@@ -23,13 +23,17 @@
         </div>
         {{ this.receiverData.receiverFirstName }} {{ this.receiverData.receiverLastName }}
       </div>
-      <div class="chats-page__chat-block__messages main_chat">
-        <div class="chats-page__chat-block__messages__msg msg-in" v-for="(msg, index) in this.messages" :key="index">
-          <div class="lawyer">{{ msg.contents }}<div class="timestamp">17:08</div></div>
+      <div id="main-chat" class="chats-page__chat-block__messages main_chat">
+        <div v-for="(msg, index) in this.messages" :key="index">
+          <div v-if="receiverData.receiverId===msg.toUserId">
+            <div v-if="!loading && msg.senderId===userId" class="chats-page__chat-block__messages__msg msg-in">
+              <div class="lawyer">{{ msg.contents }}<div class="timestamp">17:08</div></div>
+            </div>
+            <div v-else class="chats-page__chat-block__messages__msg msg-out">
+              <div class="client">{{ msg.contents }}<div class="timestamp">17:08</div></div>
+            </div>
+          </div>
         </div>
-<!--        <div class="chats-page__chat-block__messages__msg msg-out">-->
-<!--          <div class="client">How can I help you?<div class="timestamp">17:08</div></div>-->
-<!--        </div>-->
       </div>
       <div class="chats-page__chat-block__footer">
         <button><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -57,7 +61,7 @@ export default {
   name: 'chats',
   data () {
     return {
-      active_el: 2,
+      active_el: 0,
       dataModal: false,
       socket: null,
       messages: [],
@@ -65,14 +69,16 @@ export default {
       channelUuid: null,
       senderData: null,
       receiverData: null,
-      WHEN_CONNECTED_CALLBACK_WAIT_INTERVAL: 1000
+      WHEN_CONNECTED_CALLBACK_WAIT_INTERVAL: 1000,
+      userId: null,
+      loading: true
     }
   },
   computed: {
-    ...mapState(['allChats', 'chatMessages'])
+    ...mapState(['allChats', 'chatMessages', 'goToChat'])
   },
   methods: {
-    ...mapActions(['establishChatSession', 'getAllChats', 'getExistingChatSessionMessages']),
+    ...mapActions(['establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat']),
     enterInChat (e) {
       e.preventDefault()
       if (e.keyCode === 13) {
@@ -92,12 +98,24 @@ export default {
       this.dataModal = true
     },
     async onOpen () {
-      await this.establishChatSession({
-        receiver: this.active_el,
-        receiverRole: (localStorage.userType === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
-        sender: parseInt(localStorage.userId),
-        senderRole: localStorage.userType
-      }).then((res) => {
+      this.loading = true
+      if (localStorage.userId) {
+        this.userId = localStorage.userId
+        this.loading = false
+      }
+      let putData = null
+      if (this.goToChat) {
+        putData = this.goToChat
+        this.active_el = putData.receiver
+      } else {
+        putData = {
+          receiver: this.allChats[this.active_el].receiverId,
+          receiverRole: (localStorage.userType === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
+          sender: parseInt(localStorage.userId),
+          senderRole: localStorage.userType
+        }
+      }
+      await this.establishChatSession(putData).then((res) => {
         this.channelUuid = res.data.channelUuid
         this.receiverData = {
           receiverFirstName: res.data.receiverFirstName,
@@ -109,12 +127,21 @@ export default {
           senderId: res.data.senderId,
           senderLastName: res.data.senderLastName
         }
+        this.rmDataForChat()
         return res
       }).then((info) => {
         this.socket.subscribe('/topic/private.chat.' + this.channelUuid, function (data) {
           console.log('subdata:', data)
         }, { Authorization: 'Bearer ' + localStorage.getItem('token') })
-        this.getExistingChatSessionMessages(info.data.channelUuid)
+        this.getAllChats({
+          userId: localStorage.getItem('userId'),
+          userRole: localStorage.getItem('userType')
+        })
+        this.getExistingChatSessionMessages(info.data.channelUuid).then(() => {
+          this.messages = this.chatMessages
+          const dv = document.getElementById('main-chat')
+          dv.scrollTop = dv.scrollHeight
+        })
       })
       console.log('You just connected to websocket server')
     },
@@ -137,30 +164,28 @@ export default {
     onInput (e) {
       this.currentMessage = e.target.innerHTML
     },
-    addChatMessageToUI: function (message) {
-      // this.messages
-      //   .push({
-      //     contents: message.contents,
-      //     isFromRecipient: message.fromUserId !== localStorage.userId,
-      //     author: (message.fromUserId === localStorage.userId) ? this.fullName : this.2ndFullName
-      //   })
-    },
-    onMessage: function (response) {
-      this.addChatMessageToUI(JSON.parse(response.body))
-    },
     sendChatMessage: function () {
       if (!this.currentMessage || this.currentMessage.trim() === '') {
         return
       } else {
         const sendData = {
-          fromUserId: 1,
-          toUserId: 1,
+          fromUserId: this.senderData.senderId,
+          toUserId: this.receiverData.receiverId,
           toUserRole: (localStorage.userType === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
           fromUserRole: localStorage.userType,
           uuid: this.channelUuid,
           contents: this.currentMessage
         }
         this.socket.send('/app/private.chat.' + this.channelUuid, JSON.stringify(sendData), { Authorization: `Bearer ${localStorage.getItem('token')}` })
+        this.messages
+          .push({
+            fromUserId: this.senderData.senderId,
+            toUserId: this.receiverData.receiverId,
+            toUserRole: (localStorage.userType === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
+            fromUserRole: localStorage.userType,
+            uuid: this.channelUuid,
+            contents: this.currentMessage
+          })
       }
       document.getElementById('chatMessage').innerHTML = ''
       this.currentMessage = ''

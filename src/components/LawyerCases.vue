@@ -12,7 +12,8 @@
             {{ item.clientDto.firstName }} {{ item.clientDto.lastName }}
           </div>
           <div class="lawyer-cases__list__case__img open-user-modal" @click="openDataModal(item.clientDto.id)">
-            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
+            <img v-if="item.clientDto.imageDto" :src="item.clientDto.imageDto.url" alt="">
+            <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
           </div>
           <div class="lawyer-cases__list__case__case-descr">
             Case Description
@@ -25,9 +26,9 @@
           </div>
           <div class="lawyer-cases__list__case__separator"></div>
           <div v-if="caseState==='ACTIVE' || caseState==='DONE'" class="lawyer-cases__list__case__btns">
-            <router-link class="lawyer-cases__list__case__btns__btn-def" to="/lawyer/chats">
+            <div @click="routeToChat(item.clientDto.id)" class="lawyer-cases__list__case__btns__btn-def" to="/lawyer/chats">
               Chat
-            </router-link>
+            </div>
             <button v-if="caseState!=='DONE'" v-on:click="archiveToggler(item)" class="lawyer-cases__list__case__btns__btn-blue">Archive</button>
             <button v-if="caseState==='DONE'" class="lawyer-cases__list__case__btns__btn-blue">Delete</button>
           </div>
@@ -41,7 +42,8 @@
             {{ item.clientDto.firstName }} {{ item.clientDto.lastName }}
           </div>
           <div class="lawyer-cases__list__case__img open-user-modal" @click="openDataModal(item.clientDto.id)">
-            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
+            <img v-if="item.clientDto.imageDto" :src="item.clientDto.imageDto.url" alt="">
+            <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
           </div>
           <div class="lawyer-cases__list__case__case-descr">
             Case Description
@@ -54,9 +56,9 @@
           </div>
           <div class="lawyer-cases__list__case__separator"></div>
           <div v-if="caseState==='ACTIVE' || caseState==='DONE'" class="lawyer-cases__list__case__btns">
-            <router-link class="lawyer-cases__list__case__btns__btn-def" to="/lawyer/chats">
+            <div @click="routeToChat(item.clientDto.id)" class="lawyer-cases__list__case__btns__btn-def" to="/lawyer/chats">
               Chat
-            </router-link>
+            </div>
             <button v-if="caseState!=='DONE'" v-on:click="archiveToggler(item)" class="lawyer-cases__list__case__btns__btn-blue">Archive</button>
             <button v-if="caseState==='DONE'" class="lawyer-cases__list__case__btns__btn-blue">Delete</button>
           </div>
@@ -70,7 +72,8 @@
             {{ item.clientDto.firstName }} {{ item.clientDto.lastName }}
           </div>
           <div class="lawyer-cases__list__case__img open-user-modal" @click="openDataModal(item.clientDto.id)">
-            <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
+            <img v-if="item.clientDto.imageDto" :src="item.clientDto.imageDto.url" alt="">
+            <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
           </div>
           <div class="lawyer-cases__list__case__case-descr">
             Case Description
@@ -119,7 +122,17 @@ export default {
     UserDataModal: () => import('@/components/UserDataModal')
   },
   methods: {
-    ...mapActions(['getFilteredCases', 'getClientDataById', 'archiveLawyerCase']),
+    ...mapActions(['getFilteredCases', 'getClientDataById', 'archiveLawyerCase', 'dataForChat']),
+    async routeToChat (lawyerId) {
+      await this.dataForChat({
+        receiver: lawyerId,
+        receiverRole: 'ROLE_CLIENT',
+        sender: parseInt(localStorage.userId),
+        senderRole: localStorage.userType
+      }).then(() => {
+        this.$router.push('/lawyer/chats')
+      })
+    },
     async archiveToggler (item) {
       await this.archiveLawyerCase(parseInt(item.id))
         .then(() => {

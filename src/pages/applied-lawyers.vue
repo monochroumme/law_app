@@ -7,7 +7,8 @@
           {{ item.lawyerDto.firstName }} {{ item.lawyerDto.lastName }}
         </div>
         <div class="applied_lawyers-page__list__block__img open-user-modal" @click="openUserModal(item.lawyerDto.id)">
-          <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
+          <img v-if="item.lawyerDto.imageDto" :src="item.lawyerDto.imageDto.url" alt="">
+          <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
         </div>
         <span>Comments</span>
         <div class="applied_lawyers-page__list__block__separator"/>
@@ -19,9 +20,9 @@
         </div>
         <div class="applied_lawyers-page__list__block__btns">
           <button class="applied_lawyers-page__list__block__btns__btn-def" @click="chooseLawyer(item.id)">Choose lawyer</button>
-          <router-link class="applied_lawyers-page__list__block__btns__btn-def" to="/client/chats/">
+          <div @click="routeToChat(item.lawyerDto.id)" class="applied_lawyers-page__list__block__btns__btn-def">
             Contact lawyer
-          </router-link>
+          </div>
           <button v-on:click="hideLawyer(index, item)" class="applied_lawyers-page__list__block__btns__btn-blue">Hide</button>
         </div>
       </div>
@@ -54,7 +55,7 @@ export default {
     UserDataModal: () => import('@/components/UserDataModal')
   },
   computed: {
-    ...mapState(['lawyersApplied', 'userData', 'jurisdictions', 'areasOfLaw']),
+    ...mapState(['lawyersApplied', 'userData', 'jurisdictions', 'areasOfLaw', 'goToChat']),
     caseId () {
       return this.$route.params.caseId
     }
@@ -69,7 +70,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getAppliedLawyers', 'getLawyerDataById', 'getJurisdictions', 'getAreasOfLaw', 'assignLawyer']),
+    ...mapActions(['getAppliedLawyers', 'getLawyerDataById', 'getJurisdictions', 'getAreasOfLaw', 'assignLawyer', 'dataForChat']),
+    async routeToChat (lawyerId) {
+      await this.dataForChat({
+        receiver: lawyerId,
+        receiverRole: 'ROLE_LAWYER',
+        sender: parseInt(localStorage.userId),
+        senderRole: localStorage.userType
+      }).then(() => {
+        this.$router.push('/client/chats')
+      })
+    },
     hideLawyer: function (index, item) {
       this.items.splice(index, 1)
     },

@@ -8,7 +8,8 @@
           {{ item.clientFirstName }} {{ item.clientLastName }}
         </div>
         <div class="all_cases-page__list__block__img open-user-modal" @click="openDataModal(item.clientDto.id)">
-          <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
+          <img v-if="item.clientDto.imageDto" :src="item.clientDto.imageDto.url" alt="">
+          <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
         </div>
         <span>Case description</span>
         <div class="all_cases-page__list__block__separator"/>

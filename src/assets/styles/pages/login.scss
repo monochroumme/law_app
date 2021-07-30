@@ -63,6 +63,11 @@
         padding: 9px 0;
         width: 264px;
       }
+
+      &__btn:hover {
+        box-shadow: 0 4px 16px rgba(255, 200, 64, 0.5);
+        transition: .2s ease-in-out;
+      }
     }
   }
 }
