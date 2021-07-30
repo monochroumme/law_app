@@ -17,7 +17,7 @@
       </template>
     </div>
     <div class="chats-page__chat-block" v-if="this.messages">
-      <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal()">
+      <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal()" v-if="receiverData">
         <div class="chats-page__chat-block__header__img open-user-modal">
           <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
         </div>
@@ -105,6 +105,7 @@ export default {
       }
       let putData = null
       if (this.goToChat) {
+        console.error(this.goToChat)
         putData = this.goToChat
         this.active_el = putData.receiver
         this.putData = null
@@ -116,6 +117,7 @@ export default {
           senderRole: localStorage.userType
         }
       }
+      console.warn(putData)
       await this.establishChatSession(putData).then((res) => {
         this.channelUuid = res.data.channelUuid
         this.receiverData = {

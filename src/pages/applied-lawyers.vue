@@ -70,6 +70,7 @@ export default {
   methods: {
     ...mapActions(['getAppliedLawyers', 'getLawyerDataById', 'getJurisdictions', 'getAreasOfLaw', 'assignLawyer', 'dataForChat']),
     async routeToChat (lawyerId) {
+      console.log(lawyerId)
       await this.dataForChat({
         receiver: lawyerId,
         receiverRole: 'ROLE_LAWYER',
