@@ -100,6 +100,9 @@ export default {
         }
         return res
       }).then((info) => {
+        this.socket.subscribe('/topic/private.chat' + this.channelUuid, tick => {
+          console.log(tick)
+        })
         this.getExistingChatSessionMessages(info.data.channelUuid)
       })
       console.log('You just connected to websocket server')
@@ -145,7 +148,7 @@ export default {
           senderRole: localStorage.userType,
           contents: this.currentMessage
         }
-        this.socket.send('https://law-app-shrinkcom.herokuapp.com/law_app/Global-Legal/private.chat.' + this.channelUuid, {}, JSON.stringify(sendData))
+        this.socket.send('/private.chat.' + this.channelUuid, {}, JSON.stringify(sendData))
       }
       this.currentMessage = ''
     }
@@ -157,9 +160,6 @@ export default {
       userId: localStorage.getItem('userId'),
       userRole: localStorage.getItem('userType')
     })
-  },
-  mounted () {
-    this.$el.querySelector('.main_chat').scrollTop = this.$el.querySelector('.main_chat').scrollHeight
   }
   // components: {
   //   UserDataModal: () => import('@/components/UserDataModal')
