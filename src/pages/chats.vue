@@ -73,7 +73,8 @@ export default {
       messages: [],
       currentMessage: '',
       channelUuid: null,
-      otherUser: null,
+      senderData: null,
+      receiverData: null,
       WHEN_CONNECTED_CALLBACK_WAIT_INTERVAL: 1000
     }
   },
@@ -91,9 +92,18 @@ export default {
         receiverRole: 'ROLE_CLIENT',
         sender: parseInt(localStorage.userId),
         senderRole: 'ROLE_LAWYER'
-      }).then((data) => {
-        this.channelUuid = data.data.channelUuid
-        this.otherUser = 1
+      }).then((res) => {
+        this.channelUuid = res.data.channelUuid
+        this.receiverData = {
+          receiverFirstName: res.data.receiverFirstName,
+          receiverId: res.data.receiverId,
+          receiverLastName: res.data.receiverLastName
+        }
+        this.senderData = {
+          senderFirstName: res.data.senderFirstName,
+          senderId: res.data.senderId,
+          senderLastName: res.data.senderLastName
+        }
       })
       console.log('You just connected to websocket server')
     },
@@ -131,11 +141,12 @@ export default {
       if (!this.currentMessage || this.currentMessage.trim() === '') {
         return
       } else {
-        this.socket.send('/app/private.chat.' + this.channelUuid, {}, {
-          fromUserId: parseInt(localStorage.userId),
+        const sendData = {
+          fromUserId: 1,
           toUserId: 1,
           contents: this.currentMessage
-        })
+        }
+        this.socket.send('/app/private.chat.' + this.channelUuid, {}, JSON.stringify(sendData))
       }
       this.currentMessage = ''
     }
