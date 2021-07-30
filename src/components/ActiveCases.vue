@@ -170,31 +170,31 @@ export default {
     async archiveToggler (item) {
       await this.archiveClientCase(parseInt(item.id))
         .then(() => {
-          this.clientActiveCases.map((obj, index) => {
+          this.$parent.clientActiveCases.map((obj, index) => {
             if (obj.id === item.id) {
-              this.clientActiveCases.splice(index, 1)
+              this.$parent.clientActiveCases.splice(index, 1)
             }
           })
-          this.clientArchivedCases.push(item)
+          this.$parent.clientArchivedCases.push(item)
         })
     },
     async unarchiveToggler (item) {
       await this.unarchiveClientCase(parseInt(item.id))
         .then(() => {
-          this.clientArchivedCases.map((obj, index) => {
+          this.$parent.clientArchivedCases.map((obj, index) => {
             if (obj.id === item.id) {
-              this.clientArchivedCases.splice(index, 1)
+              this.$parent.clientArchivedCases.splice(index, 1)
             }
           })
-          this.clientActiveCases.push(item)
+          this.$parent.clientActiveCases.push(item)
         })
     },
     async deleteCase (id) {
       await this.deleteClientCase(parseInt(id.toString()))
         .then(() => {
-          this.clientArchivedCases.map((obj, index) => {
+          this.$parent.clientArchivedCases.map((obj, index) => {
             if (obj.id === id) {
-              this.clientArchivedCases.splice(index, 1)
+              this.$parent.clientArchivedCases.splice(index, 1)
             }
           })
         })
@@ -264,7 +264,7 @@ export default {
       }
       await this.editClientCase(putData)
         .then(() => {
-          this.clientActiveCases.map((c) => {
+          this.$parent.clientActiveCases.map((c) => {
             if (c.id === this.modalData.id) {
               c = this.modalData
             }
@@ -287,7 +287,7 @@ export default {
             jurisdictionIdList: this.jurisdiction.map(j => parseInt(j.id.toString())),
             practiceAreaIdList: (allAreas ? allAreas.map(aA => parseInt(aA.id.toString())) : this.areaOfLaw.map(p => parseInt(p.id.toString())))
           }).then(() => {
-            this.clientActiveCases.push({
+            this.$parent.clientActiveCases.push({
               clientId: localStorage.getItem('userId'),
               description: this.caseDescription,
               jurisdictionIdList: this.jurisdiction.map(j => parseInt(j.id.toString())),
