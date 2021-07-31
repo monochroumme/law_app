@@ -98,7 +98,8 @@ export default {
             role: this.userRole.id
           }).then(() => {
             this.$router.push(`/${this.userRole.slug}/cases`)
-          }).catch(() => {
+          }).catch((e) => {
+            this.$toasted.error('Wrong email or password')
           })
           this.wait = false
         }

@@ -56,10 +56,10 @@
           />
           <label class="sort">Sort by date:</label>
           <div class="all_cases-page__modal__body__radio">
-            <input type="radio"/> Most recent
+            <input type="radio" :value="true" v-model="isAscending" /> Most recent
           </div>
           <div class="all_cases-page__modal__body__radio">
-            <input type="radio"/> Old ones
+            <input type="radio" :value="false" v-model="isAscending" /> Old ones
           </div>
           <button type="submit">Done</button>
         </form>
@@ -76,6 +76,7 @@ export default {
   name: 'all-cases',
   data () {
     return {
+      isAscending: false,
       jurisdiction: null,
       areaOfLaw: null,
       showFilter: false,
@@ -125,7 +126,7 @@ export default {
       })
     }
     await this.getLawyerFilteredCases({
-      isAscending: false,
+      isAscending: this.isAscending,
       jurisdictionIdList: this.jurisdiction,
       practiceAreaIdList: this.areaOfLaw
     })
@@ -174,7 +175,7 @@ export default {
     },
     async onSubmit () {
       await this.getLawyerFilteredCases({
-        isAscending: false,
+        isAscending: this.isAscending,
         jurisdictionIdList: this.jurisdiction,
         practiceAreaIdList: this.areaOfLaw
       })

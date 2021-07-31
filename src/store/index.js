@@ -210,8 +210,7 @@ export default new Vuex.Store({
             resolve(res)
           })
           .catch(e => {
-            console.error(e.response.data.message)
-            reject(e.response.data.message)
+            reject(e)
           })
       })
     },
@@ -378,6 +377,7 @@ export default new Vuex.Store({
     },
 
     async getLawyerFilteredCases ({ commit }, params) {
+      console.log(params)
       let url = '?isAscending=' + params.isAscending
       if (params.jurisdictionIdList) {
         for (let i = 0; i < params.jurisdictionIdList.length; ++i) {
