@@ -1,8 +1,8 @@
 <template>
   <div class="page chats-page">
     <div class="chats-page__list">
-      <template v-if="this.allChats">
-        <div class="chats-page__list__chat" v-for="(chat, index) in this.allChats" :key="index" @click="activate(index)" :class="{ active : active_el === index }">
+      <template v-if="allChats">
+        <div class="chats-page__list__chat" v-for="(chat, index) in allChats" :key="index" @click="activate(index)" :class="{ active : active_el === index }">
           <template>
             <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
               <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
@@ -16,15 +16,15 @@
         </div>
       </template>
     </div>
-    <div class="chats-page__chat-block" v-if="this.messages">
+    <div class="chats-page__chat-block" v-if="messages">
       <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal()" v-if="receiverData">
         <div class="chats-page__chat-block__header__img open-user-modal">
           <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
         </div>
-        {{ this.receiverData.receiverFirstName }} {{ this.receiverData.receiverLastName }}
+        {{ receiverData.receiverFirstName }} {{ receiverData.receiverLastName }}
       </div>
       <div id="main-chat" class="chats-page__chat-block__messages main_chat">
-        <div v-for="(msg, index) in this.messages" :key="index">
+        <div v-for="(msg, index) in messages" :key="index">
           <div v-if="receiverData.receiverId===msg.toUserId">
             <div v-if="!loading && msg.senderId===userId" class="chats-page__chat-block__messages__msg msg-in">
               <div class="lawyer">{{ msg.contents }}<div class="timestamp">17:08</div></div>
