@@ -3,32 +3,64 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 const routes = [
   {
     path: '/',
     name: 'index',
+    meta: {
+      isAuthPage: true
+    },
     component: () => import('@/pages/index.vue')
   },
   {
+    path: '/login',
+    name: 'login',
+    meta: {
+      isAuthPage: true
+    },
+    props: true,
+    component: () => import('@/pages/login.vue')
+  },
+  {
     path: '/register',
+    meta: {
+      isAuthPage: true
+    },
     redirect: '/register/client'
   },
   {
     path: '/register/client',
+    meta: {
+      isAuthPage: true
+    },
     name: 'register-client',
     component: () => import('@/pages/client/Registration/index.vue')
   },
   {
     path: '/register/lawyer',
+    meta: {
+      isAuthPage: true
+    },
     name: 'register-lawyer',
     component: () => import('@/pages/lawyer/Registration/index.vue')
   },
   {
     path: '/rules',
+    meta: {
+      isAuthPage: true
+    },
     redirect: '/rules/client'
   },
   {
     path: '/rules/:userType',
+    meta: {
+      isAuthPage: true
+    },
     name: 'rules',
     props: true,
     component: () => import('@/pages/rules.vue')
@@ -66,12 +98,6 @@ const routes = [
     name: 'profile',
     props: true,
     component: () => import('@/pages/profile.vue')
-  },
-  {
-    path: '/login',
-    name: 'login',
-    props: true,
-    component: () => import('@/pages/login.vue')
   }
 ]
 
@@ -79,6 +105,20 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach(async (to, from, next) => {
+  const userLoggedIn = localStorage.getItem('userId') || typeof localStorage.getItem('userId') === 'string'
+  const isLoginPage = !!to.meta?.isAuthPage
+
+  if (userLoggedIn && isLoginPage && localStorage.getItem('userType')) {
+    next({ name: 'cases', params: { userType: localStorage.getItem('userType') } })
+  }
+  if (!userLoggedIn && !isLoginPage) {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
 })
 
 export default router
