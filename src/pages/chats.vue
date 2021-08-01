@@ -26,7 +26,7 @@
       <div id="main-chat" class="chats-page__chat-block__messages main_chat">
         <div v-for="(msg, index) in messages" :key="index">
           <div v-if="receiverData.receiverId===msg.toUserId">
-            <div v-if="!loading && msg.senderId===userId" class="chats-page__chat-block__messages__msg msg-in">
+            <div v-if="msg.fromUserRole!==userRole" class="chats-page__chat-block__messages__msg msg-in">
               <div class="lawyer">{{ msg.contents }}<div class="timestamp">17:08</div></div>
             </div>
             <div v-else class="chats-page__chat-block__messages__msg msg-out">
@@ -71,11 +71,23 @@ export default {
       receiverData: null,
       WHEN_CONNECTED_CALLBACK_WAIT_INTERVAL: 1000,
       userId: null,
-      loading: true
+      userRole: null,
+      loading: true,
+      loadingRole: true
     }
   },
   computed: {
     ...mapState(['allChats', 'chatMessages', 'goToChat'])
+  },
+  mounted () {
+    if (localStorage.userId) {
+      this.userId = localStorage.userId
+      this.loading = false
+    }
+    if (localStorage.userType) {
+      this.userRole = localStorage.userType
+      this.loadingRole = false
+    }
   },
   methods: {
     ...mapActions(['establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat']),
@@ -99,10 +111,6 @@ export default {
     },
     async onOpen () {
       this.loading = true
-      if (localStorage.userId) {
-        this.userId = localStorage.userId
-        this.loading = false
-      }
       let putData = null
       if (this.goToChat) {
         console.error(this.goToChat)
@@ -139,11 +147,12 @@ export default {
         }
         return res
       }).then((info) => {
-        this.socket.subscribe('/topic/private.chat.' + this.channelUuid, function (data) {
-          console.log('subdata:', data)
-        }, { Authorization: 'Bearer ' + localStorage.getItem('token') })
+        this.socket.subscribe('/app/queue/messages', tick => {
+          console.log(tick)
+        })
         this.getExistingChatSessionMessages(info.data.channelUuid).then(() => {
           this.messages = this.chatMessages
+          console.log(this.messages)
         })
       })
       console.log('You just connected to websocket server')
@@ -179,7 +188,7 @@ export default {
           uuid: this.channelUuid,
           contents: this.currentMessage
         }
-        this.socket.send('/app/private.chat.' + this.channelUuid, JSON.stringify(sendData), { Authorization: `Bearer ${localStorage.getItem('token')}` })
+        this.socket.send('/secured/room', JSON.stringify(sendData), this.channelUuid)
         this.messages
           .push({
             fromUserId: this.senderData.senderId,
@@ -195,7 +204,7 @@ export default {
     }
   },
   async created () {
-    this.socket = Stomp.over(new SockJS('https://law-app-shrinkcom.herokuapp.com/ws'))
+    this.socket = Stomp.over(new SockJS('https://law-app-shrinkcom.herokuapp.com/secured/room'))
     this.socket.connect({
       Authorization: 'Bearer ' + localStorage.getItem('token')
     }, this.onOpen, this.onError)
