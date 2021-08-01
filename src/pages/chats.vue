@@ -73,7 +73,9 @@ export default {
       userId: null,
       userRole: null,
       loading: true,
-      loadingRole: true
+      loadingRole: true,
+      sessionId: null,
+      subUrl: null
     }
   },
   computed: {
@@ -113,7 +115,6 @@ export default {
       this.loading = true
       let putData = null
       if (this.goToChat) {
-        console.error(this.goToChat)
         putData = this.goToChat
         this.active_el = putData.receiver
         this.putData = null
@@ -125,7 +126,6 @@ export default {
           senderRole: localStorage.userType
         }
       }
-      console.warn(putData)
       await this.establishChatSession(putData).then((res) => {
         this.channelUuid = res.data.channelUuid
         this.receiverData = {
@@ -147,12 +147,11 @@ export default {
         }
         return res
       }).then((info) => {
-        this.socket.subscribe('/app/queue/messages', tick => {
-          console.log(tick)
+        this.socket.subscribe('/secured/user/queue/specific-user', tick => {
+          console.log('alo', tick)
         })
         this.getExistingChatSessionMessages(info.data.channelUuid).then(() => {
           this.messages = this.chatMessages
-          console.log(this.messages)
         })
       })
       console.log('You just connected to websocket server')
@@ -188,7 +187,9 @@ export default {
           uuid: this.channelUuid,
           contents: this.currentMessage
         }
-        this.socket.send('/secured/room', JSON.stringify(sendData), this.channelUuid)
+        this.socket.send('https://law-app-shrinkcom.herokuapp.com/secured/room', JSON.stringify(sendData), {
+          simpleSessionId: this.channelUuid
+        })
         this.messages
           .push({
             fromUserId: this.senderData.senderId,
