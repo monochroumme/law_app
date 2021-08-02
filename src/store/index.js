@@ -75,7 +75,8 @@ export default new Vuex.Store({
     allChats: null,
     chatMessages: null,
     chatSession: null,
-    goToChat: null
+    goToChat: null,
+    notifications: null
   },
 
   mutations: {
@@ -183,6 +184,10 @@ export default new Vuex.Store({
 
     unsetDataForChat (state) {
       state.goToChat = null
+    },
+
+    setNotifications (state, payload) {
+      state.notifications = payload
     }
   },
 
@@ -559,6 +564,19 @@ export default new Vuex.Store({
     },
     async rmDataForChat ({ commit }) {
       commit('unsetDataForChat')
+    },
+    async getNotifications ({ commit }) {
+      if (localStorage.getItem('userType') === 'ROLE_LAWYER') {
+        await apiRequest.get('/lawyer/notifications/')
+          .then((res) => {
+            commit('setNotifications', res.data)
+          })
+      } else {
+        await apiRequest.get('/client/notifications/')
+          .then((res) => {
+            commit('setNotifications', res.data)
+          })
+      }
     }
   }
 })

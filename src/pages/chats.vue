@@ -74,8 +74,8 @@ export default {
       userRole: null,
       loading: true,
       loadingRole: true,
-      sessionId: null,
-      subUrl: null
+      subUrl: null,
+      sessionId: null
     }
   },
   computed: {
@@ -127,6 +127,11 @@ export default {
         }
       }
       await this.establishChatSession(putData).then((res) => {
+        this.subUrl = this.socket.ws._transport.url
+        this.subUrl = this.subUrl.replace('wss://law-app-shrinkcom.herokuapp.com/ws/', '')
+        this.subUrl = this.subUrl.replace('/websocket', '')
+        this.subUrl = this.subUrl.replace(/^[0-9]+\//, '')
+        this.sessionId = this.subUrl
         this.channelUuid = res.data.channelUuid
         this.receiverData = {
           receiverFirstName: res.data.receiverFirstName,
@@ -147,8 +152,8 @@ export default {
         }
         return res
       }).then((info) => {
-        this.socket.subscribe('/secured/user/queue/specific-user', tick => {
-          console.log('alo', tick)
+        this.socket.subscribe('/user/' + localStorage.getItem('userId') + '/queue/messages', tick => {
+          this.messages.push(JSON.parse(tick.body))
         })
         this.getExistingChatSessionMessages(info.data.channelUuid).then(() => {
           this.messages = this.chatMessages
@@ -187,8 +192,9 @@ export default {
           uuid: this.channelUuid,
           contents: this.currentMessage
         }
-        this.socket.send('https://law-app-shrinkcom.herokuapp.com/secured/room', JSON.stringify(sendData), {
-          simpleSessionId: this.channelUuid
+        this.socket.send('/app/private.chat.' + this.channelUuid, JSON.stringify(sendData), {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          sessionId: this.sessionId
         })
         this.messages
           .push({
@@ -205,7 +211,7 @@ export default {
     }
   },
   async created () {
-    this.socket = Stomp.over(new SockJS('https://law-app-shrinkcom.herokuapp.com/secured/room'))
+    this.socket = Stomp.over(new SockJS('https://law-app-shrinkcom.herokuapp.com/ws'))
     this.socket.connect({
       Authorization: 'Bearer ' + localStorage.getItem('token')
     }, this.onOpen, this.onError)
