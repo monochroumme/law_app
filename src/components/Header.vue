@@ -94,6 +94,7 @@ export default {
     }, 1000)
   },
   created () {
+    this.getNotifications()
     setInterval(() => {
       this.getNotifications()
     }, 60000)
