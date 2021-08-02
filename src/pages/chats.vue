@@ -1,6 +1,6 @@
 <template>
   <div class="page chats-page">
-    <div class="chats-page__list">
+    <div class="chats-page__list" :class="{'hiddenMobile': this.isMobile && active_el != null}">
       <template v-if="allChats">
         <div class="chats-page__list__chat" v-for="(chat, index) in allChats" :key="index" @click="activate(index)" :class="{ active : active_el === index }">
           <template>
@@ -16,7 +16,10 @@
         </div>
       </template>
     </div>
-    <div class="chats-page__chat-block" v-if="messages">
+    <div class="chats-page__chat-block" v-if="messages" :class="{'showMobile': this.isMobile && active_el != null}">
+      <div @click="removeActive" v-if="this.isMobile && active_el != null" class="chats-page__chat-block__return">
+        <img svg-inline src="@/assets/media/common/btn-back.svg" alt="Back">
+      </div>
       <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal()" v-if="receiverData">
         <div class="chats-page__chat-block__header__img open-user-modal">
           <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
@@ -75,7 +78,8 @@ export default {
       loading: true,
       loadingRole: true,
       subUrl: null,
-      sessionId: null
+      sessionId: null,
+      isMobile: false
     }
   },
   computed: {
@@ -90,9 +94,15 @@ export default {
       this.userRole = localStorage.userType
       this.loadingRole = false
     }
+    window.onresize = () => {
+      this.isMobile = window.innerWidth < 720
+    }
   },
   methods: {
     ...mapActions(['establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat']),
+    removeActive () {
+      this.active_el = null
+    },
     enterInChat (e) {
       e.preventDefault()
       if (e.keyCode === 13) {
@@ -211,6 +221,13 @@ export default {
     }
   },
   async created () {
+    if (window.innerWidth < 720) {
+      this.isMobile = true
+      this.active_el = null
+    } else {
+      this.isMobile = false
+      this.active_el = 0
+    }
     this.socket = Stomp.over(new SockJS('https://law-app-shrinkcom.herokuapp.com/ws'))
     this.socket.connect({
       Authorization: 'Bearer ' + localStorage.getItem('token')

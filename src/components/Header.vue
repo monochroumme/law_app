@@ -277,4 +277,25 @@ export default {
     }
   }
 }
+@media (max-width: 800px) {
+  .header {
+    &__notifications {
+      position: absolute;
+      left: 10px;
+      top: 12.5px;
+      margin-right: 0;
+
+      &__dd {
+        left: 0;
+        width: 290px;
+        height: 300px;
+        top: 35px;
+
+        ul {
+          height: 298px;
+        }
+      }
+    }
+  }
+}
 </style>

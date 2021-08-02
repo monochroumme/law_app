@@ -222,4 +222,30 @@
       }
     }
   }
+  @media (max-width: 720px) {
+    &__chat-block {
+      width: 100%;
+      display: none;
+      position: relative;
+
+      &__header {
+        padding-left: 50px;
+      }
+
+      &__return {
+        position: absolute;
+        left: 15px;
+        top: 30px;
+      }
+    }
+    &__list {
+      width: 100%;
+    }
+  }
+  .showMobile {
+    display: block !important;
+  }
+  .hiddenMobile {
+    display: none;
+  }
 }
