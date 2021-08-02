@@ -289,7 +289,7 @@ export default {
         left: 0;
         width: 290px;
         height: 300px;
-        top: 35px;
+        top: 40px;
 
         ul {
           height: 298px;
