@@ -29,7 +29,7 @@
           </defs>
         </svg>
         <div class="header__notifications__dd" v-if="notificationsDd">
-          <ul>
+          <ul v-if="this.notifications">
             <li v-for="(notify, index) in this.notifications" :key="index">
               <div class="fulldate">
                 <div class="weekday">{{ notify.weekday }}</div>
