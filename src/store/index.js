@@ -219,6 +219,14 @@ export default new Vuex.Store({
           })
       })
     },
+    async restorePassword ({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        apiRequest.postWithoutAuth('/auth/restore-password/', data)
+          .catch(e => {
+            reject(e)
+          })
+      })
+    },
 
     async editUser ({ commit }, data) {
       if (localStorage.getItem('userType') === 'ROLE_CLIENT') {

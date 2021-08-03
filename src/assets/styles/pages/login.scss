@@ -24,6 +24,20 @@
     }
   }
 
+  .login-page__reset-page{
+    padding-top: 50px;
+    .login-page__btns{
+      margin-top: 20px;
+      margin-bottom: 15px;
+    }
+    .login-page__reset a{
+      font-size: 22px;
+      margin: 0 auto;
+      color: #e7c76b;
+      border-bottom: 2px solid #e7c76b;
+    }
+  }
+
   &__title {
     text-align: center;
     color: #ffffff;
