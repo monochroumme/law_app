@@ -138,7 +138,7 @@ export default {
       }
       await this.establishChatSession(putData).then((res) => {
         this.subUrl = this.socket.ws._transport.url
-        this.subUrl = this.subUrl.replace('wss://law-app-shrinkcom.herokuapp.com/ws/', '')
+        this.subUrl = this.subUrl.replace(process.env.WS_PORT, '')
         this.subUrl = this.subUrl.replace('/websocket', '')
         this.subUrl = this.subUrl.replace(/^[0-9]+\//, '')
         this.sessionId = this.subUrl
@@ -230,7 +230,7 @@ export default {
       this.isMobile = false
       this.active_el = 0
     }
-    this.socket = Stomp.over(new SockJS('https://law-app-shrinkcom.herokuapp.com/ws'))
+    this.socket = Stomp.over(new SockJS('https://law-app-prof.herokuapp.com/ws'))
     this.socket.connect({
       Authorization: 'Bearer ' + localStorage.getItem('token')
     }, this.onOpen, this.onError)
