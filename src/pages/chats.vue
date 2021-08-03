@@ -8,7 +8,7 @@
               <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
             </div>
             <div class="chats-page__list__chat__text">
-              <span class="chats-page__list__chat__text__name">{{ chat.receiverFirstName }} {{ chat.receiverLastName }}</span>
+              <span class="chats-page__list__chat__text__name">{{ chat.userTwoFirstName }} {{ chat.userTwoLastName }}</span>
               <span class="chats-page__list__chat__text__short-msg">Short message...</span>
             </div>
             <div class="chats-page__list__chat__time">07:18</div>
@@ -127,12 +127,12 @@ export default {
       if (this.goToChat) {
         putData = this.goToChat
         this.active_el = putData.receiver
-        this.putData = null
+        // this.putData = null
       } else {
         putData = {
-          receiver: this.allChats[this.active_el].receiverId,
-          receiverRole: (localStorage.userType === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
-          sender: parseInt(localStorage.userId),
+          receiverEmail: this.allChats[this.active_el].userTwoEmail,
+          receiverRole: this.allChats[this.active_el].userTwoRole,
+          senderEmail: localStorage.email,
           senderRole: localStorage.userType
         }
       }
@@ -144,26 +144,31 @@ export default {
         this.sessionId = this.subUrl
         this.channelUuid = res.data.channelUuid
         this.receiverData = {
-          receiverFirstName: res.data.receiverFirstName,
-          receiverId: res.data.receiverId,
-          receiverLastName: res.data.receiverLastName
+          receiverFirstName: res.data.userTwoFirstName,
+          receiverId: res.data.userTwoId,
+          receiverLastName: res.data.userTwoLastName,
+          receiverEmail: res.data.userTwoEmail,
+          receiverRole: res.data.userTwoRole
         }
         this.senderData = {
-          senderFirstName: res.data.senderFirstName,
-          senderId: res.data.senderId,
-          senderLastName: res.data.senderLastName
+          senderFirstName: res.data.userOneFirstName,
+          senderId: res.data.userOneId,
+          senderLastName: res.data.userOneLastName,
+          senderEmail: res.data.userOneEmail,
+          senderRole: res.data.userOneRole
         }
         if (this.goToChat) {
           this.getAllChats({
-            userId: localStorage.getItem('userId'),
-            userRole: localStorage.getItem('userType')
+            userEmail: this.senderData.senderEmail,
+            role: this.senderData.senderRole
           })
           this.rmDataForChat()
         }
         return res
       }).then((info) => {
-        this.socket.subscribe('/user/' + localStorage.getItem('userId') + '/queue/messages', tick => {
-          this.messages.push(JSON.parse(tick.body))
+        this.socket.subscribe('/topic/private.chat.' + this.channelUuid, tick => {
+          console.error('alo', tick.body)
+          // this.messages.push(JSON.parse(tick.body))
         })
         this.getExistingChatSessionMessages(info.data.channelUuid).then(() => {
           this.messages = this.chatMessages
@@ -195,24 +200,21 @@ export default {
         return
       } else {
         const sendData = {
-          fromUserId: this.senderData.senderId,
-          toUserId: this.receiverData.receiverId,
-          toUserRole: (localStorage.userType === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
-          fromUserRole: localStorage.userType,
-          uuid: this.channelUuid,
+          fromUserEmail: this.senderData.senderEmail,
+          toUserEmail: this.receiverData.receiverEmail,
+          toUserRole: this.receiverData.receiverRole,
+          fromUserRole: this.senderData.senderRole,
           contents: this.currentMessage
         }
-        this.socket.send('/app/private.chat.' + this.channelUuid, JSON.stringify(sendData), {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          sessionId: this.sessionId
-        })
+        this.socket.send('/app/private.chat.' + this.channelUuid, {}, JSON.stringify(sendData))
         this.messages
           .push({
+            fromUserEmail: this.senderData.senderEmail,
+            toUserEmail: this.receiverData.receiverEmail,
+            toUserRole: this.receiverData.receiverRole,
+            fromUserRole: this.senderData.senderRole,
             fromUserId: this.senderData.senderId,
             toUserId: this.receiverData.receiverId,
-            toUserRole: (localStorage.userType === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
-            fromUserRole: localStorage.userType,
-            uuid: this.channelUuid,
             contents: this.currentMessage
           })
       }
@@ -234,8 +236,8 @@ export default {
     }, this.onOpen, this.onError)
     if (!this.goToChat) {
       await this.getAllChats({
-        userId: localStorage.getItem('userId'),
-        userRole: localStorage.getItem('userType')
+        userEmail: localStorage.getItem('email'),
+        role: localStorage.getItem('userType')
       })
     }
   }

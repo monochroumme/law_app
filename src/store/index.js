@@ -543,7 +543,7 @@ export default new Vuex.Store({
     },
     async getAllChats ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        apiRequest.get(`/private-chat/channel/chats?userId=${data.userId}&role=${data.userRole}`)
+        apiRequest.get(`/private-chat/channel/chats?userEmail=${data.userEmail}&role=${data.role}`)
           .then((res) => {
             console.log('res:', res)
             commit('setAllChats', res.data)

@@ -20,7 +20,7 @@
         </div>
         <div class="applied_lawyers-page__list__block__btns">
           <button class="applied_lawyers-page__list__block__btns__btn-def" @click="chooseLawyer(item.id)">Choose lawyer</button>
-          <div @click="routeToChat(item.lawyerDto.id)" class="applied_lawyers-page__list__block__btns__btn-def">
+          <div @click="routeToChat(item.lawyerDto.email)" class="applied_lawyers-page__list__block__btns__btn-def">
             Contact lawyer
           </div>
           <button v-on:click="hideLawyer(index, item)" class="applied_lawyers-page__list__block__btns__btn-blue">Hide</button>
@@ -69,12 +69,12 @@ export default {
   },
   methods: {
     ...mapActions(['getAppliedLawyers', 'getLawyerDataById', 'getJurisdictions', 'getAreasOfLaw', 'assignLawyer', 'dataForChat']),
-    async routeToChat (lawyerId) {
-      console.log(lawyerId)
+    async routeToChat (lawyerEmail) {
+      console.log(lawyerEmail)
       await this.dataForChat({
-        receiver: lawyerId,
+        receiverEmail: lawyerEmail,
         receiverRole: 'ROLE_LAWYER',
-        sender: parseInt(localStorage.userId),
+        senderEmail: localStorage.email,
         senderRole: localStorage.userType
       }).then(() => {
         this.$router.push('/client/chats')
