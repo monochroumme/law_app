@@ -539,7 +539,7 @@ export default new Vuex.Store({
     },
     async establishChatSession ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        apiRequest.put('/private-chat/channel/', data)
+        apiRequest.put('/rooms/establish/', data)
           .then(res => {
             commit('setChatSession', res.data)
             resolve(res)

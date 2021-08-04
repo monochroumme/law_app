@@ -20,7 +20,7 @@
         </div>
         <div class="applied_lawyers-page__list__block__btns">
           <button class="applied_lawyers-page__list__block__btns__btn-def" @click="chooseLawyer(item.id)">Choose lawyer</button>
-          <div @click="routeToChat(item.lawyerDto.email)" class="applied_lawyers-page__list__block__btns__btn-def">
+          <div @click="routeToChat({lawyerEmail: item.lawyerDto.email, lawyerId: item.lawyerDto.id})" class="applied_lawyers-page__list__block__btns__btn-def">
             Contact lawyer
           </div>
           <button v-on:click="hideLawyer(index, item)" class="applied_lawyers-page__list__block__btns__btn-blue">Hide</button>
@@ -69,13 +69,14 @@ export default {
   },
   methods: {
     ...mapActions(['getAppliedLawyers', 'getLawyerDataById', 'getJurisdictions', 'getAreasOfLaw', 'assignLawyer', 'dataForChat']),
-    async routeToChat (lawyerEmail) {
-      console.log(lawyerEmail)
+    async routeToChat ({ lawyerId }) {
       await this.dataForChat({
-        receiverEmail: lawyerEmail,
-        receiverRole: 'ROLE_LAWYER',
-        senderEmail: localStorage.email,
-        senderRole: localStorage.userType
+        senderId: localStorage.getItem('userId'),
+        receiverId: lawyerId?.toString()
+        // receiverEmail: lawyerEmail,
+        // receiverRole: 'ROLE_LAWYER',
+        // senderEmail: localStorage.email,
+        // senderRole: localStorage.userType
       }).then(() => {
         this.$router.push('/client/chats')
       })

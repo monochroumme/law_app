@@ -159,10 +159,13 @@ export default {
         // this.putData = null
       } else {
         putData = {
-          receiverEmail: this.allChats[this.active_el].userTwoEmail,
-          receiverRole: this.allChats[this.active_el].userTwoRole,
-          senderEmail: localStorage.email,
-          senderRole: localStorage.userType
+          senderId: localStorage.getItem('userId'),
+          // TODO
+          receiverId: ''
+          // receiverEmail: this.allChats[this.active_el].userTwoEmail,
+          // receiverRole: this.allChats[this.active_el].userTwoRole,
+          // senderEmail: localStorage.email,
+          // senderRole: localStorage.userType
         }
       }
       await this.establishChatSession(putData).then((res) => {
