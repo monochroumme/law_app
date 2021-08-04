@@ -232,7 +232,11 @@ export default {
     }
     this.socket = Stomp.over(new SockJS('https://law-app-prof.herokuapp.com/ws'))
     this.socket.connect({
-      Authorization: 'Bearer ' + localStorage.getItem('token')
+      Authorization: 'Bearer ' + localStorage.getItem('token'),
+      use_http_auth: true,
+      login: 'ujuqdhpp',
+      passcode: 'LFuN5bdU8IAonD4zOIzoY2_mypGNCh_N',
+      host: 'ujuqdhpp'
     }, this.onOpen, this.onError)
     if (!this.goToChat) {
       await this.getAllChats({
