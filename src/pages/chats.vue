@@ -62,6 +62,7 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'chats',
+
   data () {
     return {
       active_el: 0,
@@ -82,9 +83,32 @@ export default {
       isMobile: false
     }
   },
-  computed: {
-    ...mapState(['allChats', 'chatMessages', 'goToChat'])
+
+  async created () {
+    if (window.innerWidth < 720) {
+      this.isMobile = true
+      this.active_el = null
+    } else {
+      this.isMobile = false
+      this.active_el = 0
+    }
+    this.socket = Stomp.over(new SockJS('https://law-app-prof.herokuapp.com/ws'))
+    this.socket.connect({
+      // Authorization: 'Bearer ' + localStorage.getItem('token'),
+      // use_http_auth: true,
+      // login: 'ujuqdhpp',
+      // passcode: 'LFuN5bdU8IAonD4zOIzoY2_mypGNCh_N',
+      // host: 'ujuqdhpp'
+    }, this.onOpen, this.onError)
+    if (!this.goToChat) {
+      await this.getAllChats({
+        userId: localStorage.getItem('userId'),
+        userEmail: localStorage.getItem('email'),
+        role: localStorage.getItem('userType')
+      })
+    }
   },
+
   mounted () {
     if (localStorage.userId) {
       this.userId = localStorage.userId
@@ -98,6 +122,11 @@ export default {
       this.isMobile = window.innerWidth < 720
     }
   },
+
+  computed: {
+    ...mapState(['allChats', 'chatMessages', 'goToChat'])
+  },
+
   methods: {
     ...mapActions(['establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat']),
     removeActive () {
@@ -220,29 +249,6 @@ export default {
       }
       document.getElementById('chatMessage').innerHTML = ''
       this.currentMessage = ''
-    }
-  },
-  async created () {
-    if (window.innerWidth < 720) {
-      this.isMobile = true
-      this.active_el = null
-    } else {
-      this.isMobile = false
-      this.active_el = 0
-    }
-    this.socket = Stomp.over(new SockJS('https://law-app-prof.herokuapp.com/ws'))
-    this.socket.connect({
-      Authorization: 'Bearer ' + localStorage.getItem('token'),
-      use_http_auth: true,
-      login: 'ujuqdhpp',
-      passcode: 'LFuN5bdU8IAonD4zOIzoY2_mypGNCh_N',
-      host: 'ujuqdhpp'
-    }, this.onOpen, this.onError)
-    if (!this.goToChat) {
-      await this.getAllChats({
-        userEmail: localStorage.getItem('email'),
-        role: localStorage.getItem('userType')
-      })
     }
   }
   // components: {
