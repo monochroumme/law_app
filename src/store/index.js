@@ -551,18 +551,19 @@ export default new Vuex.Store({
     },
     async getAllChats ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        apiRequest.get(`/chat/rooms/${data.userId}`) // &role=${data.role}`)
+        apiRequest.get(`/chat/rooms/${data.userId}?role=${data.role}`) // &role=${data.role}`)
           .then((res) => {
-            console.log('res:', res)
             commit('setAllChats', res.data)
+            resolve(true)
           })
           .catch(e => {
             console.log(e.response.data)
+            reject(e)
           })
       })
     },
-    async getExistingChatSessionMessages ({ commit }, chatId) {
-      const res = await apiRequest.get(`/private-chat/channel/${chatId}`)
+    async getExistingChatSessionMessages ({ commit }, { senderId, recipientId }) {
+      const res = await apiRequest.get(`/chat/messages/${senderId}/${recipientId}`)
       if (res.data) {
         commit('setChatMessages', res.data)
       }

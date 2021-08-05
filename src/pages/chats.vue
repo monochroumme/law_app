@@ -1,14 +1,14 @@
 <template>
   <div class="page chats-page">
-    <div class="chats-page__list" :class="{'hiddenMobile': this.isMobile && active_el != null}">
+    <div class="chats-page__list" :class="{'hiddenMobile': this.isMobile && activeChat != null}">
       <template v-if="allChats">
-        <div class="chats-page__list__chat" v-for="(chat, index) in allChats" :key="index" @click="activate(index)" :class="{ active : active_el === index }">
+        <div class="chats-page__list__chat" v-for="(chat, index) in allChats" :key="index" @click="activate(index)" :class="{ active : activeChat === index }">
           <template>
             <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
               <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
             </div>
             <div class="chats-page__list__chat__text">
-              <span class="chats-page__list__chat__text__name">{{ chat.userTwoFirstName }} {{ chat.userTwoLastName }}</span>
+              <span class="chats-page__list__chat__text__name">{{ chat.recipientFirstName }} {{ chat.recipientLastName }}</span>
               <span class="chats-page__list__chat__text__short-msg">Short message...</span>
             </div>
             <div class="chats-page__list__chat__time">07:18</div>
@@ -16,8 +16,8 @@
         </div>
       </template>
     </div>
-    <div class="chats-page__chat-block" v-if="messages" :class="{'showMobile': this.isMobile && active_el != null}">
-      <div @click="removeActive" v-if="this.isMobile && active_el != null" class="chats-page__chat-block__return">
+    <div class="chats-page__chat-block" v-if="messages" :class="{'showMobile': this.isMobile && activeChat != null}">
+      <div @click="removeActive" v-if="this.isMobile && activeChat != null" class="chats-page__chat-block__return">
         <img svg-inline src="@/assets/media/common/btn-back.svg" alt="Back">
       </div>
       <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal()" v-if="receiverData">
@@ -65,7 +65,7 @@ export default {
 
   data () {
     return {
-      active_el: 0,
+      activeChat: 0,
       dataModal: false,
       socket: null,
       messages: [],
@@ -87,24 +87,46 @@ export default {
   async created () {
     if (window.innerWidth < 720) {
       this.isMobile = true
-      this.active_el = null
+      this.activeChat = null
     } else {
       this.isMobile = false
-      this.active_el = 0
+      this.activeChat = 0
     }
+
+    // connecting ws
     this.socket = Stomp.over(new SockJS('https://law-app-prof.herokuapp.com/ws'))
-    this.socket.connect({
-      // Authorization: 'Bearer ' + localStorage.getItem('token'),
-      // use_http_auth: true,
-      // login: 'ujuqdhpp',
-      // passcode: 'LFuN5bdU8IAonD4zOIzoY2_mypGNCh_N',
-      // host: 'ujuqdhpp'
-    }, this.onOpen, this.onError)
-    if (!this.goToChat) {
-      await this.getAllChats({
-        userId: localStorage.getItem('userId'),
-        userEmail: localStorage.getItem('email'),
-        role: localStorage.getItem('userType')
+    await new Promise((resolve, reject) => {
+      this.socket.connect({
+        // Authorization: 'Bearer ' + localStorage.getItem('token'),
+        // use_http_auth: true,
+        // login: 'ujuqdhpp',
+        // passcode: 'LFuN5bdU8IAonD4zOIzoY2_mypGNCh_N',
+        // host: 'ujuqdhpp'
+      }, () => {
+        this.isConnected = true
+        resolve()
+      }, function (e) {
+        reject(e)
+        this.onError()
+      })
+    })
+
+    // checking if it was goToChat
+    if (this.goToChat) {
+      await this.createChat(this.goToChat)
+    }
+
+    // getting all chats
+    await this.getAllChats({
+      userId: localStorage.getItem('userId'),
+      userEmail: localStorage.getItem('email'),
+      role: localStorage.getItem('userType')
+    })
+
+    // getting all messages to all chats
+    if (this.allChats) {
+      this.allChats.forEach(chat => {
+        this.getExistingChatSessionMessages({ senderId: chat.senderId, recipientId: chat.recipientId })
       })
     }
   },
@@ -130,8 +152,16 @@ export default {
   methods: {
     ...mapActions(['establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat']),
     removeActive () {
-      this.active_el = null
+      this.activeChat = null
     },
+
+    async createChat ({ receiverId, senderId }) {
+      await this.establishChatSession({ receiverId: parseInt(receiverId), senderId: parseInt(senderId) })
+        .then(res => {
+          console.log(res)
+        })
+    },
+
     enterInChat (e) {
       e.preventDefault()
       if (e.keyCode === 13) {
@@ -144,28 +174,23 @@ export default {
       }
     },
     activate: function (el) {
-      this.active_el = el
-      this.onOpen()
+      this.activeChat = el
     },
     openDataModal: function () {
       this.dataModal = true
     },
+
     async onOpen () {
       this.loading = true
       let putData = null
       if (this.goToChat) {
         putData = this.goToChat
-        this.active_el = putData.receiver
+        this.activeChat = putData.receiver
         // this.putData = null
       } else {
         putData = {
           senderId: localStorage.getItem('userId'),
-          // TODO
           receiverId: ''
-          // receiverEmail: this.allChats[this.active_el].userTwoEmail,
-          // receiverRole: this.allChats[this.active_el].userTwoRole,
-          // senderEmail: localStorage.email,
-          // senderRole: localStorage.userType
         }
       }
       await this.establishChatSession(putData).then((res) => {
@@ -208,12 +233,15 @@ export default {
       })
       console.log('You just connected to websocket server')
     },
+
     onClose: function () {
       console.log('You have been disconnected from websocket server')
     },
+
     isConnected: function () {
       return (this.socket && this.socket.connected)
     },
+
     whenConnected: function (_do) {
       setTimeout(
         function () {
@@ -224,39 +252,43 @@ export default {
           }
         }, this.WHEN_CONNECTED_CALLBACK_WAIT_INTERVAL)
     },
+
     onInput (e) {
       this.currentMessage = e.target.innerHTML
     },
+
     sendChatMessage: function () {
       if (!this.currentMessage || this.currentMessage.trim() === '') {
         return
       } else {
         const sendData = {
-          fromUserEmail: this.senderData.senderEmail,
-          toUserEmail: this.receiverData.receiverEmail,
-          toUserRole: this.receiverData.receiverRole,
-          fromUserRole: this.senderData.senderRole,
-          contents: this.currentMessage
+          chatId: this.allChats?.[this.activeChat]?.chatId,
+          senderId: this.allChats?.[this.activeChat]?.senderId,
+          recipientId: this.allChats?.[this.activeChat]?.recipientId,
+          senderName: `${this.allChats?.[this.activeChat]?.senderFirstName} ${this.allChats?.[this.activeChat]?.senderLastName}`,
+          recipientName: `${this.allChats?.[this.activeChat]?.recipientFirstName} ${this.allChats?.[this.activeChat]?.recipientLastName}`,
+          contents: this.currentMessage.trim(),
+          timestamp: Date.now() + ''
         }
-        this.socket.send('/app/private.chat.' + this.channelUuid, {}, JSON.stringify(sendData))
-        this.messages
-          .push({
-            fromUserEmail: this.senderData.senderEmail,
-            toUserEmail: this.receiverData.receiverEmail,
-            toUserRole: this.receiverData.receiverRole,
-            fromUserRole: this.senderData.senderRole,
-            fromUserId: this.senderData.senderId,
-            toUserId: this.receiverData.receiverId,
-            contents: this.currentMessage
-          })
+        let sendDataString = JSON.stringify(sendData)
+        sendDataString = sendDataString.substring(1, sendDataString.length - 1)
+        console.log(sendDataString)
+        this.socket.send('/app/send', {}, 'SUKA BLYAT')
+        // this.messages
+        //   .push({
+        //     fromUserEmail: sendData.senderEmail,
+        //     toUserEmail: sendData.receiverEmail,
+        //     toUserRole: sendData.receiverRole,
+        //     fromUserRole: sendData.senderRole,
+        //     fromUserId: sendData.senderId,
+        //     toUserId: sendData.receiverId,
+        //     contents: sendData.contents
+        //   })
       }
       document.getElementById('chatMessage').innerHTML = ''
       this.currentMessage = ''
     }
   }
-  // components: {
-  //   UserDataModal: () => import('@/components/UserDataModal')
-  // }
 }
 </script>
 
