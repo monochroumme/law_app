@@ -270,10 +270,8 @@ export default {
           contents: this.currentMessage.trim(),
           timestamp: Date.now() + ''
         }
-        let sendDataString = JSON.stringify(sendData)
-        sendDataString = sendDataString.substring(1, sendDataString.length - 1)
-        console.log(sendDataString)
-        this.socket.send('/app/send', {}, 'SUKA BLYAT')
+        console.log(JSON.stringify(sendData))
+        this.socket.send('/app/send', {}, JSON.stringify(sendData))
         // this.messages
         //   .push({
         //     fromUserEmail: sendData.senderEmail,
