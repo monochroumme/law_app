@@ -385,15 +385,19 @@ export default {
           editData.jurisdictionIdList = this.jurisdictionsDto.map((j) => parseInt(j.id))
           editData.practiceIdList = this.practiceAreasDto.map((p) => parseInt(p.id))
         }
-        await this.editUser(editData).then(() => {
-          localStorage.clear()
-          if (this.oldEmail !== this.email) {
+        await this.editUser(editData).then(res => {
+          if (res.data === 'email-changed') {
+            localStorage.clear()
             this.$router.push('/login')
+            this.closeModal()
+          } else if (res.data === 'email-exists') {
+            this.$toasted.error('Email exists, please use another email')
+          } else {
+            this.closeModal()
           }
         }).catch(() => {})
         this.wait = false
       }
-      this.closeModal()
     }
   }
 }
