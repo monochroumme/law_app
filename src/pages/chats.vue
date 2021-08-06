@@ -4,8 +4,9 @@
       <template v-if="allChats">
         <div class="chats-page__list__chat" v-for="(chat, index) in allChats" :key="index" @click="activate(chat.chatId)" :class="{ active: activeChat === chat.chatId }">
           <template>
-            <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
-              <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
+            <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal(chat.recipientId)">
+              <img v-if="chat.recipientImage" :src="chat.recipientImage" alt="">
+              <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
             </div>
             <div class="chats-page__list__chat__text">
               <span class="chats-page__list__chat__text__name">{{ chat.recipientFirstName }} {{ chat.recipientLastName }}</span>
@@ -20,11 +21,14 @@
       <div @click="removeActive" v-if="this.isMobile && activeChat !== null" class="chats-page__chat-block__return">
         <img svg-inline src="@/assets/media/common/btn-back.svg" alt="Back">
       </div>
-      <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal()" v-if="activeChat">
+      <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal(chats[activeChat].recipientId)" v-if="activeChat">
         <div class="chats-page__chat-block__header__img open-user-modal">
-          <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
+          <img v-if="chats[activeChat].recipientImage" :src="chats[activeChat].recipientImage" alt="">
+          <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
         </div>
-        {{ chats[activeChat].recipientFirstName }} {{ chats[activeChat].recipientLastName }}
+        <span>
+          {{ chats[activeChat].recipientFirstName }} {{ chats[activeChat].recipientLastName }}
+        </span>
       </div>
       <div id="main-chat" class="chats-page__chat-block__messages main_chat">
         <div v-for="(msg, index) in (messages[activeChat] || [])" :key="index">
@@ -49,7 +53,7 @@
       </div>
     </div>
 
-<!--    <UserDataModal v-model="dataModal" :visibility="dataModal"></UserDataModal>-->
+    <UserDataModal v-if="dataModal && userData" v-model="userData" :visibility="dataModal"></UserDataModal>
   </div>
 </template>
 
@@ -85,7 +89,10 @@ export default {
 
   async created () {
     this.isMobile = window.innerWidth < 720
-
+    if (!this.jurisdictions) {
+      await this.getJurisdictions()
+      await this.getAreasOfLaw()
+    }
     // connecting ws
     this.socket = Stomp.over(new SockJS('https://law-app-prof.herokuapp.com/ws'))
     await new Promise((resolve, reject) => {
@@ -167,7 +174,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['allChats', 'chatMessages', 'goToChat']),
+    ...mapState(['allChats', 'chatMessages', 'goToChat', 'userData', 'jurisdictions', 'areasOfLaw']),
 
     chats () {
       if (this.allChats) {
@@ -181,8 +188,12 @@ export default {
     }
   },
 
+  components: {
+    UserDataModal: () => import('@/components/UserDataModal')
+  },
+
   methods: {
-    ...mapActions(['establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat']),
+    ...mapActions(['establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat', 'getClientDataById', 'getLawyerDataById', 'getJurisdictions', 'getAreasOfLaw']),
 
     moment,
 
@@ -211,8 +222,32 @@ export default {
     activate: function (el) {
       this.activeChat = el
     },
-    openDataModal: function () {
-      this.dataModal = true
+    async openDataModal (id) {
+      if (localStorage.getItem('userType') === 'ROLE_LAWYER') {
+        await this.getClientDataById(id).then(() => {
+          this.dataModal = true
+        })
+      } else {
+        await this.getLawyerDataById(id).then(() => {
+          this.dataModal = true
+          this.userData.jurisdictions = []
+          this.userData.practiceAreas = []
+          this.jurisdictions.map(j => {
+            this.userData.jurisdictionIdList.map(jL => {
+              if (j.id === jL) {
+                this.userData.jurisdictions.push(j)
+              }
+            })
+          })
+          this.areasOfLaw.map(p => {
+            this.userData.practiceIdList.map(pL => {
+              if (p.id === pL) {
+                this.userData.practiceAreas.push(p)
+              }
+            })
+          })
+        })
+      }
     },
 
     onClose: function () {
