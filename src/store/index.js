@@ -361,17 +361,29 @@ export default new Vuex.Store({
     },
 
     async getJurisdictions ({ commit }) {
-      const res = await apiRequest.getWithoutAuth('/jurisdiction/')
-      if (res.data) {
-        commit('setJurisdictions', res.data)
-      }
+      return new Promise((resolve, reject) => {
+        apiRequest.getWithoutAuth('/jurisdiction/').then(res => {
+          if (res.data) {
+            commit('setJurisdictions', res.data)
+            resolve(true)
+          }
+        }).catch(e => {
+          reject(e)
+        })
+      })
     },
 
     async getAreasOfLaw ({ commit }) {
-      const res = await apiRequest.getWithoutAuth('/practiceArea/')
-      if (res.data) {
-        commit('setAreasOfLaw', res.data)
-      }
+      return new Promise((resolve, reject) => {
+        apiRequest.getWithoutAuth('/practiceArea/').then(res => {
+          if (res.data) {
+            commit('setAreasOfLaw', res.data)
+            resolve(true)
+          }
+        }).catch(e => {
+          reject(e)
+        })
+      })
     },
 
     async getClientAllCases ({ commit }, params) {

@@ -103,27 +103,22 @@ export default {
   },
   async created () {
     if (!this.jurisdictions) {
-      await this.getJurisdictions().then(() => {
-        this.jurisdiction = JSON.parse(localStorage.jurisdictionDtoList)
-        this.jurisdictions.map((j) => {
-          this.jurisdiction.map((jL, index) => {
-            if (j.id === jL) {
-              this.jurisdiction[index] = j
-            }
-          })
-        })
-      })
+      await this.getJurisdictions()
     }
     if (!this.areasOfLaw) {
       await this.getAreasOfLaw()
-      this.areaOfLaw = JSON.parse(localStorage.practiceAreaDtoList)
-      this.areasOfLaw.map((p) => {
-        this.areaOfLaw.map((pL, index) => {
-          if (p.id === pL) {
-            this.areaOfLaw[index] = p
-          }
-        })
-      })
+    }
+    const userJurisdictionsIds = JSON.parse(localStorage.jurisdictionDtoList)
+    const userAreasOfLawIds = JSON.parse(localStorage.practiceAreaDtoList)
+    if (userJurisdictionsIds?.length) {
+      this.jurisdiction = userJurisdictionsIds.map(id => {
+        return this.jurisdictions.find(j => j.id === id)
+      }).filter(j => j)
+    }
+    if (userAreasOfLawIds?.length) {
+      this.areaOfLaw = userAreasOfLawIds.map(id => {
+        return this.areasOfLaw.find(j => j.id === id)
+      }).filter(j => j)
     }
     await this.getLawyerFilteredCases({
       isAscending: this.isAscending,
