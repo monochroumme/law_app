@@ -146,14 +146,17 @@ export default {
 
       // subscribing to chats
       this.socket.subscribe(`/user/${this.userId}/queue/messages`, msg => {
-        const parsedMsg = JSON.parse(msg.body)?.payload
+        const parsedMsg = JSON.parse(msg.body)
         if (parsedMsg) {
           const messages = Object.assign({}, this.messages)
-          if (!messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`]) {
-            messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`] = []
+          if (!messages[parsedMsg.chatId]) {
+            messages[parsedMsg.chatId] = []
           }
-          messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`].push(parsedMsg)
+          messages[parsedMsg.chatId].push(parsedMsg)
           this.$set(this, 'messages', messages)
+        } else {
+          console.error('CHAT WAS NOT FOUND')
+          console.log(parsedMsg)
         }
       })
     }
