@@ -2,39 +2,37 @@
   <div class="page chats-page">
     <div class="chats-page__list" :class="{'hiddenMobile': this.isMobile && activeChat != null}">
       <template v-if="allChats">
-        <div class="chats-page__list__chat" v-for="(chat, index) in allChats" :key="index" @click="activate(index)" :class="{ active : activeChat === index }">
+        <div class="chats-page__list__chat" v-for="(chat, index) in allChats" :key="index" @click="activate(index)" :class="{ active: activeChat === chat.chatId }">
           <template>
             <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
               <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
             </div>
             <div class="chats-page__list__chat__text">
               <span class="chats-page__list__chat__text__name">{{ chat.recipientFirstName }} {{ chat.recipientLastName }}</span>
-              <span class="chats-page__list__chat__text__short-msg">Short message...</span>
+              <span class="chats-page__list__chat__text__short-msg" v-if="messages[chat.chatId]">{{messages[chat.chatId][messages[chat.chatId].length - 1].content}}</span>
             </div>
-            <div class="chats-page__list__chat__time">07:18</div>
+            <div class="chats-page__list__chat__time" v-if="messages[chat.chatId]">{{ moment(parseInt(messages[chat.chatId][messages[chat.chatId].length - 1].timestamp)).format('HH:mm') }}</div>
           </template>
         </div>
       </template>
     </div>
-    <div class="chats-page__chat-block" v-if="messages" :class="{'showMobile': this.isMobile && activeChat != null}">
-      <div @click="removeActive" v-if="this.isMobile && activeChat != null" class="chats-page__chat-block__return">
+    <div class="chats-page__chat-block" :class="{'showMobile': this.isMobile && activeChat != null}">
+      <div @click="removeActive" v-if="this.isMobile && activeChat !== null" class="chats-page__chat-block__return">
         <img svg-inline src="@/assets/media/common/btn-back.svg" alt="Back">
       </div>
-      <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal()" v-if="receiverData">
+      <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal()" v-if="activeChat">
         <div class="chats-page__chat-block__header__img open-user-modal">
           <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
         </div>
-        {{ receiverData.receiverFirstName }} {{ receiverData.receiverLastName }}
+        {{ chats[activeChat].recipientFirstName }} {{ chats[activeChat].recipientLastName }}
       </div>
       <div id="main-chat" class="chats-page__chat-block__messages main_chat">
-        <div v-for="(msg, index) in messages" :key="index">
-          <div v-if="receiverData.receiverId===msg.toUserId">
-            <div v-if="msg.fromUserRole!==userRole" class="chats-page__chat-block__messages__msg msg-in">
-              <div class="lawyer">{{ msg.contents }}<div class="timestamp">17:08</div></div>
-            </div>
-            <div v-else class="chats-page__chat-block__messages__msg msg-out">
-              <div class="client">{{ msg.contents }}<div class="timestamp">17:08</div></div>
-            </div>
+        <div v-for="(msg, index) in (messages[activeChat] || [])" :key="index">
+          <div v-if="msg.senderId.toString() !== userId" class="chats-page__chat-block__messages__msg msg-in">
+            <div class="lawyer">{{ msg.content }}<div class="timestamp">{{ moment(parseInt(msg.timestamp)).format('HH:mm') }}</div></div>
+          </div>
+          <div v-else class="chats-page__chat-block__messages__msg msg-out">
+            <div class="client">{{ msg.content }}<div class="timestamp">{{ moment(parseInt(msg.timestamp)).format('HH:mm') }}</div></div>
           </div>
         </div>
       </div>
@@ -59,16 +57,17 @@
 import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
 import { mapActions, mapState } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'chats',
 
   data () {
     return {
-      activeChat: 0,
+      activeChat: null,
       dataModal: false,
       socket: null,
-      messages: [],
+      messages: {},
       currentMessage: '',
       channelUuid: null,
       senderData: null,
@@ -85,19 +84,14 @@ export default {
   },
 
   async created () {
-    if (window.innerWidth < 720) {
-      this.isMobile = true
-      this.activeChat = null
-    } else {
-      this.isMobile = false
-      this.activeChat = 0
-    }
+    this.isMobile = window.innerWidth < 720
 
     // connecting ws
     this.socket = Stomp.over(new SockJS('https://law-app-prof.herokuapp.com/ws'))
     await new Promise((resolve, reject) => {
       this.socket.connect({
         // Authorization: 'Bearer ' + localStorage.getItem('token'),
+        // Authentication: 'Bearer ' + localStorage.getItem('token'),
         // use_http_auth: true,
         // login: 'ujuqdhpp',
         // passcode: 'LFuN5bdU8IAonD4zOIzoY2_mypGNCh_N',
@@ -127,6 +121,29 @@ export default {
     if (this.allChats) {
       this.allChats.forEach(chat => {
         this.getExistingChatSessionMessages({ senderId: chat.senderId, recipientId: chat.recipientId })
+          .then(res => {
+            this.messages[res[0]?.chatId] = res?.sort(function (x, y) {
+              return parseInt(x.timestamp) - parseInt(y.timestamp)
+            })
+            if (this.activeChat === null) {
+              if (this.goToChat) {
+                this.activeChat = `${this.goToChat.senderId}_${this.goToChat.receiverId}`
+              } else {
+                this.activeChat = res[0]?.chatId
+              }
+            }
+          })
+      })
+
+      // subscribing to chats
+      this.socket.subscribe(`/user/${this.userId}/queue/messages`, msg => {
+        const parsedMsg = JSON.parse(msg.body)?.payload
+        const messages = Object.assign({}, this.messages)
+        if (!messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`]) {
+          messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`] = []
+        }
+        messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`].push(parsedMsg)
+        this.$set(this, 'messages', messages)
       })
     }
   },
@@ -146,11 +163,25 @@ export default {
   },
 
   computed: {
-    ...mapState(['allChats', 'chatMessages', 'goToChat'])
+    ...mapState(['allChats', 'chatMessages', 'goToChat']),
+
+    chats () {
+      if (this.allChats) {
+        const chats = {}
+        this.allChats.forEach(chat => {
+          chats[chat.chatId] = chat
+        })
+        return chats
+      }
+      return {}
+    }
   },
 
   methods: {
     ...mapActions(['establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat']),
+
+    moment,
+
     removeActive () {
       this.activeChat = null
     },
@@ -174,71 +205,17 @@ export default {
       }
     },
     activate: function (el) {
-      this.activeChat = el
+      // this.activeChat = el
     },
     openDataModal: function () {
       this.dataModal = true
-    },
-
-    async onOpen () {
-      this.loading = true
-      let putData = null
-      if (this.goToChat) {
-        putData = this.goToChat
-        this.activeChat = putData.receiver
-        // this.putData = null
-      } else {
-        putData = {
-          senderId: localStorage.getItem('userId'),
-          receiverId: ''
-        }
-      }
-      await this.establishChatSession(putData).then((res) => {
-        this.subUrl = this.socket.ws._transport.url
-        this.subUrl = this.subUrl.replace(process.env.WS_PORT, '')
-        this.subUrl = this.subUrl.replace('/websocket', '')
-        this.subUrl = this.subUrl.replace(/^[0-9]+\//, '')
-        this.sessionId = this.subUrl
-        this.channelUuid = res.data.channelUuid
-        this.receiverData = {
-          receiverFirstName: res.data.userTwoFirstName,
-          receiverId: res.data.userTwoId,
-          receiverLastName: res.data.userTwoLastName,
-          receiverEmail: res.data.userTwoEmail,
-          receiverRole: res.data.userTwoRole
-        }
-        this.senderData = {
-          senderFirstName: res.data.userOneFirstName,
-          senderId: res.data.userOneId,
-          senderLastName: res.data.userOneLastName,
-          senderEmail: res.data.userOneEmail,
-          senderRole: res.data.userOneRole
-        }
-        if (this.goToChat) {
-          this.getAllChats({
-            userEmail: this.senderData.senderEmail,
-            role: this.senderData.senderRole
-          })
-          this.rmDataForChat()
-        }
-        return res
-      }).then((info) => {
-        this.socket.subscribe('/topic/private.chat.' + this.channelUuid, tick => {
-          console.error('alo', tick.body)
-          // this.messages.push(JSON.parse(tick.body))
-        })
-        this.getExistingChatSessionMessages(info.data.channelUuid).then(() => {
-          this.messages = this.chatMessages
-        })
-      })
-      console.log('You just connected to websocket server')
     },
 
     onClose: function () {
       console.log('You have been disconnected from websocket server')
     },
 
-    isConnected: function () {
+    isConnected () {
       return (this.socket && this.socket.connected)
     },
 
@@ -257,31 +234,39 @@ export default {
       this.currentMessage = e.target.innerHTML
     },
 
-    sendChatMessage: function () {
+    sendChatMessage () {
+      if (!this.isConnected) {
+        // TODO reconnect and don't ask the user to update the page
+        this.$toasted.error('The chat has lost its connection, please reload the page')
+        return
+      }
+
       if (!this.currentMessage || this.currentMessage.trim() === '') {
         return
       } else {
         const sendData = {
-          chatId: this.allChats?.[this.activeChat]?.chatId,
-          senderId: this.allChats?.[this.activeChat]?.senderId,
-          recipientId: this.allChats?.[this.activeChat]?.recipientId,
-          senderName: `${this.allChats?.[this.activeChat]?.senderFirstName} ${this.allChats?.[this.activeChat]?.senderLastName}`,
-          recipientName: `${this.allChats?.[this.activeChat]?.recipientFirstName} ${this.allChats?.[this.activeChat]?.recipientLastName}`,
-          contents: this.currentMessage.trim(),
+          chatId: this.chats?.[this.activeChat]?.chatId,
+          senderId: this.chats?.[this.activeChat]?.senderId?.toString(),
+          recipientId: this.chats?.[this.activeChat]?.recipientId?.toString(),
+          senderName: `${this.chats?.[this.activeChat]?.senderFirstName} ${this.chats?.[this.activeChat]?.senderLastName}`,
+          recipientName: `${this.chats?.[this.activeChat]?.recipientFirstName} ${this.chats?.[this.activeChat]?.recipientLastName}`,
+          content: this.currentMessage.trim(),
           timestamp: Date.now() + ''
         }
-        console.log(JSON.stringify(sendData))
-        this.socket.send('/app/send', {}, JSON.stringify(sendData))
-        // this.messages
-        //   .push({
-        //     fromUserEmail: sendData.senderEmail,
-        //     toUserEmail: sendData.receiverEmail,
-        //     toUserRole: sendData.receiverRole,
-        //     fromUserRole: sendData.senderRole,
-        //     fromUserId: sendData.senderId,
-        //     toUserId: sendData.receiverId,
-        //     contents: sendData.contents
-        //   })
+        this.socket.send('/app/send', JSON.stringify(sendData), {
+          // Authentication: 'Bearer ' + localStorage.getItem('token'),
+          // use_http_auth: true,
+          // login: 'ujuqdhpp',
+          // passcode: 'LFuN5bdU8IAonD4zOIzoY2_mypGNCh_N',
+          // host: 'ujuqdhpp'
+        })
+        const messages = Object.assign({}, this.messages)
+        messages[this.activeChat].push({
+          ...sendData,
+          recipientId: parseInt(this.chats?.[this.activeChat]?.recipientId),
+          senderId: parseInt(this.chats?.[this.activeChat]?.senderId)
+        })
+        this.$set(this, 'messages', messages)
       }
       document.getElementById('chatMessage').innerHTML = ''
       this.currentMessage = ''

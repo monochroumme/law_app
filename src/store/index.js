@@ -565,8 +565,10 @@ export default new Vuex.Store({
     async getExistingChatSessionMessages ({ commit }, { senderId, recipientId }) {
       const res = await apiRequest.get(`/chat/messages/${senderId}/${recipientId}`)
       if (res.data) {
-        commit('setChatMessages', res.data)
+        // commit('setChatMessages', res.data)
+        return res.data
       }
+      return []
     },
     async dataForChat ({ commit }, data) {
       commit('setDataForChat', data)
