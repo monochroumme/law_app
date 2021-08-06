@@ -85,3 +85,21 @@
     transform: translateY(-50%);
   }
 }
+
+.g-nothing-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+
+  h2 {
+    margin-bottom: 30px;
+    font-size: 40px;
+    line-height: 1;
+    color: #9a9a9a;
+  }
+
+  button {
+
+  }
+}

@@ -3,7 +3,7 @@
     <button id="openFilterBtn" @click="openFilter()" class="all_cases-page__filter">Filter</button>
     <div class="all_cases-page__title">All cases</div>
     <div class="all_cases-page__list">
-      <div v-for="item in this.lawyerFilteredCases" :key="item.id" class="all_cases-page__list__block">
+      <div v-for="item in lawyerFilteredCases" :key="item.id" class="all_cases-page__list__block">
         <div class="all_cases-page__list__block__name open-user-modal" @click="openDataModal(item.clientDto.id)">
           {{ item.clientFirstName }} {{ item.clientLastName }}
         </div>
@@ -23,6 +23,10 @@
           <button class="all_cases-page__list__block__btns__btn-def" @click="launch(item.id)">Apply</button>
           <button class="all_cases-page__list__block__btns__btn-blue" @click="deleteCase(item.id)">Hide</button>
         </div>
+      </div>
+      <div class="g-nothing-found" v-if="dataObtained && (!lawyerFilteredCases || !lawyerFilteredCases.length)">
+        <h2>Your filter didn't produce any cases</h2>
+        <button @click="onResetFilter" class="common__btn">Reset Filters</button>
       </div>
     </div>
     <ApplyModal v-if="isModalShown" :visibility="isModalShown" :caseId="this.applyId"></ApplyModal>
@@ -90,7 +94,9 @@ export default {
       ],
       isModalShown: false,
       dataModal: false,
-      applyId: null
+      applyId: null,
+
+      dataObtained: false
     }
   },
   computed: {
@@ -120,11 +126,7 @@ export default {
         return this.areasOfLaw.find(j => j.id === id)
       }).filter(j => j)
     }
-    await this.getLawyerFilteredCases({
-      isAscending: this.isAscending,
-      jurisdictionIdList: this.jurisdiction,
-      practiceAreaIdList: this.areaOfLaw
-    })
+    await this.getCases()
   },
   methods: {
     ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
@@ -168,12 +170,25 @@ export default {
         })
       })
     },
-    async onSubmit () {
+
+    onResetFilter () {
+      this.jurisdiction = null
+      this.areaOfLaw = null
+      this.getCases()
+    },
+
+    async getCases () {
+      this.dataObtained = false
       await this.getLawyerFilteredCases({
         isAscending: this.isAscending,
         jurisdictionIdList: this.jurisdiction,
         practiceAreaIdList: this.areaOfLaw
       })
+      this.dataObtained = true
+    },
+
+    async onSubmit () {
+      await this.getCases()
     }
   }
 }
