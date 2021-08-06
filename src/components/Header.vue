@@ -14,7 +14,7 @@
       </ul>
     </nav>
     <div class="header__right">
-      <div class="header__notifications">
+      <div class="header__notifications" v-click-outside="closeNotifications">
         <svg @click="showNotifications()" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0)">
             <path d="M9.16667 22C10.8268 22 12.2156 20.8165 12.5345 19.25H5.79883C6.1179 20.8165 7.50667 22 9.16667 22Z" fill="white"/>
@@ -113,6 +113,9 @@ export default {
     },
     showNotifications () {
       this.notificationsDd = !this.notificationsDd
+    },
+    closeNotifications () {
+      this.notificationsDd = false
     }
   }
 }

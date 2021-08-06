@@ -15,6 +15,7 @@
     "moment": "^2.29.1",
     "redirect-ssl": "^3.0.0",
     "sockjs-client": "^1.5.1",
+    "v-click-outside": "^3.1.2",
     "vue": "^2.6.11",
     "vue-loading-overlay": "^3.4.2",
     "vue-multiselect": "^2.1.6",

@@ -17,8 +17,10 @@ import VueLoading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import PhoneMaskInput from 'vue-phone-mask-input'
 import Toasted from 'vue-toasted'
+import vClickOutside from 'v-click-outside'
 
 // connecting plugins/modules
+Vue.use(vClickOutside)
 Vue.use(TextareaAutosize)
 Vue.component('multiselect', Multiselect)
 Vue.use(VueLoading)
