@@ -201,6 +201,7 @@ export default {
             practiceAreaIdList: this.areaOfLaw.map(p => parseInt(p.id.toString()))
           }
           this.register(postData).then(() => {
+            localStorage.clear()
             this.$router.push('/login')
           }).catch(() => {})
           this.wait = false

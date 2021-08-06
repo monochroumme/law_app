@@ -196,6 +196,7 @@ export default {
             usaStatesId: this.jurisdiction.map(j => j.isState ? parseInt(j.id.toString()) : null).filter(j => j),
             practiceAreaDtos: this.areaOfLaw.map(p => parseInt(p.id.toString()))
           }).then(() => {
+            localStorage.clear()
             this.$router.push('/login')
           }).catch(() => {})
           this.wait = false

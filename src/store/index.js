@@ -218,9 +218,9 @@ export default new Vuex.Store({
   actions: {
     async login ({ commit }, data) {
       return new Promise((resolve, reject) => {
+        localStorage.clear()
         apiRequest.postWithoutAuth('/auth/singin/', data)
           .then(res => {
-            console.log(res.data)
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('userType', res.data.role)
             localStorage.setItem('userId', res.data.id)
