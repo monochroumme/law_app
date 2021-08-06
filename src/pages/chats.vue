@@ -30,7 +30,7 @@
           {{ chats[activeChat].recipientFirstName }} {{ chats[activeChat].recipientLastName }}
         </span>
       </div>
-      <div id="main-chat" class="chats-page__chat-block__messages main_chat">
+      <div id="main-chat" class="chats-page__chat-block__messages main_chat" :class="{'not-active': activeChat === null}">
         <div v-for="(msg, index) in (messages[activeChat] || [])" :key="index">
           <div v-if="msg.senderId.toString() !== userId" class="chats-page__chat-block__messages__msg msg-in">
             <div class="lawyer">{{ msg.content }}<div class="timestamp">{{ moment(parseInt(msg.timestamp)).format('HH:mm') }}</div></div>
@@ -319,5 +319,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/styles/pages/chats'
+@import '@/assets/styles/pages/chats';
 </style>

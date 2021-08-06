@@ -102,6 +102,10 @@
       background-color: #ffffff;
       overflow-y: auto;
 
+      &.not-active {
+        height: calc(100vh - 123px);
+      }
+
       .msg-out {
         justify-content: flex-end;
       }
