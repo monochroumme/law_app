@@ -293,6 +293,10 @@ export default {
 
         ul {
           height: 298px;
+
+          li {
+            width: 240px;
+          }
         }
       }
     }

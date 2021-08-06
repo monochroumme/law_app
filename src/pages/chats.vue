@@ -199,12 +199,12 @@ export default {
 
     enterInChat (e) {
       e.preventDefault()
-      if (e.keyCode === 13) {
+      if (e.keyCode === 13 && !e.shiftKey) {
         document.getElementById('sendMsg').click()
       }
     },
     clearFix (e) {
-      if (e.keyCode === 13) {
+      if (e.keyCode === 13 && !e.shiftKey) {
         e.preventDefault()
       }
     },
