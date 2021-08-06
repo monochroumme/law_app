@@ -2,7 +2,7 @@
   <div class="page chats-page">
     <div class="chats-page__list" :class="{'hiddenMobile': this.isMobile && activeChat != null}">
       <template v-if="allChats">
-        <div class="chats-page__list__chat" v-for="(chat, index) in allChats" :key="index" @click="activate(index)" :class="{ active: activeChat === chat.chatId }">
+        <div class="chats-page__list__chat" v-for="(chat, index) in allChats" :key="index" @click="activate(chat.chatId)" :class="{ active: activeChat === chat.chatId }">
           <template>
             <div class="chats-page__list__chat__img open-user-modal" @click="openDataModal()">
               <img class="open-user-modal" src="@/assets/media/common/photo.png" alt="">
@@ -122,9 +122,11 @@ export default {
       this.allChats.forEach(chat => {
         this.getExistingChatSessionMessages({ senderId: chat.senderId, recipientId: chat.recipientId })
           .then(res => {
-            this.messages[res[0]?.chatId] = res?.sort(function (x, y) {
-              return parseInt(x.timestamp) - parseInt(y.timestamp)
-            })
+            if (res?.length) {
+              this.messages[res[0]?.chatId] = res?.sort(function (x, y) {
+                return parseInt(x.timestamp) - parseInt(y.timestamp)
+              })
+            }
             if (this.activeChat === null) {
               if (this.goToChat) {
                 this.activeChat = `${this.goToChat.senderId}_${this.goToChat.receiverId}`
@@ -138,12 +140,14 @@ export default {
       // subscribing to chats
       this.socket.subscribe(`/user/${this.userId}/queue/messages`, msg => {
         const parsedMsg = JSON.parse(msg.body)?.payload
-        const messages = Object.assign({}, this.messages)
-        if (!messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`]) {
-          messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`] = []
+        if (parsedMsg) {
+          const messages = Object.assign({}, this.messages)
+          if (!messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`]) {
+            messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`] = []
+          }
+          messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`].push(parsedMsg)
+          this.$set(this, 'messages', messages)
         }
-        messages[`${parsedMsg.recipientId}_${parsedMsg.senderId}`].push(parsedMsg)
-        this.$set(this, 'messages', messages)
       })
     }
   },
@@ -205,7 +209,7 @@ export default {
       }
     },
     activate: function (el) {
-      // this.activeChat = el
+      this.activeChat = el
     },
     openDataModal: function () {
       this.dataModal = true
@@ -261,6 +265,7 @@ export default {
           // host: 'ujuqdhpp'
         })
         const messages = Object.assign({}, this.messages)
+        if (!messages[this.activeChat]) messages[this.activeChat] = []
         messages[this.activeChat].push({
           ...sendData,
           recipientId: parseInt(this.chats?.[this.activeChat]?.recipientId),
