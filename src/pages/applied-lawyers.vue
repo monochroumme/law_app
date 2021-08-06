@@ -86,7 +86,7 @@ export default {
     },
     async chooseLawyer (id) {
       await this.assignLawyer(id).then(() => {
-        this.$router.push('/client/chats')
+        this.$router.push('/client/cases')
       })
     },
     async openUserModal (id) {

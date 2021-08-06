@@ -17,9 +17,12 @@
           <div class="active-cases__list__case__separator"></div>
           <div class="active-cases__list__case__btns">
             <button class="active-cases__list__case__btns__btn-def" @click="openEditModal(item)">Edit</button>
-            <router-link class="active-cases__list__case__btns__btn-def" :to="'/client/cases/'+item.id+'/applied-lawyers'">
+            <router-link class="active-cases__list__case__btns__btn-def" v-if="item.assignedLawyerId === 0" :to="'/client/cases/'+item.id+'/applied-lawyers'">
               Lawyers Applied
             </router-link>
+            <button v-else class="active-cases__list__case__btns__btn-def" @click="routeToChat({lawyerId: item.assignedLawyerId})">
+              Contact my lawyer
+            </button>
             <button v-on:click="archiveToggler(item)" class="active-cases__list__case__btns__btn-blue">Archive</button>
           </div>
         </div>
@@ -165,7 +168,20 @@ export default {
   },
   methods: {
     ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
-    ...mapActions(['addClientCase', 'editClientCase', 'archiveClientCase', 'deleteClientCase', 'unarchiveClientCase']),
+    ...mapActions(['addClientCase', 'editClientCase', 'archiveClientCase', 'deleteClientCase', 'unarchiveClientCase', 'dataForChat']),
+
+    async routeToChat ({ lawyerId }) {
+      await this.dataForChat({
+        senderId: localStorage.getItem('userId'),
+        receiverId: lawyerId?.toString()
+        // receiverEmail: lawyerEmail,
+        // receiverRole: 'ROLE_LAWYER',
+        // senderEmail: localStorage.email,
+        // senderRole: localStorage.userType
+      }).then(() => {
+        this.$router.push('/client/chats')
+      })
+    },
 
     async archiveToggler (item) {
       await this.archiveClientCase(parseInt(item.id))
