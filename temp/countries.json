@@ -922,239 +922,239 @@
     "id": 231,
     "states": [
       {
-        "name": "Alabama",
+        "state": "Alabama",
         "id": 300
       },
       {
-        "name": "Alaska",
+        "state": "Alaska",
         "id": 299
       },
       {
-        "name": "American Samoa",
+        "state": "American Samoa",
         "id": 399
       },
       {
-        "name": "Arizona",
+        "state": "Arizona",
         "id": 499
       },
       {
-        "name": "Arkansas",
+        "state": "Arkansas",
         "id": 599
       },
       {
-        "name": "California",
+        "state": "California",
         "id": 699
       },
       {
-        "name": "Colorado",
+        "state": "Colorado",
         "id": 799
       },
       {
-        "name": "Connecticut",
+        "state": "Connecticut",
         "id": 899
       },
       {
-        "name": "Delaware",
+        "state": "Delaware",
         "id": 999
       },
       {
-        "name": "District Of Columbia",
+        "state": "District Of Columbia",
         "id": 1099
       },
       {
-        "name": "Federated States Of Micronesia",
+        "state": "Federated States Of Micronesia",
         "id": 1199
       },
       {
-        "name": "Florida",
+        "state": "Florida",
         "id": 1299
       },
       {
-        "name": "Georgia",
+        "state": "Georgia",
         "id": 1399
       },
       {
-        "name": "Guam",
+        "state": "Guam",
         "id": 1499
       },
       {
-        "name": "Hawaii",
+        "state": "Hawaii",
         "id": 1599
       },
       {
-        "name": "Idaho",
+        "state": "Idaho",
         "id": 1699
       },
       {
-        "name": "Illinois",
+        "state": "Illinois",
         "id": 1799
       },
       {
-        "name": "Indiana",
+        "state": "Indiana",
         "id": 1899
       },
       {
-        "name": "Iowa",
+        "state": "Iowa",
         "id": 1999
       },
       {
-        "name": "Kansas",
+        "state": "Kansas",
         "id": 2099
       },
       {
-        "name": "Kentucky",
+        "state": "Kentucky",
         "id": 2199
       },
       {
-        "name": "Louisiana",
+        "state": "Louisiana",
         "id": 2299
       },
       {
-        "name": "Maine",
+        "state": "Maine",
         "id": 2399
       },
       {
-        "name": "Marshall Islands",
+        "state": "Marshall Islands",
         "id": 2499
       },
       {
-        "name": "Maryland",
+        "state": "Maryland",
         "id": 2599
       },
       {
-        "name": "Massachusetts",
+        "state": "Massachusetts",
         "id": 2699
       },
       {
-        "name": "Michigan",
+        "state": "Michigan",
         "id": 2799
       },
       {
-        "name": "Minnesota",
+        "state": "Minnesota",
         "id": 2899
       },
       {
-        "name": "Mississippi",
+        "state": "Mississippi",
         "id": 2999
       },
       {
-        "name": "Missouri",
+        "state": "Missouri",
         "id": 3099
       },
       {
-        "name": "Montana",
+        "state": "Montana",
         "id": 3199
       },
       {
-        "name": "Nebraska",
+        "state": "Nebraska",
         "id": 3299
       },
       {
-        "name": "Nevada",
+        "state": "Nevada",
         "id": 3399
       },
       {
-        "name": "New Hampshire",
+        "state": "New Hampshire",
         "id": 3499
       },
       {
-        "name": "New Jersey",
+        "state": "New Jersey",
         "id": 3599
       },
       {
-        "name": "New Mexico",
+        "state": "New Mexico",
         "id": 3699
       },
       {
-        "name": "New York",
+        "state": "New York",
         "id": 3799
       },
       {
-        "name": "North Carolina",
+        "state": "North Carolina",
         "id": 3899
       },
       {
-        "name": "North Dakota",
+        "state": "North Dakota",
         "id": 3999
       },
       {
-        "name": "Northern Mariana Islands",
+        "state": "Northern Mariana Islands",
         "id": 4099
       },
       {
-        "name": "Ohio",
+        "state": "Ohio",
         "id": 4199
       },
       {
-        "name": "Oklahoma",
+        "state": "Oklahoma",
         "id": 4299
       },
       {
-        "name": "Oregon",
+        "state": "Oregon",
         "id": 4399
       },
       {
-        "name": "Palau",
+        "state": "Palau",
         "id": 4499
       },
       {
-        "name": "Pennsylvania",
+        "state": "Pennsylvania",
         "id": 4599
       },
       {
-        "name": "Puerto Rico",
+        "state": "Puerto Rico",
         "id": 4699
       },
       {
-        "name": "Rhode Island",
+        "state": "Rhode Island",
         "id": 4799
       },
       {
-        "name": "South Carolina",
+        "state": "South Carolina",
         "id": 4899
       },
       {
-        "name": "South Dakota",
+        "state": "South Dakota",
         "id": 4999
       },
       {
-        "name": "Tennessee",
+        "state": "Tennessee",
         "id": 5099
       },
       {
-        "name": "Texas",
+        "state": "Texas",
         "id": 5199
       },
       {
-        "name": "Utah",
+        "state": "Utah",
         "id": 5299
       },
       {
-        "name": "Vermont",
+        "state": "Vermont",
         "id": 5399
       },
       {
-        "name": "Virgin Islands",
+        "state": "Virgin Islands",
         "id": 5499
       },
       {
-        "name": "Virginia",
+        "state": "Virginia",
         "id": 5599
       },
       {
-        "name": "Washington",
+        "state": "Washington",
         "id": 5699
       },
       {
-        "name": "West Virginia",
+        "state": "West Virginia",
         "id": 5799
       },
       {
-        "name": "Wisconsin",
+        "state": "Wisconsin",
         "id": 5899
       },
       {
-        "name": "Wyoming",
+        "state": "Wyoming",
         "id": 5999
       }
     ]

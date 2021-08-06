@@ -86,7 +86,31 @@ export default new Vuex.Store({
     },
 
     setJurisdictions (state, payload) {
-      state.jurisdictions = payload
+      const jurisdictions = []
+
+      payload.forEach(j => {
+        const states = []
+
+        if (j.usaStateList) {
+          j.usaStateList.forEach(s => {
+            states.push({
+              id: s.usaStatesId,
+              jurisdiction: s.usaStates,
+              isState: true
+            })
+          })
+        }
+
+        const toPush = {
+          ...j
+        }
+
+        if (states.length) { toPush.states = states }
+
+        jurisdictions.push(toPush)
+      })
+
+      state.jurisdictions = jurisdictions
     },
 
     setAreasOfLaw (state, payload) {

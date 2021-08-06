@@ -192,7 +192,8 @@ export default {
             lastName: this.surname,
             phoneNumber: this.phone,
             caseDescription: this.caseDescription,
-            jurisdictionDtos: this.jurisdiction.map(j => parseInt(j.id.toString())),
+            jurisdictionDtos: this.jurisdiction.map(j => !j.isState ? parseInt(j.id.toString()) : null).filter(j => j),
+            usaStatesId: this.jurisdiction.map(j => j.isState ? parseInt(j.id.toString()) : null).filter(j => j),
             practiceAreaDtos: this.areaOfLaw.map(p => parseInt(p.id.toString()))
           }).then(() => {
             this.$router.push('/login')
