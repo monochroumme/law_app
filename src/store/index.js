@@ -245,7 +245,25 @@ export default new Vuex.Store({
     },
     async restorePassword ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        apiRequest.postWithoutAuth('/auth/restore-password/', data)
+        apiRequest.postWithoutAuth('/auth/forgot_password/', data)
+          .then(res => {
+            resolve(res)
+          })
+          .catch(e => {
+            reject(e)
+          })
+      })
+    },
+
+    async resetPasswordWithoutAuth ({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        apiRequest.postWithoutAuth(`/auth/reset_password?token=${data.token}&role=${data.role}`, {
+          newPassword: data.newPassword,
+          repeatPassword: data.repeatPassword
+        })
+          .then(res => {
+            resolve(res)
+          })
           .catch(e => {
             reject(e)
           })

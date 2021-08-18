@@ -29,9 +29,9 @@
     </form>
     <form @submit.prevent="onSubmitReset" class="common__container login-page__content login-page__reset-page" v-else>
       <div class="login-page__content__back">
-        <router-link to="/">
+        <div @click="backToLogin" to="/">
           X
-        </router-link>
+        </div>
       </div>
       <credentials-input class="mb-20" v-model="emailReset" placeholder="Enter your email" type="email" label="Email"/>
 
@@ -46,11 +46,6 @@
         <button type="submit" class="common__btn">
           Reset
         </button>
-      </div>
-      <div class="login-page__reset">
-        <a href="#" @click.prevent="isLogin = true">
-          Forgot password
-        </a>
       </div>
     </form>
   </div>
@@ -133,8 +128,10 @@ export default {
       }
     },
 
+    backToLogin () {
+      this.isLogin = true
+    },
     onSubmit () {
-      console.log(localStorage.getItem('token'))
       if (!this.wait) {
         if (!this.validateInputs()) {
           this.login({
@@ -162,7 +159,7 @@ export default {
           }).then(() => {
             this.$toasted.info('Restore password had been sent to your email')
           }).catch((e) => {
-            this.$toasted.error('Wrong email or password')
+            this.$toasted.error('Wrong email or role')
           })
           this.wait = false
         }

@@ -27,6 +27,15 @@ const routes = [
     component: () => import('@/pages/login.vue')
   },
   {
+    path: '/reset_password',
+    name: 'reset_password',
+    meta: {
+      isAuthPage: true
+    },
+    props: true,
+    component: () => import('@/pages/reset-password.vue')
+  },
+  {
     path: '/register',
     meta: {
       isAuthPage: true
