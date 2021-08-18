@@ -67,6 +67,7 @@
   &__chat-block {
     width: 65%;
     flex-direction: column;
+    position: relative;
 
     &__header {
       background-color: #293567;
@@ -115,7 +116,6 @@
         position:relative;
         display: flex;
 
-
         .lawyer {
           position: relative;
           padding-top: 18px;
@@ -159,6 +159,23 @@
             position: absolute;
             font-size: 8px;
             right: 10px;
+          }
+        }
+
+        .withFile {
+          display: flex;
+          flex-direction: column;
+          text-align: start;
+          padding-bottom: 10px;
+
+          img {
+            max-width: 263px;
+            margin-bottom: 7px;
+            border-radius: 9px;
+          }
+
+          .timestamp {
+            bottom: 10px;
           }
         }
       }
@@ -262,10 +279,87 @@
       }
     }
   }
+
   .showMobile {
     display: block !important;
   }
+
   .hiddenMobile {
     display: none;
+  }
+
+  .previewImgBlock {
+    display: none;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: calc(100vh - 136px);
+    top: 86px;
+    background-color: #F2F2F2;
+
+    .previewHeader {
+      font-size: 30px;
+      width: 100%;
+      text-indent: 25px;
+      span {
+        cursor: pointer;
+      }
+    }
+
+    img {
+      display: block;
+      width: auto;
+      height: 80%;
+    }
+
+    .msgBlock {
+      width: 80%;
+      display: flex;
+      justify-content: space-between;
+
+      button{
+        width: 41px;
+        height: 41px;
+        border-radius: 50px;
+        background-color: #FFFFFF;
+        margin: 8px 0;
+      }
+
+      .inputBlock {
+        box-sizing: border-box;
+        min-width: 93%;
+        min-height: 20px;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20px;
+        outline: none;
+        will-change: width;
+        padding: 9px 12px 11px;
+        margin: 8px 10px;
+        background-color: #ffffff;
+        border-radius: 21px;
+
+        .contentInput {
+          min-height: 20px;
+          background-color: white;
+          outline: none;
+          max-height: 100px;
+          word-wrap: break-word;
+          white-space: pre-wrap;
+          overflow-x: hidden;
+          overflow-y: auto;
+          -webkit-user-select: text;
+          -moz-user-select: text;
+          -ms-user-select: text;
+          user-select: text;
+        }
+      }
+    }
+  }
+
+  .showPreview {
+    display: flex;
   }
 }

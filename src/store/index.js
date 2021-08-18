@@ -624,6 +624,18 @@ export default new Vuex.Store({
             commit('setNotifications', res.data)
           })
       }
+    },
+    async uploadChatImg ({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        apiRequest.post('/chat/upload', data)
+          .then(res => {
+            resolve(res)
+          })
+          .catch(e => {
+            console.error(e.response.data.message)
+            reject(e.response.data.message)
+          })
+      })
     }
   }
 })

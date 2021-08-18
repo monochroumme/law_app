@@ -169,6 +169,11 @@ export default {
     top: 40px;
     right: 0;
     border-left: 3px solid #2889e4;
+    cursor: pointer;
+
+    div {
+      text-indent: 10px;
+    }
   }
   &__user:hover + .hidden, .hidden:hover {
     display: block;
