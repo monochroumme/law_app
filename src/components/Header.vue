@@ -227,7 +227,6 @@ export default {
           .title {
             padding: 8px 0;
             font-size: 14px;
-            text-transform: capitalize;
           }
 
           .content {
