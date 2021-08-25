@@ -202,7 +202,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['allChats', 'chatMessages', 'goToChat', 'userData', 'jurisdictions', 'areasOfLaw']),
+    ...mapState(['allChats', 'chatMessages', 'goToChat', 'userData', 'jurisdictions', 'areasOfLaw', 'chatsNotifications']),
 
     chats () {
       if (this.allChats) {
@@ -221,7 +221,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['uploadChatImg', 'establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat', 'getClientDataById', 'getLawyerDataById', 'getJurisdictions', 'getAreasOfLaw']),
+    ...mapActions(['uploadChatImg', 'establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat', 'getClientDataById', 'getLawyerDataById', 'getJurisdictions', 'getAreasOfLaw', 'updChatNotifications']),
 
     moment,
 
@@ -248,6 +248,7 @@ export default {
       }
     },
     activate: function (el) {
+      this.updChatNotifications(0)
       this.activeChat = el
     },
     async openDataModal (id) {

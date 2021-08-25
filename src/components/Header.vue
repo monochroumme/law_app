@@ -10,6 +10,7 @@
         </li>
         <li>
           <router-link :to="`/${userType}/chats`">Chats</router-link>
+          <span v-if="this.chatsNotifications !== 0">{{ this.chatsNotifications }}</span>
         </li>
       </ul>
     </nav>
@@ -58,12 +59,14 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
 
 export default {
   name: 'Header',
 
   computed: {
-    ...mapState(['user', 'notifications']),
+    ...mapState(['user', 'notifications', 'chatsNotifications']),
 
     userType () {
       return this.$route.params.userType
@@ -76,7 +79,8 @@ export default {
       firstName: '',
       lastName: '',
       profilePhoto: null,
-      notificationsDd: false
+      notificationsDd: false,
+      notificationsSocket: null
     }
   },
   mounted () {
@@ -93,14 +97,35 @@ export default {
       this.profilePhoto = localStorage.profilePic
     }, 1000)
   },
-  created () {
-    this.getNotifications()
+  async created () {
+    await this.getNotifications()
+    await this.getChatNotifications(localStorage.getItem('userId'))
+      .then(() => {
+        this.notificationsSocket = Stomp.over(new SockJS('https://law-app-prof.herokuapp.com/ws'))
+        this.notificationsSocket.connect({
+          // Authorization: 'Bearer ' + localStorage.getItem('token'),
+          // Authentication: 'Bearer ' + localStorage.getItem('token'),
+          // use_http_auth: true,
+          // login: 'ujuqdhpp',
+          // passcode: 'LFuN5bdU8IAonD4zOIzoY2_mypGNCh_N',
+          // host: 'ujuqdhpp'
+        }, () => {
+          this.notificationsSocket.subscribe(`/user/${localStorage.getItem('userId')}/queue/messages`, msg => {
+            const msgData = JSON.parse(msg.body)
+            if (msgData.status === 'RECEIVED') {
+              this.updChatNotifications(this.chatsNotifications + 1)
+            }
+          })
+        }, function () {
+          this.onError()
+        })
+      })
     setInterval(() => {
       this.getNotifications()
     }, 60000)
   },
   methods: {
-    ...mapActions(['getNotifications']),
+    ...mapActions(['getNotifications', 'updChatNotifications', 'getChatNotifications']),
     openFilter: function () {
       this.showFilter = true
     },
@@ -143,6 +168,22 @@ export default {
 
       li {
         margin: 0 10px;
+        position: relative;
+
+        span {
+          position: absolute;
+          top: -2px;
+          right: -14px;
+          font-size: 9px;
+          color: #FFFFFF;
+          background-color: red;
+          border-radius: 26px;
+          width: 14px;
+          height: 14px;
+          text-align: center;
+          display: block;
+          padding: 2px;
+        }
 
         .router-link-exact-active {
           border-bottom: 1px solid $yellow-0;

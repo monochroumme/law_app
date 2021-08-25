@@ -125,9 +125,9 @@ export default {
     ...mapActions(['getFilteredCases', 'getClientDataById', 'archiveLawyerCase', 'dataForChat']),
     async routeToChat (lawyerId) {
       await this.dataForChat({
-        receiver: lawyerId,
+        receiverId: lawyerId,
         receiverRole: 'ROLE_CLIENT',
-        sender: parseInt(localStorage.userId),
+        senderId: parseInt(localStorage.userId),
         senderRole: localStorage.userType
       }).then(() => {
         this.$router.push('/lawyer/chats')

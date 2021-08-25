@@ -76,7 +76,8 @@ export default new Vuex.Store({
     chatMessages: null,
     chatSession: null,
     goToChat: null,
-    notifications: null
+    notifications: null,
+    chatsNotifications: 0
   },
 
   mutations: {
@@ -212,6 +213,10 @@ export default new Vuex.Store({
 
     setNotifications (state, payload) {
       state.notifications = payload
+    },
+
+    setChatsNotifications (state, payload) {
+      state.chatsNotifications = payload
     }
   },
 
@@ -648,6 +653,21 @@ export default new Vuex.Store({
             commit('setNotifications', res.data)
           })
       }
+    },
+    async updChatNotifications ({ commit }, data) {
+      commit('setChatsNotifications', data)
+    },
+    async getChatNotifications ({ commit }, userId) {
+      return new Promise((resolve, reject) => {
+        apiRequest.get(`/chat/rooms/${userId}/count`)
+          .then(res => {
+            commit('setChatsNotifications', res.data)
+            resolve(res)
+          })
+          .catch(e => {
+            reject(e.response.data.message)
+          })
+      })
     },
     async uploadChatImg ({ commit }, data) {
       return new Promise((resolve, reject) => {
