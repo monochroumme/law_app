@@ -290,6 +290,12 @@ export default new Vuex.Store({
         return new Promise((resolve, reject) => {
           apiRequest.put('/lawyer/update/', data)
             .then(res => {
+              localStorage.setItem('firstName', data.firstName)
+              localStorage.setItem('lastName', data.lastName)
+              localStorage.setItem('phoneNumber', data.phoneNumber)
+              localStorage.setItem('email', data.email)
+              localStorage.setItem('jurisdictionDtoList', JSON.stringify(data.jurisdictionIdList))
+              localStorage.setItem('practiceAreaDtoList', JSON.stringify(data.practiceIdList))
               resolve(res)
             })
             .catch(e => {

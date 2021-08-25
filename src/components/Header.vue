@@ -32,8 +32,8 @@
           <ul v-if="this.notifications">
             <li v-for="(notify, index) in this.notifications" :key="index">
               <div class="fulldate">
-                <div class="weekday">{{ notify.weekday }}</div>
-                <div class="datetime">{{ notify.datetime }}</div>
+                <div class="weekday">{{ notify.dayOfWeek }}</div>
+                <div class="datetime">{{ notify.creationDate }}</div>
               </div>
               <div class="title">
                 {{ notify.info }}
@@ -215,13 +215,14 @@ export default {
 
             .weekday {
               font-size: 15px;
+              line-height: 17px;
+              color: #A4ABC0;
             }
 
             .datetime {
-              font-size: 11px;
-              color: #A4ABC0;
+              font-size: 13px;
+              color: #868e96;
               padding-left: 11px;
-              padding-top: 5px;
             }
           }
           .title {
