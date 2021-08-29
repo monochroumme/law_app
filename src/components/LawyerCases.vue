@@ -136,12 +136,12 @@ export default {
     async archiveToggler (item) {
       await this.archiveLawyerCase(parseInt(item.id))
         .then(() => {
-          this.lawyerCases.map((obj, index) => {
+          this.$parent.lawyerCases.map((obj, index) => {
             if (obj.id === item.id) {
-              this.lawyerCases.splice(index, 1)
+              this.$parent.lawyerCases.splice(index, 1)
             }
           })
-          this.lawyerDoneCases.push(item)
+          this.$parent.lawyerDoneCases.push(item)
         })
     },
     showActive: function () {
