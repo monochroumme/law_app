@@ -323,13 +323,8 @@ export default {
             description: this.caseDescription,
             jurisdictionIdList: this.jurisdiction.map(j => parseInt(j.id.toString())),
             practiceAreaIdList: (allAreas ? allAreas.map(aA => parseInt(aA.id.toString())) : this.areaOfLaw.map(p => parseInt(p.id.toString())))
-          }).then(() => {
-            this.$parent.clientActiveCases.push({
-              clientId: localStorage.getItem('userId'),
-              description: this.caseDescription,
-              jurisdictionIdList: this.jurisdiction.map(j => parseInt(j.id.toString())),
-              practiceAreaIdList: this.areaOfLaw.map(p => parseInt(p.id.toString()))
-            })
+          }).then((newCase) => {
+            this.$parent.clientActiveCases.unshift(newCase.data)
             this.closeModal()
           }).catch(() => {
           })
