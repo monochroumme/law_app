@@ -14,6 +14,7 @@
           <div class="active-cases__list__case__description">
             {{ item.description }}
           </div>
+          <div class="active-cases__list__case__date">{{ item.creationDate.slice(0, 10) }}</div>
           <div class="active-cases__list__case__separator"></div>
           <div class="active-cases__list__case__btns">
             <button class="active-cases__list__case__btns__btn-def" @click="openEditModal(item)">Edit</button>
