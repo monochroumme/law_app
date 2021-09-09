@@ -11,6 +11,7 @@
             <div class="chats-page__list__chat__text">
               <span class="chats-page__list__chat__text__name">{{ chat.recipientFirstName }} {{ chat.recipientLastName }}</span>
               <span class="chats-page__list__chat__text__short-msg" v-if="messages[chat.chatId]">{{messages[chat.chatId][messages[chat.chatId].length - 1].fileUrl ? 'Photo' : messages[chat.chatId][messages[chat.chatId].length - 1].content}}</span>
+              <span class="chats-page__list__chat__text__short-msg"></span>
             </div>
             <div class="chats-page__list__chat__time" v-if="messages[chat.chatId]">{{ moment(parseInt(messages[chat.chatId][messages[chat.chatId].length - 1].timestamp)).format('HH:mm') }}</div>
           </template>
@@ -170,7 +171,7 @@ export default {
       })
 
       // subscribing to chats
-      this.socket.subscribe(`/user/${this.userId}/queue/messages`, msg => {
+      this.socket.subscribe(`/user/${this.userId}:${this.userRole}/queue/messages`, msg => {
         const parsedMsg = JSON.parse(msg.body)
         if (parsedMsg) {
           const messages = Object.assign({}, this.messages)
@@ -341,6 +342,8 @@ export default {
             recipientId: this.chats?.[this.activeChat]?.recipientId?.toString(),
             senderName: `${this.chats?.[this.activeChat]?.senderFirstName} ${this.chats?.[this.activeChat]?.senderLastName}`,
             recipientName: `${this.chats?.[this.activeChat]?.recipientFirstName} ${this.chats?.[this.activeChat]?.recipientLastName}`,
+            senderRole: this.userRole,
+            recipientRole: (this.userRole === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
             content: (this.currMsg.trim() === '' ? null : this.currMsg.trim()),
             timestamp: Date.now() + '',
             fileUrl: imgUrl.data
@@ -373,6 +376,8 @@ export default {
           recipientId: this.chats?.[this.activeChat]?.recipientId?.toString(),
           senderName: `${this.chats?.[this.activeChat]?.senderFirstName} ${this.chats?.[this.activeChat]?.senderLastName}`,
           recipientName: `${this.chats?.[this.activeChat]?.recipientFirstName} ${this.chats?.[this.activeChat]?.recipientLastName}`,
+          senderRole: this.userRole,
+          recipientRole: (this.userRole === 'ROLE_CLIENT' ? 'ROLE_LAWYER' : 'ROLE_CLIENT'),
           content: this.currentMessage.trim(),
           timestamp: Date.now() + '',
           fileUrl: null
