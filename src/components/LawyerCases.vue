@@ -18,8 +18,8 @@
           <div class="lawyer-cases__list__case__case-descr">
             Case Description
           </div>
-          <div class="lawyer-cases__list__case__description">
-            {{ item.description }}
+          <div class="lawyer-cases__list__case__description open-case-modal" @click="showFullCase(item.description)">
+            {{ item.description.slice(0, 120) }} {{ (item.description.length > 120 ? '...' : '') }}
           </div>
           <div class="lawyer-cases__list__case__date">
             {{ item.creationDate.slice(0, 10) }}
@@ -48,8 +48,8 @@
           <div class="lawyer-cases__list__case__case-descr">
             Case Description
           </div>
-          <div class="lawyer-cases__list__case__description">
-            {{ item.description }}
+          <div class="lawyer-cases__list__case__description open-case-modal" @click="showFullCase(item.description)">
+            {{ item.description.slice(0, 120) }} {{ (item.description.length > 120 ? '...' : '') }}
           </div>
           <div class="lawyer-cases__list__case__date">
             {{ item.creationDate.slice(0, 10) }}
@@ -78,8 +78,8 @@
           <div class="lawyer-cases__list__case__case-descr">
             Case Description
           </div>
-          <div class="lawyer-cases__list__case__description">
-            {{ item.description }}
+          <div class="lawyer-cases__list__case__description open-case-modal" @click="showFullCase(item.description)">
+            {{ item.description.slice(0, 120) }} {{ (item.description.length > 120 ? '...' : '') }}
           </div>
           <div class="lawyer-cases__list__case__date">
             {{ item.creationDate.slice(0, 10) }}
@@ -96,6 +96,7 @@
       </template>
     </div>
     <UserDataModal v-if="this.dataModal" v-model="userData" :visibility="dataModal"></UserDataModal>
+    <FullCaseModal v-if="caseModal && this.caseDescr.length >= 120" v-model="this.caseDescr" :visibility="caseModal"></FullCaseModal>
   </div>
 </template>
 
@@ -112,17 +113,25 @@ export default {
   data () {
     return {
       caseState: 'ACTIVE',
-      dataModal: false
+      dataModal: false,
+      caseModal: false,
+      caseDescr: ''
     }
   },
   computed: {
     ...mapState(['userData'])
   },
   components: {
-    UserDataModal: () => import('@/components/UserDataModal')
+    UserDataModal: () => import('@/components/UserDataModal'),
+    FullCaseModal: () => import('@/components/FullCaseModal')
   },
   methods: {
     ...mapActions(['getFilteredCases', 'getClientDataById', 'archiveLawyerCase', 'dataForChat']),
+
+    showFullCase: function (data) {
+      this.caseModal = true
+      this.caseDescr = data
+    },
     async routeToChat (lawyerId) {
       await this.dataForChat({
         receiverId: lawyerId,

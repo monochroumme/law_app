@@ -13,8 +13,8 @@
         </div>
         <span>Case description</span>
         <div class="all_cases-page__list__block__separator"/>
-        <div class="all_cases-page__list__block__commentary">
-          {{ item.description }}
+        <div class="all_cases-page__list__block__commentary open-case-modal" @click="showFullCase(item.description)">
+          {{ item.description.slice(0, 120) }} {{ (item.description.length > 120 ? '...' : '') }}
         </div>
         <div class="all_cases-page__list__block__date">
           {{ item.creationDate.slice(0, 10) }}
@@ -70,6 +70,7 @@
       </div>
     </div>
     <UserDataModal v-if="dataModal && userData" v-model="userData" :visibility="dataModal"></UserDataModal>
+    <FullCaseModal v-if="caseModal && this.caseDescr.length >= 120" v-model="this.caseDescr" :visibility="caseModal"></FullCaseModal>
   </div>
 </template>
 
@@ -80,6 +81,8 @@ export default {
   name: 'all-cases',
   data () {
     return {
+      caseModal: false,
+      caseDescr: '',
       isAscending: false,
       jurisdiction: null,
       areaOfLaw: null,
@@ -105,7 +108,8 @@ export default {
   components: {
     ApplyModal: () => import('@/components/ApplyModal'),
     UserDataModal: () => import('@/components/UserDataModal'),
-    CustomMultiselect: () => import('@/components/CustomMultiselect')
+    CustomMultiselect: () => import('@/components/CustomMultiselect'),
+    FullCaseModal: () => import('@/components/FullCaseModal')
   },
   async created () {
     if (!this.jurisdictions) {
@@ -131,6 +135,11 @@ export default {
   methods: {
     ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
     ...mapActions(['getLawyerFilteredCases', 'getClientDataById', 'deleteLawyerCase']),
+
+    showFullCase: function (data) {
+      this.caseModal = true
+      this.caseDescr = data
+    },
     launch: function (id) {
       this.isModalShown = true
       this.applyId = id

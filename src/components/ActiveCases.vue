@@ -11,8 +11,8 @@
             {{ item.date }}
           </div>
           <div class="active-cases__list__case__separator"></div>
-          <div class="active-cases__list__case__description">
-            {{ item.description }}
+          <div class="active-cases__list__case__description open-case-modal" @click="showFullCase(item.description)">
+            {{ item.description.slice(0, 120) }} {{ (item.description.length > 120 ? '...' : '') }}
           </div>
           <div class="active-cases__list__case__date">{{ item.creationDate.slice(0, 10) }}</div>
           <div class="active-cases__list__case__separator"></div>
@@ -48,8 +48,8 @@
             {{ item.date }}
           </div>
           <div class="active-cases__list__case__separator"></div>
-          <div class="active-cases__list__case__description">
-            {{ item.description }}
+          <div class="active-cases__list__case__description open-full-case" @click="showFullCase(item.description)">
+            {{ item.description.slice(0, 120) }} {{ (item.description.length > 120 ? '...' : '') }}
           </div>
           <div class="active-cases__list__case__separator"></div>
           <div class="active-cases__list__case__btns">
@@ -138,6 +138,7 @@
         </form>
       </div>
     </div>
+    <FullCaseModal v-if="caseModal && this.caseDescr.length >= 120" v-model="this.caseDescr" :visibility="caseModal"></FullCaseModal>
   </div>
 </template>
 
@@ -147,7 +148,8 @@ import { mapActions, mapState } from 'vuex'
 export default {
   name: 'ActiveCases',
   components: {
-    CustomMultiselect: () => import('@/components/CustomMultiselect')
+    CustomMultiselect: () => import('@/components/CustomMultiselect'),
+    FullCaseModal: () => import('@/components/FullCaseModal')
   },
   computed: {
     ...mapState(['defaultJurisdictions', 'defaultAreasOfLaw', 'jurisdictions', 'areasOfLaw'])
@@ -156,6 +158,8 @@ export default {
     return {
       showModal: false,
       showEditModal: false,
+      caseModal: false,
+      caseDescr: '',
       loading: false,
       caseDescription: '',
       jurisdiction: '',
@@ -178,6 +182,10 @@ export default {
     ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
     ...mapActions(['addClientCase', 'editClientCase', 'archiveClientCase', 'deleteClientCase', 'unarchiveClientCase', 'dataForChat']),
 
+    showFullCase: function (data) {
+      this.caseModal = true
+      this.caseDescr = data
+    },
     async routeToChat ({ lawyerId }) {
       await this.dataForChat({
         senderId: localStorage.getItem('userId'),
