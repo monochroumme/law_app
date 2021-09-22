@@ -23,8 +23,8 @@
             <path
               d="m213.332031 512c38.636719 0 70.957031-27.542969 78.378907-64h-156.757813c7.425781 36.457031 39.746094 64 78.378906 64zm0 0"/>
           </svg>
-          <span v-if="notifications && notifications.length">
-            {{notifications.length}}
+          <span v-if="notifications && notifications.length && this.notificationsCount >= 1">
+            {{this.notificationsCount}}
           </span>
         </div>
         <div class="header__notifications__dd" v-if="notificationsDd">
@@ -80,7 +80,8 @@ export default {
       lastName: '',
       profilePhoto: null,
       notificationsDd: false,
-      notificationsSocket: null
+      notificationsSocket: null,
+      notificationsCount: 0
     }
   },
   mounted () {
@@ -98,7 +99,13 @@ export default {
     }, 1000)
   },
   async created () {
-    await this.getNotifications()
+    await this.getNotifications().then(() => {
+      this.notifications.map(n => {
+        if (n.seen === false) {
+          this.notificationsCount++
+        }
+      })
+    })
     await this.getChatNotifications(localStorage.getItem('userId'))
       .then(() => {
         this.notificationsSocket = Stomp.over(new SockJS('https://law-app-prof.herokuapp.com/ws'))
@@ -120,12 +127,18 @@ export default {
           this.onError()
         })
       })
-    setInterval(() => {
-      this.getNotifications()
+    setInterval(async () => {
+      await this.getNotifications().then(() => {
+        this.notifications.map(n => {
+          if (n.seen === false) {
+            this.notificationsCount++
+          }
+        })
+      })
     }, 60000)
   },
   methods: {
-    ...mapActions(['getNotifications', 'updChatNotifications', 'getChatNotifications']),
+    ...mapActions(['getNotifications', 'updChatNotifications', 'getChatNotifications', 'notificationsChecked']),
     openFilter: function () {
       this.showFilter = true
     },
@@ -141,6 +154,8 @@ export default {
     },
     closeNotifications () {
       this.notificationsDd = false
+      this.notificationsChecked()
+      this.notificationsCount = 0
     }
   }
 }

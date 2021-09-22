@@ -654,6 +654,19 @@ export default new Vuex.Store({
           })
       }
     },
+    async notificationsChecked ({ commit }) {
+      if (localStorage.getItem('userType') === 'ROLE_LAWYER') {
+        await apiRequest.put('/lawyer/notifications/seen/')
+          .then(() => {
+            console.log('Lawyer notifications seen')
+          })
+      } else {
+        await apiRequest.put('/client/notifications/seen/')
+          .then(() => {
+            console.log('Client notifications seen')
+          })
+      }
+    },
     async updChatNotifications ({ commit }, data) {
       commit('setChatsNotifications', data)
     },
