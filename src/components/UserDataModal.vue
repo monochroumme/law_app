@@ -11,7 +11,7 @@
             <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
           </div>
           <div class="user-modal__modal__body__user__data">
-            <div>Name/Surname:</div>
+            <div>Name/Last name:</div>
             <span>{{ this.userData.firstName }} {{ this.userData.lastName }}</span>
           </div>
          <div class="user-modal__modal__body__user__data">

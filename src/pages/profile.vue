@@ -114,7 +114,7 @@
         <form @submit.prevent="onSubmit">
           <div class="profile-page__modal__block__body">
             <custom-input class="mb-20" v-model="firstName" placeholder="Enter your name" label="Name" />
-            <custom-input class="mb-20" v-model="lastName" placeholder="Enter your surname" label="Surname" />
+            <custom-input class="mb-20" v-model="lastName" placeholder="Enter your last name" label="Last name" />
             <custom-input class="mb-20" v-model="email" placeholder="Enter your email" label="Email" />
             <custom-input class="mb-20" v-model="phoneNumber" :is-phone="true" placeholder="Enter your phone" label="Phone" />
             <custom-multiselect
@@ -288,7 +288,7 @@ export default {
       }
       if (!this.lastName?.trim()?.length) {
         error = true
-        this.$toasted.error('Please, enter your surname')
+        this.$toasted.error('Please, enter your last name')
       }
       if (!this.phoneNumber) {
         error = true

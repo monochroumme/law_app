@@ -20,7 +20,7 @@
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'ModalBackdrop',
+  name: 'ApplyModal',
   data () {
     return {
       caseId: null,
@@ -49,13 +49,13 @@ export default {
       this.$parent.applyId = null
     },
     validateTextarea () {
-      let error = false
+      // let error = false
 
-      if (!this.comment?.trim()?.length) {
-        error = true
-        this.$toasted.error('Please, enter your case description')
-      }
-      return error
+      // if (!this.comment?.trim()?.length) {
+      //   error = true
+      //   this.$toasted.error('Please, enter your case description')
+      // }
+      return false
     },
     async onSubmit () {
       if (!this.validateTextarea()) {

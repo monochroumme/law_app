@@ -9,8 +9,8 @@
     <form @submit.prevent="onSubmit" class="common__container registration-page__content">
       <custom-input class="mb-20" v-model="name" placeholder="Enter your name" label="Name" />
       <div v-if="this.errorObj.name" class="error">Please, enter your name</div>
-      <custom-input class="mb-20" v-model="surname" placeholder="Enter your surname" label="Surname" />
-      <div v-if="this.errorObj.surname" class="error">Please, enter your surname</div>
+      <custom-input class="mb-20" v-model="surname" placeholder="Enter your last name" label="Last name" />
+      <div v-if="this.errorObj.surname" class="error">Please, enter your last name</div>
       <custom-multiselect
         :loading="loading"
         class="mb-20"
