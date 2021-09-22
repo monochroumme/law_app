@@ -13,7 +13,7 @@
         <span>Comments</span>
         <div class="applied_lawyers-page__list__block__separator"/>
         <div class="applied_lawyers-page__list__block__commentary">
-          {{ item.comment !== 'null' ? item.comment : 'No comment' || 'No comment' }}
+          {{ item.comment || 'No comment' }}
         </div>
         <div class="applied_lawyers-page__list__block__date">
           {{ item.date }}

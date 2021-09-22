@@ -82,7 +82,7 @@
 <script>
 import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -222,6 +222,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['setLawyerData']),
     ...mapActions(['uploadChatImg', 'establishChatSession', 'getAllChats', 'getExistingChatSessionMessages', 'rmDataForChat', 'getClientDataById', 'getLawyerDataById', 'getJurisdictions', 'getAreasOfLaw', 'updChatNotifications']),
 
     moment,
@@ -260,23 +261,25 @@ export default {
       } else {
         await this.getLawyerDataById(id).then(() => {
           this.dataModal = true
-          if (this.userData) {
-            this.userData.jurisdictions = []
-            this.userData.practiceAreas = []
+          const userData = JSON.parse(JSON.stringify(this.userData))
+          if (userData) {
+            userData.jurisdictions = []
+            userData.practiceAreas = []
             this.jurisdictions.map(j => {
-              this.userData.jurisdictionIdList.map(jL => {
+              userData.jurisdictionIdList.map(jL => {
                 if (j.id === jL) {
-                  this.userData.jurisdictions.push(j)
+                  userData.jurisdictions.push(j)
                 }
               })
             })
             this.areasOfLaw.map(p => {
-              this.userData.practiceIdList.map(pL => {
+              userData.practiceIdList.map(pL => {
                 if (p.id === pL) {
-                  this.userData.practiceAreas.push(p)
+                  userData.practiceAreas.push(p)
                 }
               })
             })
+            this.setLawyerData(userData)
           }
         })
       }
