@@ -194,7 +194,8 @@ export default {
             caseDescription: this.caseDescription,
             jurisdictionDtos: this.jurisdiction.map(j => !j.isState ? parseInt(j.id.toString()) : null).filter(j => j),
             usaStatesId: this.jurisdiction.map(j => j.isState ? parseInt(j.id.toString()) : null).filter(j => j),
-            practiceAreaDtos: this.areaOfLaw.map(p => parseInt(p.id.toString()))
+            practiceAreaDtos: this.areaOfLaw.map(p => parseInt(p.id.toString())),
+            role: 'ROLE_CLIENT'
           }).then(() => {
             localStorage.clear()
             this.$router.push('/login')

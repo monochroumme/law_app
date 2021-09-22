@@ -15,7 +15,7 @@
             <span>{{ this.userData.firstName }} {{ this.userData.lastName }}</span>
           </div>
          <div class="user-modal__modal__body__user__data">
-           <div>Contact No:</div>
+           <div>Phone number:</div>
            <span>{{ this.userData.phoneNumber }}</span>
          </div>
           <div class="user-modal__modal__body__user__data-w">
@@ -31,7 +31,7 @@
             <span>Azerbaijan</span>
           </div>
           <div class="user-modal__modal__body__user__data-w" :class="{ block_to_right: this.userType === 'ROLE_CLIENT' }" v-if="this.userType==='ROLE_CLIENT'">
-            <div>Specialization:</div>
+            <div>Area of law:</div>
             <span v-for="(item, i) in this.userData.practiceAreas" :key="i">{{ item.practiceArea }}</span>
           </div>
         </div>

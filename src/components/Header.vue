@@ -16,22 +16,20 @@
     </nav>
     <div class="header__right">
       <div class="header__notifications" v-click-outside="closeNotifications">
-        <svg @click="showNotifications()" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0)">
-            <path d="M9.16667 22C10.8268 22 12.2156 20.8165 12.5345 19.25H5.79883C6.1179 20.8165 7.50667 22 9.16667 22Z" fill="white"/>
-            <path d="M16.1113 13.2879C16.0874 13.2879 16.0654 13.2916 16.0416 13.2916C11.9982 13.2916 8.70839 10.0018 8.70839 5.95839C8.70839 4.36972 9.22166 2.90224 10.0834 1.69945V0.916611C10.0834 0.409714 9.67267 0 9.16661 0C8.66072 0 8.25 0.409714 8.25 0.916611V1.90674C5.14517 2.35405 2.75 5.02432 2.75 8.25V10.8056C2.75 12.6197 1.95525 14.3321 0.560944 15.5109C0.204437 15.8162 0 16.2598 0 16.7291C0 17.6138 0.719559 18.3334 1.60411 18.3334H16.7291C17.6138 18.3334 18.3334 17.6138 18.3334 16.7291C18.3334 16.2598 18.129 15.8162 17.7632 15.5037C17.0408 14.8922 16.4836 14.1313 16.1113 13.2879Z" fill="white"/>
-            <circle cx="16" cy="6" r="6" fill="#FF4343"/>
-            <path d="M16.436 9H15.166V4.10449L13.6499 4.57471V3.54199L16.2998 2.59277H16.436V9Z" fill="white"/>
-          </g>
-          <defs>
-            <clipPath id="clip0">
-              <rect width="22" height="22" fill="white"/>
-            </clipPath>
-          </defs>
-        </svg>
+        <div class="header__notifications-icon">
+          <svg @click="showNotifications()" height="512pt" viewBox="-43 0 512 512" width="512pt" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="m413.417969 360.8125c-32.253907-27.265625-50.75-67.117188-50.75-109.335938v-59.476562c0-75.070312-55.765625-137.214844-128-147.625v-23.042969c0-11.796875-9.558594-21.332031-21.335938-21.332031-11.773437 0-21.332031 9.535156-21.332031 21.332031v23.042969c-72.257812 10.410156-128 72.554688-128 147.625v59.476562c0 42.21875-18.496094 82.070313-50.945312 109.503907-8.296876 7.105469-13.054688 17.429687-13.054688 28.351562 0 20.589844 16.746094 37.335938 37.332031 37.335938h352c20.589844 0 37.335938-16.746094 37.335938-37.335938 0-10.921875-4.757813-21.246093-13.25-28.519531zm0 0"/>
+            <path
+              d="m213.332031 512c38.636719 0 70.957031-27.542969 78.378907-64h-156.757813c7.425781 36.457031 39.746094 64 78.378906 64zm0 0"/>
+          </svg>
+          <span v-if="notifications && notifications.length">
+            {{notifications.length}}
+          </span>
+        </div>
         <div class="header__notifications__dd" v-if="notificationsDd">
-          <ul v-if="this.notifications">
-            <li v-for="(notify, index) in this.notifications" :key="index">
+          <ul v-if="notifications">
+            <li v-for="(notify, index) in notifications" :key="index">
               <div class="fulldate">
                 <div class="weekday">{{ notify.dayOfWeek }}</div>
                 <div class="datetime">{{ notify.creationDate }}</div>
@@ -52,13 +50,15 @@
         <img v-if="this.profilePhoto" :src="this.profilePhoto" alt="Profile pic">
         <img v-else src="/media/common/user.svg" alt="">
       </router-link>
-      <div class="hidden"><div @click="logout()">Logout</div></div>
+      <div class="hidden">
+        <div @click="logout()">Logout</div>
+      </div>
     </div>
   </header>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
@@ -197,6 +197,7 @@ export default {
       }
     }
   }
+
   .hidden {
     display: none;
     background: #fff;
@@ -216,9 +217,11 @@ export default {
       text-indent: 10px;
     }
   }
+
   &__user:hover + .hidden, .hidden:hover {
     display: block;
   }
+
   &__notifications {
     margin-right: 85px;
     display: flex;
@@ -227,6 +230,31 @@ export default {
 
     svg {
       cursor: pointer;
+      width: 22px;
+      height: 22px;
+    }
+
+    &-icon {
+      position: relative;
+
+      span {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(50%, -5px);
+        min-width: 16px;
+        min-height: 16px;
+        padding: 1px 3px 2px;
+        border-radius: 50%;
+        background: #ff6a6a;
+        color: #fff;
+        font-size: 10px;
+        line-height: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid #1a2552;
+      }
     }
 
     &__dd {
@@ -266,6 +294,7 @@ export default {
               padding-left: 11px;
             }
           }
+
           .title {
             padding: 8px 0;
             font-size: 14px;
@@ -282,10 +311,12 @@ export default {
       }
     }
   }
+
   &__right {
     display: flex;
     justify-content: flex-end;
   }
+
   &__user {
     display: flex;
     align-items: center;
@@ -312,6 +343,7 @@ export default {
     }
   }
 }
+
 @media (max-width: 450px) {
   .header {
     &__user {
@@ -319,6 +351,7 @@ export default {
         display: none;
       }
     }
+
     .lawyer_nav {
       left: 25%;
       transform: translate(-25%, -50%);
@@ -326,6 +359,7 @@ export default {
     }
   }
 }
+
 @media (max-width: 800px) {
   .header {
     &__notifications {

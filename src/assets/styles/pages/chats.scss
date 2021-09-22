@@ -103,6 +103,7 @@
       height: calc(100vh - 209px);
       background-color: #ffffff;
       overflow-y: auto;
+      border-left: 1px solid #1a2552;
 
       &.not-active {
         height: calc(100vh - 123px);

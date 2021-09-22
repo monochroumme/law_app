@@ -196,9 +196,10 @@ export default {
             phoneNumber: this.phone,
             webSiteLink: this.websiteLink,
             licenceNumber: this.licenseNumber,
-            BARAssociation: this.barAssociation,
+            barAssociation: this.barAssociation,
             jurisdictionIdList: this.jurisdiction.map(j => parseInt(j.id.toString())),
-            practiceAreaIdList: this.areaOfLaw.map(p => parseInt(p.id.toString()))
+            practiceAreaIdList: this.areaOfLaw.map(p => parseInt(p.id.toString())),
+            role: 'ROLE_LAWYER'
           }
           this.register(postData).then(() => {
             localStorage.clear()

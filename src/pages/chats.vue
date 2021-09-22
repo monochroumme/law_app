@@ -260,22 +260,24 @@ export default {
       } else {
         await this.getLawyerDataById(id).then(() => {
           this.dataModal = true
-          this.userData.jurisdictions = []
-          this.userData.practiceAreas = []
-          this.jurisdictions.map(j => {
-            this.userData.jurisdictionIdList.map(jL => {
-              if (j.id === jL) {
-                this.userData.jurisdictions.push(j)
-              }
+          if (this.userData) {
+            this.userData.jurisdictions = []
+            this.userData.practiceAreas = []
+            this.jurisdictions.map(j => {
+              this.userData.jurisdictionIdList.map(jL => {
+                if (j.id === jL) {
+                  this.userData.jurisdictions.push(j)
+                }
+              })
             })
-          })
-          this.areasOfLaw.map(p => {
-            this.userData.practiceIdList.map(pL => {
-              if (p.id === pL) {
-                this.userData.practiceAreas.push(p)
-              }
+            this.areasOfLaw.map(p => {
+              this.userData.practiceIdList.map(pL => {
+                if (p.id === pL) {
+                  this.userData.practiceAreas.push(p)
+                }
+              })
             })
-          })
+          }
         })
       }
     },
