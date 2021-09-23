@@ -237,6 +237,7 @@ export default new Vuex.Store({
               localStorage.setItem('profilePic', res.data.imageUrl)
             }
             if (res.data.role === 'ROLE_LAWYER') {
+              localStorage.setItem('webSiteLink', res.data.webSiteLink)
               localStorage.setItem('aboutMe', res.data.aboutMe)
               localStorage.setItem('jurisdictionDtoList', JSON.stringify(res.data.jurisdictionDtoList))
               localStorage.setItem('practiceAreaDtoList', JSON.stringify(res.data.practiceAreaDtoList))

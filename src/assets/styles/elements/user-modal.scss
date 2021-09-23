@@ -14,7 +14,10 @@
     display: flex;
     flex-direction: column;
     background-color: white;
-    padding: 47px 43px 21px 44px;
+    padding-left: 85px;
+    padding-right: 85px;
+    padding-top: 33px;
+    padding-bottom: 43px;
     border-radius: 32px;
 
     &__header {
@@ -25,7 +28,7 @@
       button {
         position: absolute;
         top: -25px;
-        right: 0;
+        right: -60px;
         font-size: 30px;
       }
     }
@@ -33,45 +36,46 @@
     &__body {
       &__user {
         display: flex;
-        width: 500px;
+        max-width: 560px;
         flex-wrap: wrap;
 
         &__data {
-          width: 30%;
+          width: auto;
           height: 84px;
+          margin-left: 54px;
+          margin-top: 39px;
 
           div {
-            margin-bottom: 18px;
+            font-size: 14px;
           }
 
           span {
             font-weight: bold;
+            font-size: 17px;
           }
         }
         .block_to_right {
-          text-align: end;
-          padding-right: 10%;
+          padding-left: 12.4%;
         }
         &__data-w {
           width: 50%;
-          margin-bottom: 30px;
-          height: 84px;
+          margin-bottom: 16px;
 
           div {
-            margin-bottom: 18px;
+            font-size: 14px;
           }
 
           span {
             font-weight: bold;
-            margin-right: 5px;
+            font-size: 17px;
           }
         }
         img {
           border-radius: 150px;
-          width: 120px;
-          height: 120px;
-          margin-right: 45px;
-          margin-bottom: 30px;
+          width: 128px;
+          height: 128px;
+          margin-right: 12px;
+          margin-bottom: 27px;
           object-fit: cover;
         }
       }

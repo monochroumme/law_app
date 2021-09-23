@@ -38,6 +38,10 @@
           <div class="type">About me:</div>
           <div class="data">{{ this.aboutMe.length > 22 ? this.aboutMe.slice(0, 22) + '...' : this.aboutMe }}</div>
         </div>
+        <div v-if="this.userType === 'ROLE_LAWYER'" class="profile-page__user__data-pack__data">
+          <div class="type">Website:</div>
+          <div class="data">{{ this.website }}</div>
+        </div>
       </div>
       <button class="profile-page__user__edit" @click="editModal()">
         Edit profile
@@ -172,6 +176,7 @@ export default {
       lastName: '',
       email: '',
       aboutMe: '',
+      website: '',
       oldEmail: '',
       phoneNumber: '',
       jurisdictionDtoList: null,
@@ -221,6 +226,9 @@ export default {
     }
     if (localStorage.aboutMe) {
       this.aboutMe = localStorage.aboutMe
+    }
+    if (localStorage.webSiteLink) {
+      this.website = localStorage.webSiteLink
     }
     if (localStorage.userId) {
       this.userId = localStorage.userId

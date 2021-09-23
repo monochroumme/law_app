@@ -24,7 +24,7 @@
           </div>
           <div class="user-modal__modal__body__user__data-w" :class="{ block_to_right: this.userType === 'ROLE_CLIENT' }" v-if="this.userType==='ROLE_CLIENT'">
             <div>Bar Association:</div>
-            <span>{{ this.userData.barassociation }}</span>
+            <span>{{ this.userData.barAssociation }}</span>
           </div>
           <div class="user-modal__modal__body__user__data-w" :class="{ block_to_right: this.userType === 'ROLE_LAWYER' }">
             <div>Jurisdiction: </div>
