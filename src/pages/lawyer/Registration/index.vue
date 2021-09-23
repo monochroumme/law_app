@@ -44,6 +44,7 @@
       <custom-input class="mb-20" v-model="websiteLink" placeholder="Enter your website link" label="Website Link" />
       <custom-input class="mb-20" v-model="phone" @set-phone-valid="isPhoneValid = $event" :is-phone="true" placeholder="Enter your phone number" label="Phone Number" />
       <div v-if="this.errorObj.isPhoneValid" class="error">Please, enter a valid phone number</div>
+      <custom-input class="mb-20" v-model="aboutMe" placeholder="Enter information about you" label="About Me" />
       <custom-input class="mb-20" v-model="email" placeholder="Enter your email" label="Email" />
       <div v-if="this.errorObj.email" class="error">Please, enter a valid email</div>
       <custom-input type="password" class="mb-20" :show-password="showPassword" @toggle-password="showPassword = !showPassword" v-model="password" placeholder="Enter your password" label="Password" />
@@ -91,6 +92,7 @@ export default {
       password: '',
       confirmPassword: '',
       phone: '',
+      aboutMe: '',
 
       isPhoneValid: false,
       showPassword: false,
@@ -199,6 +201,7 @@ export default {
             barAssociation: this.barAssociation,
             jurisdictionIdList: this.jurisdiction.map(j => parseInt(j.id.toString())),
             practiceAreaIdList: this.areaOfLaw.map(p => parseInt(p.id.toString())),
+            aboutMe: this.aboutMe,
             role: 'ROLE_LAWYER'
           }
           this.register(postData).then(() => {

@@ -153,9 +153,11 @@ export default {
       this.notificationsDd = !this.notificationsDd
     },
     closeNotifications () {
-      this.notificationsDd = false
-      this.notificationsChecked()
-      this.notificationsCount = 0
+      if (this.notificationsDd === true) {
+        this.notificationsDd = false
+        this.notificationsChecked()
+        this.notificationsCount = 0
+      }
     }
   }
 }

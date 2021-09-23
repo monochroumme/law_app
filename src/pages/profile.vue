@@ -2,7 +2,7 @@
   <div class="page profile-page">
     <div class="profile-page__user">
       <div class="profile-page__user__photo">
-        <div class="profile-page__user__photo__img">
+        <div class="profile-page__user__photo__img" :class="{lessenImg: this.userType === 'ROLE_LAWYER'}">
           <img v-if="!this.profilePhoto" src="/media/common/user.svg" alt="Profile photo">
           <img v-else :src="this.profilePhoto" alt="Profile photo">
         </div>
@@ -33,6 +33,10 @@
         <div class="profile-page__user__data-pack__data">
           <div class="type">User type:</div>
           <div class="data">{{ this.userType === 'ROLE_CLIENT' ? 'Client' : 'Lawyer' }}</div>
+        </div>
+        <div v-if="this.userType === 'ROLE_LAWYER'" class="profile-page__user__data-pack__data">
+          <div class="type">About me:</div>
+          <div class="data">{{ this.aboutMe.length > 22 ? this.aboutMe.slice(0, 22) + '...' : this.aboutMe }}</div>
         </div>
       </div>
       <button class="profile-page__user__edit" @click="editModal()">
@@ -117,6 +121,7 @@
             <custom-input class="mb-20" v-model="lastName" placeholder="Enter your last name" label="Last name" />
             <custom-input class="mb-20" v-model="email" placeholder="Enter your email" label="Email" />
             <custom-input class="mb-20" v-model="phoneNumber" :is-phone="true" placeholder="Enter your phone" label="Phone" />
+            <custom-input class="mb-20" v-model="aboutMe" placeholder="Enter information about you" label="About Me" />
             <custom-multiselect
               v-if="userType==='ROLE_LAWYER'"
               class="mb-20"
@@ -166,6 +171,7 @@ export default {
       firstName: '',
       lastName: '',
       email: '',
+      aboutMe: '',
       oldEmail: '',
       phoneNumber: '',
       jurisdictionDtoList: null,
@@ -212,6 +218,9 @@ export default {
     }
     if (localStorage.phoneNumber) {
       this.phoneNumber = localStorage.phoneNumber
+    }
+    if (localStorage.aboutMe) {
+      this.aboutMe = localStorage.aboutMe
     }
     if (localStorage.userId) {
       this.userId = localStorage.userId
@@ -384,6 +393,8 @@ export default {
         if (this.userType === 'ROLE_LAWYER') {
           editData.jurisdictionIdList = this.jurisdictionsDto.map((j) => parseInt(j.id))
           editData.practiceIdList = this.practiceAreasDto.map((p) => parseInt(p.id))
+          editData.aboutMe = this.aboutMe
+          console.log(editData)
         }
         await this.editUser(editData).then(res => {
           if (res.data === 'email-changed') {

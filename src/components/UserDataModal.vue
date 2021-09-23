@@ -34,6 +34,10 @@
             <div>Area of law:</div>
             <span v-for="(item, i) in this.userData.practiceAreas" :key="i">{{ item.practiceArea }}</span>
           </div>
+          <div class="user-modal__modal__body__user__data-w" v-if="this.userType==='ROLE_CLIENT'">
+            <div>About me:</div>
+            <span>{{ this.userData.aboutMe }}</span>
+          </div>
         </div>
       </div>
     </div>

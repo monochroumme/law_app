@@ -237,6 +237,7 @@ export default new Vuex.Store({
               localStorage.setItem('profilePic', res.data.imageUrl)
             }
             if (res.data.role === 'ROLE_LAWYER') {
+              localStorage.setItem('aboutMe', res.data.aboutMe)
               localStorage.setItem('jurisdictionDtoList', JSON.stringify(res.data.jurisdictionDtoList))
               localStorage.setItem('practiceAreaDtoList', JSON.stringify(res.data.practiceAreaDtoList))
             }
@@ -299,6 +300,7 @@ export default new Vuex.Store({
               localStorage.setItem('lastName', data.lastName)
               localStorage.setItem('phoneNumber', data.phoneNumber)
               localStorage.setItem('email', data.email)
+              localStorage.setItem('aboutMe', data.aboutMe)
               localStorage.setItem('jurisdictionDtoList', JSON.stringify(data.jurisdictionIdList))
               localStorage.setItem('practiceAreaDtoList', JSON.stringify(data.practiceIdList))
               resolve(res)
