@@ -30,15 +30,18 @@
         <div class="header__notifications__dd" v-if="notificationsDd">
           <ul v-if="notifications">
             <li v-for="(notify, index) in notifications" :key="index">
-              <div class="fulldate">
-                <div class="weekday">{{ notify.dayOfWeek }}</div>
-                <div class="datetime">{{ notify.creationDate }}</div>
-              </div>
-              <div class="title">
-                {{ notify.info }}
-              </div>
-              <div class="content">
-                {{ notify.content }}
+              <div @click="redirectToNotification(notify)">
+                <div class="fulldate">
+                  <div class="weekday">{{ notify.dayOfWeek }}</div>
+                  <div class="datetime">{{ notify.creationDate }}</div>
+                  <div v-if="!notify.seen" class="notify-circle"></div>
+                </div>
+                <div class="title">
+                  {{ notify.info }}
+                </div>
+                <div class="content">
+                  {{ notify.content }}
+                </div>
               </div>
             </li>
           </ul>
@@ -152,12 +155,30 @@ export default {
     showNotifications () {
       this.notificationsDd = !this.notificationsDd
     },
-    closeNotifications () {
+    async closeNotifications () {
       if (this.notificationsDd === true) {
         this.notificationsDd = false
-        this.notificationsChecked()
+        await this.notificationsChecked().then(() => {
+          this.getNotifications()
+        })
         this.notificationsCount = 0
       }
+    },
+    async redirectToNotification (notification) {
+      if (localStorage.userType === 'ROLE_LAWYER') {
+        if (notification.info.includes('New Case Created')) {
+          this.$router.push('/lawyer/all-cases')
+        } else {
+          this.$router.push('/lawyer/cases')
+        }
+      } else {
+        this.$router.push(`/client/cases/${notification.caseId}/applied-lawyers`)
+      }
+      this.notificationsDd = false
+      await this.notificationsChecked().then(() => {
+        this.getNotifications()
+      })
+      this.notificationsCount = 0
     }
   }
 }
@@ -295,6 +316,7 @@ export default {
           width: 341px;
           height: 107px;
           padding: 10px;
+          cursor: pointer;
 
           .fulldate {
             display: flex;
@@ -303,6 +325,15 @@ export default {
               font-size: 15px;
               line-height: 17px;
               color: #A4ABC0;
+            }
+
+            .notify-circle {
+              margin-left: 10px;
+              background-color: #F4D071;
+              border-radius: 50px;
+              width: 10px;
+              height: 10px;
+              margin-top: 3.5px;
             }
 
             .datetime {

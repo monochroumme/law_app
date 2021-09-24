@@ -290,6 +290,10 @@ export default {
         error = true
         this.$toasted.error('Please, enter your case description')
       }
+      if (this.caseDescription.trim().length > 1000) {
+        error = true
+        this.$toasted.error('Case description can not exceed 1000 characters')
+      }
       if (!this.jurisdiction?.length) {
         error = true
         this.$toasted.error('Please, choose your jurisdiction')

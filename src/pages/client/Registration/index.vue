@@ -20,6 +20,7 @@
         placeholder="Enter your case description"
       />
       <div v-if="this.errorObj.caseDescription" class="error">Please, enter your case description</div>
+      <div v-if="this.errorObj.caseDescriptionLength" class="error">Case description can not exceed 1000 characters</div>
       <custom-multiselect
         :loading="loading"
         class="mb-20"
@@ -101,6 +102,7 @@ export default {
         name: false,
         surname: false,
         caseDescription: false,
+        caseDescriptionLength: true,
         jurisdiction: false,
         areaOfLaw: false,
         isPhoneValid: false,
@@ -145,6 +147,10 @@ export default {
         this.errorObj.caseDescription = true
         error = true
         // this.$toasted.error('Please, enter your case description')
+      }
+      if (this.caseDescription.trim().length > 1000) {
+        this.errorObj.caseDescriptionLength = true
+        error = true
       }
       if (!this.jurisdiction?.length) {
         this.errorObj.jurisdiction = true
