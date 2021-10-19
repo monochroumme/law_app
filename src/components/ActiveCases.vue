@@ -290,9 +290,9 @@ export default {
         error = true
         this.$toasted.error('Please, enter your case description')
       }
-      if (this.caseDescription.trim().length > 1000) {
+      if (this.caseDescription.trim().length > 1024) {
         error = true
-        this.$toasted.error('Case description can not exceed 1000 characters')
+        this.$toasted.error('Case description can not exceed 1024 characters')
       }
       if (!this.jurisdiction?.length) {
         error = true
@@ -305,26 +305,50 @@ export default {
 
       return error // error => false, valid => true
     },
-    async onEdit () {
-      const putData = {
-        id: this.modalData.id,
-        description: this.modalData.description,
-        jurisdictionIdList: this.modalData.jurisdictionIdList.map(j => parseInt(j.id)),
-        practiceAreaIdList: this.modalData.practiceAreaIdList.map(p => parseInt(p.id))
+    validateEditInputs () {
+      let error = false
+
+      if (!this.modalData.description?.trim()?.length) {
+        error = true
+        this.$toasted.error('Please, enter your case description')
       }
-      await this.editClientCase(putData)
-        .then(() => {
-          this.$parent.clientActiveCases.map((c) => {
-            if (c.id === this.modalData.id) {
-              c = this.modalData
-              this.modalData.id = ''
-              this.modalData.description = ''
-              this.modalData.jurisdictionIdList = []
-              this.modalData.practiceAreaIdList = []
-            }
+      if (this.modalData.description.trim().length > 1024) {
+        error = true
+        this.$toasted.error('Case description can not exceed 1024 characters')
+      }
+      if (!this.modalData.jurisdictionIdList?.length) {
+        error = true
+        this.$toasted.error('Please, choose your jurisdiction')
+      }
+      if (!this.modalData.practiceAreaIdList?.length) {
+        error = true
+        this.$toasted.error('Please, choose your area of law')
+      }
+
+      return error // error => false, valid => true
+    },
+    async onEdit () {
+      if (!this.validateEditInputs()) {
+        const putData = {
+          id: this.modalData.id,
+          description: this.modalData.description,
+          jurisdictionIdList: this.modalData.jurisdictionIdList.map(j => parseInt(j.id)),
+          practiceAreaIdList: this.modalData.practiceAreaIdList.map(p => parseInt(p.id))
+        }
+        await this.editClientCase(putData)
+          .then(() => {
+            this.$parent.clientActiveCases.map((c) => {
+              if (c.id === this.modalData.id) {
+                c = this.modalData
+                this.modalData.id = ''
+                this.modalData.description = ''
+                this.modalData.jurisdictionIdList = []
+                this.modalData.practiceAreaIdList = []
+              }
+            })
+            this.closeModal()
           })
-          this.closeModal()
-        })
+      }
     },
     async onSubmit () {
       if (!this.wait) {
