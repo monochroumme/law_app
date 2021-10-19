@@ -241,6 +241,7 @@ export default new Vuex.Store({
               localStorage.setItem('aboutMe', res.data.aboutMe)
               localStorage.setItem('jurisdictionDtoList', JSON.stringify(res.data.jurisdictionDtoList))
               localStorage.setItem('practiceAreaDtoList', JSON.stringify(res.data.practiceAreaDtoList))
+              localStorage.setItem('barAssociation', res.data.barAssociation)
             }
             commit('setUser', res.data)
             resolve(res)

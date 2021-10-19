@@ -125,6 +125,7 @@
             <custom-input class="mb-20" v-model="lastName" placeholder="Enter your last name" label="Last name" />
             <custom-input class="mb-20" v-model="email" placeholder="Enter your email" label="Email" />
             <custom-input class="mb-20" v-model="phoneNumber" :is-phone="true" placeholder="Enter your phone" label="Phone" />
+            <custom-input v-if="userType==='ROLE_LAWYER'" class="mb-20" v-model="barAssociation" placeholder="Enter your bar association" label="Bar association" />
             <custom-input v-if="userType==='ROLE_LAWYER'" class="mb-20" v-model="aboutMe" placeholder="Enter information about you" label="About Me" />
             <custom-multiselect
               v-if="userType==='ROLE_LAWYER'"
@@ -177,6 +178,7 @@ export default {
       email: '',
       aboutMe: '',
       website: '',
+      barAssociation: '',
       oldEmail: '',
       phoneNumber: '',
       jurisdictionDtoList: null,
@@ -242,6 +244,9 @@ export default {
     if (localStorage.profilePic) {
       this.profilePhoto = localStorage.profilePic
     }
+    if (localStorage.barAssociation) {
+      this.barAssociation = localStorage.barAssociation
+    }
   },
   methods: {
     ...mapActions(['getJurisdictions', 'getAreasOfLaw']),
@@ -303,9 +308,15 @@ export default {
         error = true
         this.$toasted.error('Please, enter your name')
       }
+      if (!this.firstName.trim().length > 255) {
+        this.$toasted.error('First name can not exceed 255 symbols')
+      }
       if (!this.lastName?.trim()?.length) {
         error = true
         this.$toasted.error('Please, enter your last name')
+      }
+      if (!this.lastName.trim().length > 255) {
+        this.$toasted.error('Last name can not exceed 255 symbols')
       }
       if (!this.phoneNumber) {
         error = true
@@ -315,6 +326,9 @@ export default {
         error = true
         this.$toasted.error('Please, enter a valid email')
       }
+      if (!this.email.trim().length > 255) {
+        this.$toasted.error('Email can not exceed 255 symbols')
+      }
       if (this.userType === 'ROLE_LAWYER') {
         if (!this.jurisdictionsDto?.length) {
           error = true
@@ -323,6 +337,12 @@ export default {
         if (!this.practiceAreasDto?.length) {
           error = true
           this.$toasted.error('Please, choose your area of law')
+        }
+        if (!this.aboutMe.trim().length > 255) {
+          this.$toasted.error('About me data can not exceed 255 symbols')
+        }
+        if (!this.barAssociation.trim().length > 255) {
+          this.$toasted.error('Bar association can not exceed 255 symbols')
         }
       }
       return !error
@@ -402,7 +422,7 @@ export default {
           editData.jurisdictionIdList = this.jurisdictionsDto.map((j) => parseInt(j.id))
           editData.practiceIdList = this.practiceAreasDto.map((p) => parseInt(p.id))
           editData.aboutMe = this.aboutMe
-          console.log(editData)
+          editData.barAssociation = this.barAssociation
         }
         await this.editUser(editData).then(res => {
           if (res.data === 'email-changed') {

@@ -159,7 +159,11 @@ export default {
           }).then(() => {
             this.$toasted.info('Restore password had been sent to your email')
           }).catch((e) => {
-            this.$toasted.error('Wrong email or role')
+            if (e.response.data === 'user-does-not-exists') {
+              this.$toasted.error('User does not exist')
+            } else {
+              this.$toasted.error('Wrong email or role')
+            }
           })
           this.wait = false
         }
