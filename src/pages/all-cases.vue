@@ -60,10 +60,10 @@
           />
           <label class="sort">Sort by date:</label>
           <div class="all_cases-page__modal__body__radio">
-            <input type="radio" :value="true" v-model="isAscending" /> Most recent
+            <input type="radio" :value="false" v-model="isAscending" /> Most recent
           </div>
           <div class="all_cases-page__modal__body__radio">
-            <input type="radio" :value="false" v-model="isAscending" /> Old ones
+            <input type="radio" :value="true" v-model="isAscending" /> Old ones
           </div>
           <button type="submit">Done</button>
         </form>
@@ -198,6 +198,7 @@ export default {
 
     async onSubmit () {
       await this.getCases()
+      this.showFilter = false
     }
   }
 }
