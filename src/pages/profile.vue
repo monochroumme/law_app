@@ -125,7 +125,7 @@
             <custom-input class="mb-20" v-model="lastName" placeholder="Enter your last name" label="Last name" />
             <custom-input class="mb-20" v-model="email" placeholder="Enter your email" label="Email" />
             <custom-input class="mb-20" v-model="phoneNumber" :is-phone="true" placeholder="Enter your phone" label="Phone" />
-            <custom-input class="mb-20" v-model="aboutMe" placeholder="Enter information about you" label="About Me" />
+            <custom-input v-if="userType==='ROLE_LAWYER'" class="mb-20" v-model="aboutMe" placeholder="Enter information about you" label="About Me" />
             <custom-multiselect
               v-if="userType==='ROLE_LAWYER'"
               class="mb-20"

@@ -131,6 +131,7 @@ export default {
         })
       })
     setInterval(async () => {
+      this.notificationsCount = 0
       await this.getNotifications().then(() => {
         this.notifications.map(n => {
           if (n.seen === false) {
