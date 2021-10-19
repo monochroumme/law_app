@@ -33,7 +33,7 @@
       </div>
       <div id="main-chat" class="chats-page__chat-block__messages main_chat" :class="{'not-active': activeChat === null}">
         <div v-for="(msg, index) in (messages[activeChat] || [])" :key="index">
-          <div v-if="msg.senderId.toString() !== userId" class="chats-page__chat-block__messages__msg msg-in">
+          <div v-if="msg.senderId.toString() !== userId && msg.senderRole.toString() !== userRole" class="chats-page__chat-block__messages__msg msg-in">
             <div class="lawyer" :class="{'withFile': msg.fileUrl}">
               <img v-if="msg.fileUrl" :src="msg.fileUrl" alt="">
               {{ msg.content }}
