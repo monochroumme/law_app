@@ -317,6 +317,10 @@ export default {
           this.$parent.clientActiveCases.map((c) => {
             if (c.id === this.modalData.id) {
               c = this.modalData
+              this.modalData.id = ''
+              this.modalData.description = ''
+              this.modalData.jurisdictionIdList = []
+              this.modalData.practiceAreaIdList = []
             }
           })
           this.closeModal()
@@ -339,6 +343,9 @@ export default {
           }).then((newCase) => {
             this.$parent.clientActiveCases.unshift(newCase.data)
             this.closeModal()
+            this.areaOfLaw = ''
+            this.jurisdiction = ''
+            this.caseDescription = ''
           }).catch(() => {
           })
         }
