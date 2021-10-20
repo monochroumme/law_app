@@ -4,6 +4,17 @@
   padding: 0;
   min-height: calc(100vh - 50px);
 
+  .hoverHeader {
+    display: flex;
+    align-items: center;
+    padding: 0px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+
+    &:hover {
+      background: #293573;
+    }
+  }
   &__list {
     display: flex;
     flex-direction: column;
@@ -14,7 +25,7 @@
 
     &__chat.active {
       color: white;
-      background-color: #293567;
+      background: #293567 !important;
     }
 
     &__chat {
@@ -23,6 +34,10 @@
       cursor: pointer;
       width: 100%;
       min-height: 86px;
+
+      &:hover {
+       background: rgba(112, 117, 121, 0.08);
+      }
 
       &__img {
         width: 59px;

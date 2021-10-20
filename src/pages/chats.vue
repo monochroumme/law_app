@@ -23,13 +23,15 @@
         <img svg-inline src="@/assets/media/common/btn-back.svg" alt="Back">
       </div>
       <div class="chats-page__chat-block__header open-user-modal" @click="openDataModal(chats[activeChat].recipientId)" v-if="activeChat">
-        <div class="chats-page__chat-block__header__img open-user-modal">
-          <img v-if="chats[activeChat].recipientImage" :src="chats[activeChat].recipientImage" alt="">
-          <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
+        <div class="hoverHeader">
+          <div class="chats-page__chat-block__header__img open-user-modal">
+            <img v-if="chats[activeChat].recipientImage" :src="chats[activeChat].recipientImage" alt="">
+            <img v-else class="open-user-modal" src="/media/common/user.svg" alt="">
+          </div>
+          <span>
+            {{ chats[activeChat].recipientFirstName }} {{ chats[activeChat].recipientLastName }}
+          </span>
         </div>
-        <span>
-          {{ chats[activeChat].recipientFirstName }} {{ chats[activeChat].recipientLastName }}
-        </span>
       </div>
       <div id="main-chat" class="chats-page__chat-block__messages main_chat" :class="{'not-active': activeChat === null}">
         <div v-for="(msg, index) in (messages[activeChat] || [])" :key="index">
